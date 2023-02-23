@@ -1,6 +1,4 @@
 <h1 align="center"> HLib </h1>
-<br>
-
 <p align="center">Shitty Qt app to search/read my local H library</p>
 <br>
 
