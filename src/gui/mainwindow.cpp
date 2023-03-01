@@ -297,8 +297,8 @@ void MainWindow::populateTree() {
     this->setTreeStatusMessage();
 }
 
-void MainWindow::searchTreeItems(const QString search_str) {    
-    QStringList hash_list = this->db.select(search_str);
+void MainWindow::searchTreeItems(const QString search_str) {
+    QStringList hash_list = this->db.select("*" + search_str + "*");
     
     QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
     while (*tree_it) {
