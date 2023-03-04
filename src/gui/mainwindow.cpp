@@ -362,7 +362,8 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     if (!index.isValid())
         return;
     
-    QTreeWidgetItem *item = this->ui.treeWidget->itemAt(pos);    
+    QTreeWidgetItem *item = this->ui.treeWidget->itemAt(pos);
+    QString item_filehash = item->data(0, MyDataRoles::FileHash).toString();
     QString item_filepath = item->data(0, MyDataRoles::FilePath).toString();
     QString item_filename = item->text(0);
     QString item_tags = item->data(0, MyDataRoles::Tags).toString();
@@ -372,10 +373,12 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     QAction *copy_title = new QAction("Copy title", &menu);
     QAction *copy_filepath = new QAction("Copy path", &menu);
     QAction *copy_tags = new QAction("Copy tags", &menu);
+    QAction *remove_db = new QAction("Remove from DB", &menu);
     menu.addAction(load_all_images);
     menu.addAction(copy_title);
     menu.addAction(copy_filepath);
     menu.addAction(copy_tags);
+    menu.addAction(remove_db);
     QAction *clicked_action = menu.exec(this->ui.treeWidget->viewport()->mapToGlobal(pos));
 
     if (!clicked_action) {
@@ -383,7 +386,7 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     }
 
     if (clicked_action == load_all_images) {
-        this->loadAllImages(item_filepath);        
+        this->loadAllImages(item_filepath);
     }
     else if (clicked_action == copy_title) {
         QApplication::clipboard()->clear();
@@ -394,6 +397,13 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     } else if (clicked_action == copy_tags) {
         QApplication::clipboard()->clear();
         QApplication::clipboard()->setText(item_tags, QClipboard::Clipboard);
+    } else if (clicked_action == remove_db) {
+        if (this->db.removeFromDB(item_filehash)) {
+            this->populateTree();
+            QMessageBox::information(this, "Info", "Removed from DB");
+        } else {
+            QMessageBox::warning(this, "Warning", "Couldn't remove from DB");
+        }
     }
 }
 

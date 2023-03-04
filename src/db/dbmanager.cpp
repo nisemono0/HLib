@@ -139,3 +139,21 @@ QStringList SQLiteDB::selectAllHashes() {
     }
     return hash_list;
 }
+
+
+bool SQLiteDB::removeFromDB(const QString del_hash) {
+    bool success = false;
+    if (this->db.isOpen()) {
+        QSqlQuery query(this->db);
+        query.prepare("DELETE FROM HLib WHERE file_hash MATCH :del_hash");
+        query.bindValue(":del_hash", del_hash);
+        if (query.exec()) {
+            success = true;
+        } else {
+            qDebug() << "[deleteFromDB error]:" << query.lastError();
+        }
+        query.clear();
+        this->db.commit();
+    }
+    return success;
+}
