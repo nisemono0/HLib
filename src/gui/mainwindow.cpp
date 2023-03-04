@@ -276,10 +276,6 @@ void MainWindow::setTreeStatusMessage(const QString message) {
 
 void MainWindow::populateTree() {
     QList<QMap<QString, QVariant>> list_variants = this->db.select();
-    if (list_variants.isEmpty()) {
-        this->setTreeStatusMessage("Empty database");
-        return;
-    }
 
     this->clearTree();
     QList<QTreeWidgetItem *> root_items;
@@ -375,9 +371,11 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     QAction *copy_tags = new QAction("Copy tags", &menu);
     QAction *remove_db = new QAction("Remove from DB", &menu);
     menu.addAction(load_all_images);
+    menu.addSeparator();
     menu.addAction(copy_title);
     menu.addAction(copy_filepath);
     menu.addAction(copy_tags);
+    menu.addSeparator();
     menu.addAction(remove_db);
     QAction *clicked_action = menu.exec(this->ui.treeWidget->viewport()->mapToGlobal(pos));
 
