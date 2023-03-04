@@ -142,12 +142,15 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
     if (this->has_images) {
         QMenu menu(this);
         QString file_path = this->image_item->data(MyDataRoles::FilePath).toString();
+        QString title = this->image_item->data(MyDataRoles::Title).toString();
 
         QAction *load_all_images = new QAction("Load all images", &menu);
         QAction *copy_current_image = new QAction("Copy image", &menu);
-
+        QAction *copy_title = new QAction("Copy title", &menu);
         menu.addAction(load_all_images);
         menu.addAction(copy_current_image);
+        menu.addSeparator();
+        menu.addAction(copy_title);
         
         QAction *clicked_action = menu.exec(event->globalPos());
 
@@ -169,6 +172,9 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
         } else if (clicked_action == copy_current_image) {
             QApplication::clipboard()->clear();
             QApplication::clipboard()->setImage(this->getCurrentImage());
+        } else if (clicked_action == copy_title) {
+            QApplication::clipboard()->clear();
+            QApplication::clipboard()->setText(title);
         }
     }
 }
