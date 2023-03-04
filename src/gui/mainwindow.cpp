@@ -312,7 +312,7 @@ void MainWindow::searchTreeItems(const QString search_str) {
     }
 }
 
-void MainWindow::loadAllImages(const QString item_path) {
+void MainWindow::loadAllImages(const QString item_path, const QString title) {
     QByteArrayList images_list = Utils::getImagesFromZip(item_path, this);
     
     if (images_list.isEmpty()) {
@@ -323,11 +323,12 @@ void MainWindow::loadAllImages(const QString item_path) {
     if (img.loadFromData(images_list[0])) {
         this->pixitem->setPixmap(img);
         this->pixitem->setData(MyDataRoles::FilePath, QVariant::fromValue(item_path));
+        this->pixitem->setData(MyDataRoles::Title, QVariant::fromValue(title));
         this->ui.graphicsView->loadImages(images_list);
     }
 }
 
-void MainWindow::loadFIrstImage(const QString file_path) {
+void MainWindow::loadFIrstImage(const QString file_path, const QString title) {
     QByteArray zip_image = Utils::getFirstImageFromZip(file_path);
     
     if (Utils::isNullOrEmpty(zip_image)) {
@@ -338,6 +339,7 @@ void MainWindow::loadFIrstImage(const QString file_path) {
     if (img.loadFromData(zip_image)) {
         this->pixitem->setPixmap(img);
         this->pixitem->setData(MyDataRoles::FilePath, QVariant::fromValue(file_path));
+        this->pixitem->setData(MyDataRoles::Title, QVariant::fromValue(title));
         this->ui.graphicsView->loadImages(zip_image);
     }
 }
@@ -350,7 +352,8 @@ void MainWindow::treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *prev
     }
     
     QString item_path = current->data(0, MyDataRoles::FilePath).toString();
-    this->loadFIrstImage(item_path);
+    QString title = current->data(0, MyDataRoles::Title).toString();
+    this->loadFIrstImage(item_path, title);
 }
 
 void MainWindow::showTreeContextMenu(const QPoint &pos) {
@@ -359,6 +362,7 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
         return;
     
     QTreeWidgetItem *item = this->ui.treeWidget->itemAt(pos);
+    QString title = item->data(0, MyDataRoles::Title).toString();
     QString item_filehash = item->data(0, MyDataRoles::FileHash).toString();
     QString item_filepath = item->data(0, MyDataRoles::FilePath).toString();
     QString item_filename = item->text(0);
@@ -384,7 +388,7 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     }
 
     if (clicked_action == load_all_images) {
-        this->loadAllImages(item_filepath);
+        this->loadAllImages(item_filepath, title);
     }
     else if (clicked_action == copy_title) {
         QApplication::clipboard()->clear();
@@ -411,5 +415,7 @@ void MainWindow::treeDoubleClick(QTreeWidgetItem *item, int column) {
     }
     
     QString item_filepath = item->data(column, MyDataRoles::FilePath).toString();
-    this->loadAllImages(item_filepath);
+    QString title = item->data(0, MyDataRoles::Title).toString();
+    
+    this->loadAllImages(item_filepath, title);
 }

@@ -33,8 +33,8 @@ private:
     void resetTreeStatusMessage();
     void setTreeStatusMessage();
     void setTreeStatusMessage(const QString message);
-    void loadAllImages(const QString file_path);
-    void loadFIrstImage(const QString file_path);
+    void loadAllImages(const QString file_path, const QString title);
+    void loadFIrstImage(const QString file_path, const QString title);
 private slots:
     void triggered_action_addDir();
     void triggered_action_addFile();
