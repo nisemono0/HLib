@@ -109,7 +109,7 @@ QStringList SQLiteDB::select(const QString tag_search) {
     QStringList hash_list;
     if (this->db.isOpen()) {
         QSqlQuery query(this->db);
-        query.prepare("SELECT DISTINCT * FROM HLib WHERE tags MATCH :tag_search OR title MATCH :tag_search");
+        query.prepare("SELECT DISTINCT * FROM HLib WHERE tags MATCH :tag_search");
         query.bindValue(":tag_search", tag_search);
         if (query.exec()) {
             while (query.next()) {

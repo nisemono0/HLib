@@ -83,7 +83,7 @@ QMap<QString, QString> Utils::getMapFromJson(QJsonObject json_obj) {
     QStringList other = tags["other"].toStringList();
     QStringList magazine = tags["magazine"].toStringList();
 
-    QString str_tags = "";
+    QString str_tags = "title:" + title + ", ";
     for (auto it : artist) {
         str_tags += "artist:" + it + ", ";
     }
