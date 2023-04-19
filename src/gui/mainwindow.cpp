@@ -405,11 +405,14 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
         QApplication::clipboard()->clear();
         QApplication::clipboard()->setText(item_tags, QClipboard::Clipboard);
     } else if (clicked_action == remove_db) {
-        if (this->db.removeFromDB(item_filehash)) {
-            this->populateTree();
-            QMessageBox::information(this, "Info", QString("Removed %1 from DB").arg(title));
-        } else {
-            QMessageBox::warning(this, "Warning", "Couldn't remove from DB");
+        QMessageBox::StandardButton remove_reply = QMessageBox::question(this, "Remove from DB", QString("Remove %1 from DB").arg(title), QMessageBox::Yes | QMessageBox::No);
+        if (remove_reply == QMessageBox::Yes) {
+            if (this->db.removeFromDB(item_filehash)) {
+                this->populateTree();
+                QMessageBox::information(this, "Info", QString("Removed %1 from DB").arg(title));
+            } else {
+                QMessageBox::warning(this, "Warning", "Couldn't remove from DB");
+            }
         }
     }
 }
