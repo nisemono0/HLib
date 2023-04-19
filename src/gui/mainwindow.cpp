@@ -131,10 +131,12 @@ void MainWindow::triggered_action_addFile() {
             if (!hash_list.contains(json_map["file_hash"])) {
                 if (this->db.insert(json_map)) {
                     this->populateTree();
-                    QMessageBox::information(this, "Info", "Added to database");
+                    QMessageBox::information(this, "Info", QString("Added %1 to database").arg(json_map["title"]));
                 } else {
                     QMessageBox::warning(this, "Warning", "Couldn't add to database");
                 }
+            } else {
+                QMessageBox::information(this, "Info", "Archive already in database");
             }
         }
     }
@@ -161,8 +163,9 @@ void MainWindow::triggered_action_addDir() {
 
     QList<QMap<QString, QString>> data_list;
     QStringList db_hashes = this->db.selectAllHashes();
+    int total_toadd = 0;
     
-    QProgressDialog progress("Adding files to DB", nullptr, 0, zip_files.length(), this);
+    QProgressDialog progress("Adding files to DB", nullptr, 0, zip_files.length() - 1, this);
     progress.setWindowModality(Qt::WindowModal);
     progress.show();
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
@@ -173,6 +176,8 @@ void MainWindow::triggered_action_addDir() {
         if (!json_map.isEmpty()) {
             if (!db_hashes.contains(json_map["file_hash"])) {
                 data_list.append(json_map);
+                qDebug() << "To add:" << json_map["title"];
+                total_toadd++;
             }
         }
 
@@ -180,10 +185,10 @@ void MainWindow::triggered_action_addDir() {
         progress.setLabelText(QString("Working on files: [%1/%2]").arg(QString::number(i + 1), QString::number(zip_files.length())));
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
+    progress.hide();
     if (this->db.insert(data_list)) {
         this->populateTree();
-        progress.hide();
-        QMessageBox::information(this, "Info", "Added to database");
+        QMessageBox::information(this, "Info", QString("Added %1 archives to database").arg(QString::number(total_toadd)));
     } else {
         QMessageBox::warning(this, "Warning", "Couldn't add to database");
     }
@@ -402,7 +407,7 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     } else if (clicked_action == remove_db) {
         if (this->db.removeFromDB(item_filehash)) {
             this->populateTree();
-            QMessageBox::information(this, "Info", "Removed from DB");
+            QMessageBox::information(this, "Info", QString("Removed %1 from DB").arg(title));
         } else {
             QMessageBox::warning(this, "Warning", "Couldn't remove from DB");
         }
