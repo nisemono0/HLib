@@ -26,13 +26,14 @@ private:
     QGraphicsScene *scene;
     QLabel *tree_status;
     QLabel *img_status;
+    int loaded_archives_num;
     void lockWindowItems();
     void unlockWindowItems();
     void clearTree();
     void clearView();
     void resetTreeStatusMessage();
     void setTreeStatusMessage();
-    void setTreeStatusMessage(const QString message);
+    void setTreeStatusMessage(const QString file_path);
     void loadAllImages(const QString file_path, const QString title);
     void loadFIrstImage(const QString file_path, const QString title);
 private slots:

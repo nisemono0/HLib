@@ -14,9 +14,13 @@
 #include <QShortcut>
 #include <QMenu>
 #include <QClipboard>
+#include <QFileInfo>
+#include <QLocale>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     this->ui.setupUi(this);
+
+    this->loaded_archives_num = 0;
 
     new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImageOption::NextImage);});
     new QShortcut(QKeySequence(Qt::Key_Left), this, [=] { ui.graphicsView->setCurrentImage(SetImageOption::PrevImage);});
@@ -235,6 +239,7 @@ void MainWindow::triggered_action_unloadDB() {
     this->ui.lineEditSearch->setText("");
     this->resetTreeStatusMessage();
     this->lockWindowItems();
+    this->loaded_archives_num = 0;
     QMessageBox::information(this, "Info", "Database unloaded");
 }
 
@@ -272,11 +277,17 @@ void MainWindow::resetTreeStatusMessage() {
 }
 
 void MainWindow::setTreeStatusMessage() {
-    this->tree_status->setText(QString("Loaded: [%1] archives").arg(QString::number(this->ui.treeWidget->topLevelItemCount())));
+    this->tree_status->setText(QString("Loaded: [%1]").arg(QString::number(this->loaded_archives_num)));
 }
 
-void MainWindow::setTreeStatusMessage(const QString message) {
-    this->tree_status->setText(message);
+void MainWindow::setTreeStatusMessage(const QString file_path) {
+    QFileInfo file(file_path);
+    QLocale locale;
+    QString file_size = "File not found";
+    if (file.exists()) {
+        file_size = locale.formattedDataSize(file.size(), 1, QLocale::DataSizeIecFormat);
+    }
+    this->tree_status->setText(QString("Loaded: [%1] | Filesize: [%2]").arg(QString::number(this->loaded_archives_num), file_size));
 }
 
 void MainWindow::populateTree() {
@@ -294,7 +305,7 @@ void MainWindow::populateTree() {
         root_items.append(root);
     }
     this->ui.treeWidget->addTopLevelItems(root_items);
-    
+    this->loaded_archives_num = this->ui.treeWidget->topLevelItemCount();
     this->setTreeStatusMessage();
 }
 
@@ -358,6 +369,7 @@ void MainWindow::treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *prev
     
     QString item_path = current->data(0, MyDataRoles::FilePath).toString();
     QString title = current->data(0, MyDataRoles::Title).toString();
+    this->setTreeStatusMessage(item_path);
     this->loadFIrstImage(item_path, title);
 }
 
