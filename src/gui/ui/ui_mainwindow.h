@@ -45,6 +45,7 @@ public:
     QAction *actionCleanDB;
     QAction *actionCleanHashes;
     QAction *actionCleanPaths;
+    QAction *actionScaleImage;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -59,6 +60,7 @@ public:
     QMenu *menuFile;
     QMenu *menuLoad;
     QMenu *menuTheme;
+    QMenu *menuSettings;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -94,6 +96,10 @@ public:
         actionCleanHashes->setObjectName(QString::fromUtf8("actionCleanHashes"));
         actionCleanPaths = new QAction(MainWindow);
         actionCleanPaths->setObjectName(QString::fromUtf8("actionCleanPaths"));
+        actionScaleImage = new QAction(MainWindow);
+        actionScaleImage->setObjectName(QString::fromUtf8("actionScaleImage"));
+        actionScaleImage->setCheckable(true);
+        actionScaleImage->setChecked(false);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -185,10 +191,13 @@ public:
         menuLoad->setObjectName(QString::fromUtf8("menuLoad"));
         menuTheme = new QMenu(menubar);
         menuTheme->setObjectName(QString::fromUtf8("menuTheme"));
+        menuSettings = new QMenu(menubar);
+        menuSettings->setObjectName(QString::fromUtf8("menuSettings"));
         MainWindow->setMenuBar(menubar);
 
         menubar->addAction(menuFile->menuAction());
         menubar->addAction(menuLoad->menuAction());
+        menubar->addAction(menuSettings->menuAction());
         menubar->addAction(menuTheme->menuAction());
         menuFile->addAction(actionAddFile);
         menuFile->addAction(actionAddDir);
@@ -208,6 +217,7 @@ public:
         menuTheme->addSeparator();
         menuTheme->addAction(actionThemeFusion);
         menuTheme->addAction(actionThemeWindows);
+        menuSettings->addAction(actionScaleImage);
 
         retranslateUi(MainWindow);
 
@@ -291,11 +301,16 @@ public:
 #if QT_CONFIG(statustip)
         actionCleanPaths->setStatusTip(QCoreApplication::translate("MainWindow", "Removes all entries with the same path from the database", nullptr));
 #endif // QT_CONFIG(statustip)
+        actionScaleImage->setText(QCoreApplication::translate("MainWindow", "Scale image to window", nullptr));
+#if QT_CONFIG(statustip)
+        actionScaleImage->setStatusTip(QCoreApplication::translate("MainWindow", "Enable or disables the image scaling", nullptr));
+#endif // QT_CONFIG(statustip)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuLoad->setTitle(QCoreApplication::translate("MainWindow", "Database", nullptr));
         menuTheme->setTitle(QCoreApplication::translate("MainWindow", "Theme", nullptr));
+        menuSettings->setTitle(QCoreApplication::translate("MainWindow", "Settings", nullptr));
     } // retranslateUi
 
 };

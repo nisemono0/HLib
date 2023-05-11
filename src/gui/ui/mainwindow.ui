@@ -187,8 +187,15 @@
     <addaction name="actionThemeFusion"/>
     <addaction name="actionThemeWindows"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionScaleImage"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuLoad"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuTheme"/>
   </widget>
   <action name="actionLoadDB">
@@ -319,6 +326,20 @@
    </property>
    <property name="statusTip">
     <string>Removes all entries with the same path from the database</string>
+   </property>
+  </action>
+  <action name="actionScaleImage">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Scale image to window</string>
+   </property>
+   <property name="statusTip">
+    <string>Enable or disables the image scaling</string>
    </property>
   </action>
  </widget>

@@ -16,6 +16,7 @@ ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->total_images = -1;
     this->has_images = false;
     this->image_item = nullptr;
+    this->scale_images = false;
     this->cursor_next = QCursor(QPixmap(":mouse/mouse-image-next"), -1, -1);
     this->cursor_prev = QCursor(QPixmap(":mouse/mouse-image-prev"), -1, -1);
 }
@@ -27,9 +28,7 @@ void ImageView::loadImages(QByteArrayList images) {
     this->current_image = 0;
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
-    // Scale the displayed image when loading all of them
-    // Easier to read very high res archives
-    this->scaleDisplayedImage();
+    this->scaleDisplayImage();
     this->setMouseTracking(true);
     this->fitImage();
     this->showStatus();
@@ -41,8 +40,7 @@ void ImageView::loadImages(QByteArray image) {
     this->current_image = 0;
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
-    // It's faster to NOT call this when viewing only the 1st image
-    // this->scaleDisplayedImage(); 
+    this->scaleDisplayImage();
     this->setMouseTracking(true);
     this->fitImage();
     this->showStatus();
@@ -70,7 +68,7 @@ void ImageView::setCurrentImage(const SetImageOption::SetImageOption option) {
 
     if (this->has_images && (0 <= current_image && current_image < this->total_images)) {
         this->current_image = current_image;
-        this->scaleDisplayedImage();
+        this->scaleDisplayImage();
         this->fitImage();
         this->showStatus();
     }    
@@ -92,12 +90,22 @@ void ImageView::fitImage() {
     }
 }
 
-void ImageView::scaleDisplayedImage() {
+void ImageView::scaleDisplayImage() {
     if (this->has_images) {
         QPixmap image;
         image.loadFromData(this->images[this->current_image]);
-        this->image_item->setPixmap(image.scaled(QWidget::window()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        if (this->scale_images) {
+            this->image_item->setPixmap(image.scaled(QWidget::window()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        } else {
+            this->image_item->setPixmap(image);
+        }
     }
+}
+
+void ImageView::setScaleImages(bool checked) {
+    this->scale_images = checked;
+    this->scaleDisplayImage();
+    this->fitImage();
 }
 
 void ImageView::clearImageView() {
@@ -112,7 +120,7 @@ void ImageView::clearImageView() {
 
 void ImageView::resizeEvent(QResizeEvent *event) {
     QGraphicsView::resizeEvent(event);
-    this->scaleDisplayedImage();
+    this->scaleDisplayImage();
     this->fitImage();
 }
 

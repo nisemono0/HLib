@@ -63,6 +63,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     connect(this->ui.actionCleanHashes, &QAction::triggered, this, &MainWindow::triggered_action_cleanHashes);
     connect(this->ui.actionCleanPaths, &QAction::triggered, this, &MainWindow::triggered_action_cleanPaths);
 
+    connect(this->ui.actionScaleImage, &QAction::toggled, this, &MainWindow::triggered_action_scaleimage);
+    
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
     connect(this->ui.actionThemeDarkGreen, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_GREEN);});
     connect(this->ui.actionThemeDarkPurple, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_PURPLE);});
@@ -311,6 +313,11 @@ void MainWindow::triggered_action_cleanPaths() {
         QMessageBox::warning(this, "Warning", "Couldn't clean DB");
     }
 }
+
+void MainWindow::triggered_action_scaleimage(bool checked) {
+    this->ui.graphicsView->setScaleImages(checked);
+}
+
 
 void MainWindow::lockWindowItems() {
     this->ui.actionAddFile->setEnabled(false);

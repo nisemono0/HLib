@@ -45,6 +45,7 @@ private slots:
     void triggered_action_cleanDB();
     void triggered_action_cleanHashes();
     void triggered_action_cleanPaths();
+    void triggered_action_scaleimage(bool checked);
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void populateTree();
     void searchTreeItems(const QString search_str);
