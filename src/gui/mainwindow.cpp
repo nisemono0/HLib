@@ -60,6 +60,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     connect(this->ui.actionLoadDB, &QAction::triggered, this, &MainWindow::triggered_action_loadDB);
     connect(this->ui.actionUnloadDB, &QAction::triggered, this, &MainWindow::triggered_action_unloadDB);
     connect(this->ui.actionCleanDB, &QAction::triggered, this, &MainWindow::triggered_action_cleanDB);
+    connect(this->ui.actionCleanHashes, &QAction::triggered, this, &MainWindow::triggered_action_cleanHashes);
+    connect(this->ui.actionCleanPaths, &QAction::triggered, this, &MainWindow::triggered_action_cleanPaths);
 
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
     connect(this->ui.actionThemeDarkGreen, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_GREEN);});
@@ -133,7 +135,8 @@ void MainWindow::triggered_action_addFile() {
 
         if (!json_map.isEmpty()) {
             QStringList db_hashes = this->db.selectAllHashes();
-            if (!db_hashes.contains(json_map["file_hash"])) {
+            QStringList db_filepaths = this->db.selectAllFilepaths();
+            if (!db_hashes.contains(json_map["file_hash"]) || !db_filepaths.contains(json_map["file_path"])) {
                 if (this->db.insert(json_map)) {
                     this->populateTree();
                     QMessageBox::information(this, "Info", QString("Added %1 to database").arg(json_map["title"]));
@@ -168,6 +171,7 @@ void MainWindow::triggered_action_addDir() {
 
     QList<QMap<QString, QString>> data_list;
     QStringList db_hashes = this->db.selectAllHashes();
+    QStringList db_filepaths = this->db.selectAllFilepaths();
     int total_toadd = 0;
     
     QProgressDialog progress("Adding files to DB", nullptr, 0, zip_files.length() - 1, this);
@@ -179,7 +183,7 @@ void MainWindow::triggered_action_addDir() {
         QMap json_map = Utils::getMapFromJson(json_obj);
 
         if (!json_map.isEmpty()) {
-            if (!db_hashes.contains(json_map["file_hash"])) {
+            if (!db_hashes.contains(json_map["file_hash"]) || !db_filepaths.contains(json_map["file_path"])) {
                 data_list.append(json_map);
                 qDebug() << "To add:" << json_map["title"];
                 total_toadd++;
@@ -253,11 +257,41 @@ void MainWindow::triggered_action_cleanDB() {
         path_hash_map[it["file_path"].toString()].append(it["file_hash"].toString());
     }
 
-    QStringList removable_hashes = Utils::getRemovableDuplicates(path_hash_map);
+    QStringList removable_hashes = Utils::getCleanDBEntries(path_hash_map);
 
     if (this->db.removeFromDB(removable_hashes)) {
         this->populateTree();
         QMessageBox::information(this, "Info", QString("Cleaned %1 entries from DB").arg(QString::number(removable_hashes.length())));
+    } else {
+        QMessageBox::warning(this, "Warning", "Couldn't clean DB");
+    }
+}
+
+void MainWindow::triggered_action_cleanHashes() {
+    QStringList hashes = this->db.selectAllHashes();
+    QStringList removable_hashes = Utils::getCleanDBHashes(hashes);
+    if (this->db.removeFromDB(removable_hashes)) {
+        this->populateTree();
+        QMessageBox::information(this, "Info", QString("Removed %1 duplicate hashes from DB").arg(QString::number(removable_hashes.length())));
+    } else {
+        QMessageBox::warning(this, "Warning", "Couldn't clean DB");
+    }
+}
+
+void MainWindow::triggered_action_cleanPaths() {
+    QList<QMap<QString, QVariant>> db_select = this->db.selectAll();
+
+    QMap<QString, QStringList> path_hash_map;
+
+    for (auto it : db_select) {
+        path_hash_map[it["file_path"].toString()].append(it["file_hash"].toString());
+    }
+
+    QStringList removable_paths = Utils::getCleanDBPaths(path_hash_map);
+
+    if (this->db.removeFromDB(removable_paths)) {
+        this->populateTree();
+        QMessageBox::information(this, "Info", QString("Removed %1 duplicate filepaths from DB").arg(QString::number(removable_paths.length())));
     } else {
         QMessageBox::warning(this, "Warning", "Couldn't clean DB");
     }
@@ -269,6 +303,8 @@ void MainWindow::lockWindowItems() {
     this->ui.actionLoadDB->setEnabled(true);
     this->ui.actionUnloadDB->setEnabled(false);
     this->ui.actionCleanDB->setEnabled(false);
+    this->ui.actionCleanHashes->setEnabled(false);
+    this->ui.actionCleanPaths->setEnabled(false);
     this->ui.lineEditSearch->setEnabled(false);
     this->ui.pushButtonSearch->setEnabled(false);
     this->ui.pushButtonRefresh->setEnabled(false);
@@ -280,6 +316,8 @@ void MainWindow::unlockWindowItems() {
     this->ui.actionLoadDB->setEnabled(false);
     this->ui.actionUnloadDB->setEnabled(true);
     this->ui.actionCleanDB->setEnabled(true);
+    this->ui.actionCleanHashes->setEnabled(true);
+    this->ui.actionCleanPaths->setEnabled(true);
     this->ui.lineEditSearch->setEnabled(true);
     this->ui.pushButtonSearch->setEnabled(true);
     this->ui.pushButtonRefresh->setEnabled(true);

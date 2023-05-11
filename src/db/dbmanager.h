@@ -21,6 +21,7 @@ public:
     QList<QMap<QString, QVariant>> selectAll();
     QStringList selectTags(const QString tag_search);
     QStringList selectAllHashes();
+    QStringList selectAllFilepaths();
 private:
     QSqlDatabase db;
 };

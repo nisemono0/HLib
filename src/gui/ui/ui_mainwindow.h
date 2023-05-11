@@ -43,6 +43,8 @@ public:
     QAction *actionCreateDB;
     QAction *actionUnloadDB;
     QAction *actionCleanDB;
+    QAction *actionCleanHashes;
+    QAction *actionCleanPaths;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -88,6 +90,10 @@ public:
         actionUnloadDB->setObjectName(QString::fromUtf8("actionUnloadDB"));
         actionCleanDB = new QAction(MainWindow);
         actionCleanDB->setObjectName(QString::fromUtf8("actionCleanDB"));
+        actionCleanHashes = new QAction(MainWindow);
+        actionCleanHashes->setObjectName(QString::fromUtf8("actionCleanHashes"));
+        actionCleanPaths = new QAction(MainWindow);
+        actionCleanPaths->setObjectName(QString::fromUtf8("actionCleanPaths"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -194,6 +200,8 @@ public:
         menuLoad->addAction(actionUnloadDB);
         menuLoad->addSeparator();
         menuLoad->addAction(actionCleanDB);
+        menuLoad->addAction(actionCleanHashes);
+        menuLoad->addAction(actionCleanPaths);
         menuTheme->addAction(actionThemeDarkMaroon);
         menuTheme->addAction(actionThemeDarkGreen);
         menuTheme->addAction(actionThemeDarkPurple);
@@ -210,18 +218,30 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         actionLoadDB->setText(QCoreApplication::translate("MainWindow", "Load DB", nullptr));
+#if QT_CONFIG(statustip)
+        actionLoadDB->setStatusTip(QCoreApplication::translate("MainWindow", "Load a database", nullptr));
+#endif // QT_CONFIG(statustip)
 #if QT_CONFIG(shortcut)
         actionLoadDB->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+L", nullptr));
 #endif // QT_CONFIG(shortcut)
         actionAddDir->setText(QCoreApplication::translate("MainWindow", "Add Directory", nullptr));
+#if QT_CONFIG(statustip)
+        actionAddDir->setStatusTip(QCoreApplication::translate("MainWindow", "Add all archives in a directory", nullptr));
+#endif // QT_CONFIG(statustip)
 #if QT_CONFIG(shortcut)
         actionAddDir->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+D", nullptr));
 #endif // QT_CONFIG(shortcut)
         actionAddFile->setText(QCoreApplication::translate("MainWindow", "Add File", nullptr));
+#if QT_CONFIG(statustip)
+        actionAddFile->setStatusTip(QCoreApplication::translate("MainWindow", "Add a single archive", nullptr));
+#endif // QT_CONFIG(statustip)
 #if QT_CONFIG(shortcut)
         actionAddFile->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+A", nullptr));
 #endif // QT_CONFIG(shortcut)
         actionExit->setText(QCoreApplication::translate("MainWindow", "Exit", nullptr));
+#if QT_CONFIG(statustip)
+        actionExit->setStatusTip(QCoreApplication::translate("MainWindow", "Exists the program", nullptr));
+#endif // QT_CONFIG(statustip)
 #if QT_CONFIG(shortcut)
         actionExit->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+Q", nullptr));
 #endif // QT_CONFIG(shortcut)
@@ -246,14 +266,31 @@ public:
         actionThemeWindows->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+5", nullptr));
 #endif // QT_CONFIG(shortcut)
         actionCreateDB->setText(QCoreApplication::translate("MainWindow", "Create DB", nullptr));
+#if QT_CONFIG(statustip)
+        actionCreateDB->setStatusTip(QCoreApplication::translate("MainWindow", "Create a new database", nullptr));
+#endif // QT_CONFIG(statustip)
 #if QT_CONFIG(shortcut)
         actionCreateDB->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+C", nullptr));
 #endif // QT_CONFIG(shortcut)
         actionUnloadDB->setText(QCoreApplication::translate("MainWindow", "Unload DB", nullptr));
+#if QT_CONFIG(statustip)
+        actionUnloadDB->setStatusTip(QCoreApplication::translate("MainWindow", "Unload a database", nullptr));
+#endif // QT_CONFIG(statustip)
 #if QT_CONFIG(shortcut)
         actionUnloadDB->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+U", nullptr));
 #endif // QT_CONFIG(shortcut)
         actionCleanDB->setText(QCoreApplication::translate("MainWindow", "Clean DB", nullptr));
+#if QT_CONFIG(statustip)
+        actionCleanDB->setStatusTip(QCoreApplication::translate("MainWindow", "Removes entries with the same path but different hash from the database, keeping the correct entry", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionCleanHashes->setText(QCoreApplication::translate("MainWindow", "Clean hashes", nullptr));
+#if QT_CONFIG(statustip)
+        actionCleanHashes->setStatusTip(QCoreApplication::translate("MainWindow", "Removes all entries with the same hash from the database", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionCleanPaths->setText(QCoreApplication::translate("MainWindow", "Clean paths", nullptr));
+#if QT_CONFIG(statustip)
+        actionCleanPaths->setStatusTip(QCoreApplication::translate("MainWindow", "Removes all entries with the same path from the database", nullptr));
+#endif // QT_CONFIG(statustip)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));

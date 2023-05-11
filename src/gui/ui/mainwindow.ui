@@ -173,6 +173,8 @@
     <addaction name="actionUnloadDB"/>
     <addaction name="separator"/>
     <addaction name="actionCleanDB"/>
+    <addaction name="actionCleanHashes"/>
+    <addaction name="actionCleanPaths"/>
    </widget>
    <widget class="QMenu" name="menuTheme">
     <property name="title">
@@ -193,6 +195,9 @@
    <property name="text">
     <string>Load DB</string>
    </property>
+   <property name="statusTip">
+    <string>Load a database</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
    </property>
@@ -200,6 +205,9 @@
   <action name="actionAddDir">
    <property name="text">
     <string>Add Directory</string>
+   </property>
+   <property name="statusTip">
+    <string>Add all archives in a directory</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
@@ -209,6 +217,9 @@
    <property name="text">
     <string>Add File</string>
    </property>
+   <property name="statusTip">
+    <string>Add a single archive</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
    </property>
@@ -216,6 +227,9 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+   <property name="statusTip">
+    <string>Exists the program</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -265,6 +279,9 @@
    <property name="text">
     <string>Create DB</string>
    </property>
+   <property name="statusTip">
+    <string>Create a new database</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
    </property>
@@ -273,6 +290,9 @@
    <property name="text">
     <string>Unload DB</string>
    </property>
+   <property name="statusTip">
+    <string>Unload a database</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+U</string>
    </property>
@@ -280,6 +300,25 @@
   <action name="actionCleanDB">
    <property name="text">
     <string>Clean DB</string>
+   </property>
+   <property name="statusTip">
+    <string>Removes entries with the same path but different hash from the database, keeping the correct entry</string>
+   </property>
+  </action>
+  <action name="actionCleanHashes">
+   <property name="text">
+    <string>Clean hashes</string>
+   </property>
+   <property name="statusTip">
+    <string>Removes all entries with the same hash from the database</string>
+   </property>
+  </action>
+  <action name="actionCleanPaths">
+   <property name="text">
+    <string>Clean paths</string>
+   </property>
+   <property name="statusTip">
+    <string>Removes all entries with the same path from the database</string>
    </property>
   </action>
  </widget>

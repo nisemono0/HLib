@@ -91,7 +91,7 @@ QList<QMap<QString, QVariant>> SQLiteDB::selectAll() {
     QList<QMap<QString, QVariant>> results_list;
     if (this->db.isOpen()) {
         QSqlQuery query(this->db);
-        query.prepare("SELECT DISTINCT * FROM HLib");
+        query.prepare("SELECT * FROM HLib");
         if (query.exec()) {
             while (query.next()) {
                 results_list.append({ {"file_hash", query.value(0)}, {"title", query.value(1)},
@@ -109,7 +109,7 @@ QStringList SQLiteDB::selectTags(const QString tag_search) {
     QStringList hash_list;
     if (this->db.isOpen()) {
         QSqlQuery query(this->db);
-        query.prepare("SELECT DISTINCT * FROM HLib WHERE tags MATCH :tag_search");
+        query.prepare("SELECT * FROM HLib WHERE tags MATCH :tag_search");
         query.bindValue(":tag_search", tag_search);
         if (query.exec()) {
             while (query.next()) {
@@ -127,7 +127,7 @@ QStringList SQLiteDB::selectAllHashes() {
     QStringList hash_list;
     if (this->db.isOpen()) {
         QSqlQuery query(this->db);
-        query.prepare("SELECT DISTINCT file_hash FROM HLib");
+        query.prepare("SELECT file_hash FROM HLib");
         if (query.exec()) {
             while (query.next()) {
                 hash_list.append(query.value(0).toString());
@@ -138,6 +138,23 @@ QStringList SQLiteDB::selectAllHashes() {
         query.clear();
     }
     return hash_list;
+}
+
+QStringList SQLiteDB::selectAllFilepaths() {
+    QStringList paths_list;
+    if (this->db.isOpen()) {
+        QSqlQuery query(this->db);
+        query.prepare("SELECT file_path FROM HLib");
+        if (query.exec()) {
+            while (query.next()) {
+                paths_list.append(query.value(0).toString());
+            }
+        } else {
+            qDebug() << "[selectAllFilepaths() error]:" << query.lastError();
+        }
+        query.clear();
+    }
+    return paths_list;
 }
 
 

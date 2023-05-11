@@ -289,7 +289,7 @@ QByteArrayList Utils::getImagesFromZip(const QString zip_path, QWidget *parent) 
     return images_bytelist;
 }
 
-QStringList Utils::getRemovableDuplicates(QMap<QString, QStringList> map) {
+QStringList Utils::getCleanDBEntries(QMap<QString, QStringList> map) {
     QStringList removable_list;
     for (auto key : map.keys()) {
         QStringList db_hashes = map.value(key);
@@ -301,6 +301,30 @@ QStringList Utils::getRemovableDuplicates(QMap<QString, QStringList> map) {
                         removable_list.append(hash);
                     }
                 }
+            }
+        }
+    }
+    return removable_list;
+}
+
+QStringList Utils::getCleanDBHashes(QStringList hashes) {
+    QStringList removable_list;
+    for (auto it : hashes) {
+        if (hashes.count(it) > 1) {
+            removable_list.append(it);
+        }
+    }
+    return removable_list;
+}
+
+
+QStringList Utils::getCleanDBPaths(QMap<QString, QStringList> map) {
+    QStringList removable_list;
+    for (auto key : map.keys()) {
+        QStringList hashes = map.value(key);
+        if (hashes.length() > 1) {
+            for (auto hash : hashes) {
+                removable_list.append(hash);
             }
         }
     }
