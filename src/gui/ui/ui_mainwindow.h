@@ -305,6 +305,9 @@ public:
 #if QT_CONFIG(statustip)
         actionScaleImage->setStatusTip(QCoreApplication::translate("MainWindow", "Enable or disables the image scaling", nullptr));
 #endif // QT_CONFIG(statustip)
+#if QT_CONFIG(shortcut)
+        actionScaleImage->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+S", nullptr));
+#endif // QT_CONFIG(shortcut)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));

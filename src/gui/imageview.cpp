@@ -154,6 +154,21 @@ void ImageView::mouseMoveEvent(QMouseEvent *event) {
     }
 }
 
+void ImageView::mouseDoubleClickEvent(QMouseEvent *event) {
+    QGraphicsView::mouseDoubleClickEvent(event);
+    if (this->has_images) {
+        QString file_path = this->image_item->data(MyDataRoles::FilePath).toString();
+        
+        QByteArrayList images_list = Utils::getImagesFromZip(file_path, this);
+        if (images_list.isEmpty()) {
+            return;
+        }
+        this->image_item->setData(MyDataRoles::FilePath, QVariant::fromValue(file_path));
+        this->loadImages(images_list);
+    }
+}
+
+
 void ImageView::contextMenuEvent(QContextMenuEvent *event) {
     QGraphicsView::contextMenuEvent(event);
     if (this->has_images) {
