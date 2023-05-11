@@ -341,6 +341,9 @@
    <property name="statusTip">
     <string>Enable or disables the image scaling</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
  </widget>
  <customwidgets>
