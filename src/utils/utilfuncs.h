@@ -18,4 +18,5 @@ public:
     static QByteArray getFirstImageFromZip(const QString zip_path);
     static void naturalOrder(QStringList *str_list);
     static QByteArrayList getImagesFromZip(const QString zip_path, QWidget *parent);
+    static QStringList getRemovableDuplicates(QMap<QString, QStringList> map);
 };

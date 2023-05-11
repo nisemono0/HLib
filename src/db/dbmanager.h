@@ -17,8 +17,9 @@ public:
     bool insert(QMap<QString, QString> info_map);
     bool insert(QList<QMap<QString, QString>> map_list);
     bool removeFromDB(const QString del_hash);
-    QList<QMap<QString, QVariant>> select();
-    QStringList select(const QString tag_search);
+    bool removeFromDB(QStringList del_hashes);
+    QList<QMap<QString, QVariant>> selectAll();
+    QStringList selectTags(const QString tag_search);
     QStringList selectAllHashes();
 private:
     QSqlDatabase db;

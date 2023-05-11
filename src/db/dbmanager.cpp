@@ -87,7 +87,7 @@ bool SQLiteDB::insert(QList<QMap<QString, QString>> map_list) {
     return success;
 }
 
-QList<QMap<QString, QVariant>> SQLiteDB::select() {
+QList<QMap<QString, QVariant>> SQLiteDB::selectAll() {
     QList<QMap<QString, QVariant>> results_list;
     if (this->db.isOpen()) {
         QSqlQuery query(this->db);
@@ -105,7 +105,7 @@ QList<QMap<QString, QVariant>> SQLiteDB::select() {
     return results_list;
 }
 
-QStringList SQLiteDB::select(const QString tag_search) {
+QStringList SQLiteDB::selectTags(const QString tag_search) {
     QStringList hash_list;
     if (this->db.isOpen()) {
         QSqlQuery query(this->db);
@@ -150,10 +150,36 @@ bool SQLiteDB::removeFromDB(const QString del_hash) {
         if (query.exec()) {
             success = true;
         } else {
-            qDebug() << "[deleteFromDB error]:" << query.lastError();
+            qDebug() << "[deleteFromDB(del_hash) error]:" << query.lastError();
         }
         query.clear();
         this->db.commit();
     }
+    return success;
+}
+
+bool SQLiteDB::removeFromDB(QStringList del_hashes) {
+    bool success = false;
+
+    if (this->db.isOpen()) {
+        QSqlQuery query(this->db);
+        query.prepare("DELETE FROM HLib WHERE file_hash MATCH :del_hashes");
+        
+        QVariantList hashes;
+        for (auto it : del_hashes) {
+            hashes.append(it);
+        }
+        query.bindValue(":del_hashes", hashes);
+        
+        if (query.execBatch()) {
+            success = true;
+        } else {
+            qDebug() << "[removeFromDB(del_hashes) error]:" << query.lastError();
+        }
+        
+        query.clear();
+        this->db.commit();
+    }
+    
     return success;
 }

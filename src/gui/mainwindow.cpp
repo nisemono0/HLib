@@ -59,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     connect(this->ui.actionCreateDB, &QAction::triggered, this, &MainWindow::triggered_action_createDB);
     connect(this->ui.actionLoadDB, &QAction::triggered, this, &MainWindow::triggered_action_loadDB);
     connect(this->ui.actionUnloadDB, &QAction::triggered, this, &MainWindow::triggered_action_unloadDB);
+    connect(this->ui.actionCleanDB, &QAction::triggered, this, &MainWindow::triggered_action_cleanDB);
 
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
     connect(this->ui.actionThemeDarkGreen, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_GREEN);});
@@ -243,6 +244,25 @@ void MainWindow::triggered_action_unloadDB() {
     QMessageBox::information(this, "Info", "Database unloaded");
 }
 
+void MainWindow::triggered_action_cleanDB() {
+    QList<QMap<QString, QVariant>> db_select = this->db.selectAll();
+
+    QMap<QString, QStringList> path_hash_map;
+
+    for (auto it : db_select) {
+        path_hash_map[it["file_path"].toString()].append(it["file_hash"].toString());
+    }
+
+    QStringList removable_hashes = Utils::getRemovableDuplicates(path_hash_map);
+
+    if (this->db.removeFromDB(removable_hashes)) {
+        this->populateTree();
+        QMessageBox::information(this, "Info", QString("Cleaned %1 entries from DB").arg(QString::number(removable_hashes.length())));
+    } else {
+        QMessageBox::warning(this, "Warning", "Couldn't clean DB");
+    }
+}
+
 void MainWindow::lockWindowItems() {
     this->ui.actionAddFile->setEnabled(false);
     this->ui.actionAddDir->setEnabled(false);
@@ -293,7 +313,7 @@ void MainWindow::setTreeStatusMessage(const QString file_path) {
 }
 
 void MainWindow::populateTree() {
-    QList<QMap<QString, QVariant>> list_variants = this->db.select();
+    QList<QMap<QString, QVariant>> list_variants = this->db.selectAll();
 
     this->clearTree();
     QList<QTreeWidgetItem *> root_items;
@@ -312,7 +332,7 @@ void MainWindow::populateTree() {
 }
 
 void MainWindow::searchTreeItems(const QString search_str) {
-    QStringList hash_list = this->db.select("*" + search_str + "*");
+    QStringList hash_list = this->db.selectTags("*" + search_str + "*");
     
     QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
     while (*tree_it) {
@@ -392,12 +412,14 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     QAction *copy_title = new QAction("Copy title", &menu);
     QAction *copy_filepath = new QAction("Copy path", &menu);
     QAction *copy_tags = new QAction("Copy tags", &menu);
+    QAction *copy_hash = new QAction("Copy hash", &menu);
     QAction *remove_db = new QAction("Remove from DB", &menu);
     menu.addAction(load_all_images);
     menu.addSeparator();
     menu.addAction(copy_title);
     menu.addAction(copy_filepath);
     menu.addAction(copy_tags);
+    menu.addAction(copy_hash);
     menu.addSeparator();
     menu.addAction(remove_db);
     QAction *clicked_action = menu.exec(this->ui.treeWidget->viewport()->mapToGlobal(pos));
@@ -418,6 +440,9 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     } else if (clicked_action == copy_tags) {
         QApplication::clipboard()->clear();
         QApplication::clipboard()->setText(item_tags, QClipboard::Clipboard);
+    } else if (clicked_action == copy_hash) {
+        QApplication::clipboard()->clear();
+        QApplication::clipboard()->setText(item_filehash, QClipboard::Clipboard);
     } else if (clicked_action == remove_db) {
         QMessageBox::StandardButton remove_reply = QMessageBox::question(this, "Remove from DB", QString("Remove %1 from DB").arg(title), QMessageBox::Yes | QMessageBox::No);
         if (remove_reply == QMessageBox::Yes) {

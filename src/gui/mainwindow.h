@@ -42,6 +42,7 @@ private slots:
     void triggered_action_createDB();
     void triggered_action_loadDB();
     void triggered_action_unloadDB();
+    void triggered_action_cleanDB();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void populateTree();
     void searchTreeItems(const QString search_str);

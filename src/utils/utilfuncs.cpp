@@ -288,3 +288,21 @@ QByteArrayList Utils::getImagesFromZip(const QString zip_path, QWidget *parent) 
     }
     return images_bytelist;
 }
+
+QStringList Utils::getRemovableDuplicates(QMap<QString, QStringList> map) {
+    QStringList removable_list;
+    for (auto key : map.keys()) {
+        QStringList db_hashes = map.value(key);
+        if (db_hashes.length() > 1) {
+            QString file_hash = Utils::getSHA1Hash(key);
+            if (!Utils::isNullOrEmpty(file_hash)) {
+                for (auto hash : db_hashes) {
+                    if (QString::compare(file_hash, hash, Qt::CaseInsensitive) != 0) {
+                        removable_list.append(hash);
+                    }
+                }
+            }
+        }
+    }
+    return removable_list;
+}
