@@ -11,7 +11,7 @@
 #include <QApplication>
 #include <QClipboard>
 
-ImageView::ImageView(QWidget *parent): QGraphicsView(parent) {
+ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->current_image = -1;
     this->total_images = -1;
     this->has_images = false;
@@ -96,7 +96,7 @@ void ImageView::scaleDisplayedImage() {
     if (this->has_images) {
         QPixmap image;
         image.loadFromData(this->images[this->current_image]);
-        this->image_item->setPixmap(image.scaled(this->width(), this->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        this->image_item->setPixmap(image.scaled(QWidget::window()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
 
