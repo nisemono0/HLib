@@ -17,6 +17,7 @@ ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->has_images = false;
     this->image_item = nullptr;
     this->scale_images = false;
+    this->current_pixmap = QPixmap();
     this->cursor_next = QCursor(QPixmap(":mouse/mouse-image-next"), -1, -1);
     this->cursor_prev = QCursor(QPixmap(":mouse/mouse-image-prev"), -1, -1);
 }
@@ -28,6 +29,7 @@ void ImageView::loadImages(QByteArrayList images) {
     this->current_image = 0;
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
+    this->current_pixmap = this->image_item->pixmap();
     this->scaleDisplayImage();
     this->setMouseTracking(true);
     this->fitImage();
@@ -40,6 +42,7 @@ void ImageView::loadImages(QByteArray image) {
     this->current_image = 0;
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
+    this->current_pixmap = this->image_item->pixmap();
     this->scaleDisplayImage();
     this->setMouseTracking(true);
     this->fitImage();
@@ -68,6 +71,7 @@ void ImageView::setCurrentImage(const SetImageOption::SetImageOption option) {
 
     if (this->has_images && (0 <= current_image && current_image < this->total_images)) {
         this->current_image = current_image;
+        this->current_pixmap.loadFromData(this->images[this->current_image]);
         this->scaleDisplayImage();
         this->fitImage();
         this->showStatus();
@@ -92,12 +96,10 @@ void ImageView::fitImage() {
 
 void ImageView::scaleDisplayImage() {
     if (this->has_images) {
-        QPixmap image;
-        image.loadFromData(this->images[this->current_image]);
         if (this->scale_images) {
-            this->image_item->setPixmap(image.scaled(QWidget::window()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            this->image_item->setPixmap(this->current_pixmap.scaled(QWidget::window()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         } else {
-            this->image_item->setPixmap(image);
+            this->image_item->setPixmap(this->current_pixmap);
         }
     }
 }
@@ -113,6 +115,7 @@ void ImageView::clearImageView() {
     this->current_image = -1;
     this->total_images = -1;
     this->has_images = false;
+    this->current_pixmap = QPixmap();
     this->setCursor(Qt::ArrowCursor);
     this->setMouseTracking(false);
     this->hideStatus();

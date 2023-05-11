@@ -28,6 +28,7 @@ private:
     QImage getCurrentImage();
     QCursor cursor_next;
     QCursor cursor_prev;
+    QPixmap current_pixmap;
     void showStatus();
     void hideStatus();
     void fitImage();
