@@ -42,6 +42,7 @@ public:
     QAction *actionThemeWindows;
     QAction *actionCreateDB;
     QAction *actionUnloadDB;
+    QAction *actionCleanDB;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -85,6 +86,8 @@ public:
         actionCreateDB->setObjectName(QString::fromUtf8("actionCreateDB"));
         actionUnloadDB = new QAction(MainWindow);
         actionUnloadDB->setObjectName(QString::fromUtf8("actionUnloadDB"));
+        actionCleanDB = new QAction(MainWindow);
+        actionCleanDB->setObjectName(QString::fromUtf8("actionCleanDB"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -169,7 +172,7 @@ public:
         MainWindow->setStatusBar(statusBar);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1000, 22));
+        menubar->setGeometry(QRect(0, 0, 1000, 30));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuLoad = new QMenu(menubar);
@@ -189,6 +192,8 @@ public:
         menuLoad->addSeparator();
         menuLoad->addAction(actionLoadDB);
         menuLoad->addAction(actionUnloadDB);
+        menuLoad->addSeparator();
+        menuLoad->addAction(actionCleanDB);
         menuTheme->addAction(actionThemeDarkMaroon);
         menuTheme->addAction(actionThemeDarkGreen);
         menuTheme->addAction(actionThemeDarkPurple);
@@ -248,6 +253,7 @@ public:
 #if QT_CONFIG(shortcut)
         actionUnloadDB->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+U", nullptr));
 #endif // QT_CONFIG(shortcut)
+        actionCleanDB->setText(QCoreApplication::translate("MainWindow", "Clean DB", nullptr));
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));

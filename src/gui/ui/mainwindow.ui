@@ -151,7 +151,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>22</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -171,6 +171,8 @@
     <addaction name="separator"/>
     <addaction name="actionLoadDB"/>
     <addaction name="actionUnloadDB"/>
+    <addaction name="separator"/>
+    <addaction name="actionCleanDB"/>
    </widget>
    <widget class="QMenu" name="menuTheme">
     <property name="title">
@@ -273,6 +275,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionCleanDB">
+   <property name="text">
+    <string>Clean DB</string>
    </property>
   </action>
  </widget>

@@ -248,6 +248,7 @@ void MainWindow::lockWindowItems() {
     this->ui.actionAddDir->setEnabled(false);
     this->ui.actionLoadDB->setEnabled(true);
     this->ui.actionUnloadDB->setEnabled(false);
+    this->ui.actionCleanDB->setEnabled(false);
     this->ui.lineEditSearch->setEnabled(false);
     this->ui.pushButtonSearch->setEnabled(false);
     this->ui.pushButtonRefresh->setEnabled(false);
@@ -258,6 +259,7 @@ void MainWindow::unlockWindowItems() {
     this->ui.actionAddDir->setEnabled(true);
     this->ui.actionLoadDB->setEnabled(false);
     this->ui.actionUnloadDB->setEnabled(true);
+    this->ui.actionCleanDB->setEnabled(true);
     this->ui.lineEditSearch->setEnabled(true);
     this->ui.pushButtonSearch->setEnabled(true);
     this->ui.pushButtonRefresh->setEnabled(true);
