@@ -249,6 +249,11 @@ void MainWindow::triggered_action_unloadDB() {
 }
 
 void MainWindow::triggered_action_cleanDB() {
+    QMessageBox::StandardButton ask_cleandb = QMessageBox::question(this, "Clean DB", QString("Are you sure you want to clean DB ?"), QMessageBox::Yes | QMessageBox::No);
+    if (ask_cleandb == QMessageBox::No) {
+        return;
+    }
+    
     QList<QMap<QString, QVariant>> db_select = this->db.selectAll();
 
     QMap<QString, QStringList> path_hash_map;
@@ -268,6 +273,11 @@ void MainWindow::triggered_action_cleanDB() {
 }
 
 void MainWindow::triggered_action_cleanHashes() {
+    QMessageBox::StandardButton ask_cleanhashes = QMessageBox::question(this, "Clean hashes", QString("Are you sure you want to clean hashes ?"), QMessageBox::Yes | QMessageBox::No);
+    if (ask_cleanhashes == QMessageBox::No) {
+        return;
+    }
+
     QStringList hashes = this->db.selectAllHashes();
     QStringList removable_hashes = Utils::getCleanDBHashes(hashes);
     if (this->db.removeFromDB(removable_hashes)) {
@@ -279,6 +289,11 @@ void MainWindow::triggered_action_cleanHashes() {
 }
 
 void MainWindow::triggered_action_cleanPaths() {
+    QMessageBox::StandardButton ask_cleanpaths = QMessageBox::question(this, "Clean paths", QString("Are you sure you want to clean paths ?"), QMessageBox::Yes | QMessageBox::No);
+    if (ask_cleanpaths == QMessageBox::No) {
+        return;
+    }
+
     QList<QMap<QString, QVariant>> db_select = this->db.selectAll();
 
     QMap<QString, QStringList> path_hash_map;
