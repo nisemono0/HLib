@@ -131,8 +131,8 @@ void MainWindow::triggered_action_addFile() {
         QMap json_map = Utils::getMapFromJson(json_obj);
 
         if (!json_map.isEmpty()) {
-            QStringList hash_list = this->db.selectAllHashes();
-            if (!hash_list.contains(json_map["file_hash"])) {
+            QStringList db_hashes = this->db.selectAllHashes();
+            if (!db_hashes.contains(json_map["file_hash"])) {
                 if (this->db.insert(json_map)) {
                     this->populateTree();
                     QMessageBox::information(this, "Info", QString("Added %1 to database").arg(json_map["title"]));
