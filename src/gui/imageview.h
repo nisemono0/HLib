@@ -29,6 +29,7 @@ private:
     void showStatus();
     void hideStatus();
     void fitImage();
+    void scaleDisplayedImage();
 protected:
     void resizeEvent(QResizeEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);

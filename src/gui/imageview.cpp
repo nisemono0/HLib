@@ -27,6 +27,9 @@ void ImageView::loadImages(QByteArrayList images) {
     this->current_image = 0;
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
+    // Scale the displayed image when loading all of them
+    // Easier to read very high res archives
+    this->scaleDisplayedImage();
     this->setMouseTracking(true);
     this->fitImage();
     this->showStatus();
@@ -38,11 +41,12 @@ void ImageView::loadImages(QByteArray image) {
     this->current_image = 0;
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
+    // It's faster to NOT call this when viewing only the 1st image
+    // this->scaleDisplayedImage(); 
     this->setMouseTracking(true);
     this->fitImage();
     this->showStatus();
 }
-
 
 void ImageView::addStatusLabel(QLabel *img_status) {
     this->img_status = img_status;
@@ -66,9 +70,7 @@ void ImageView::setCurrentImage(const SetImageOption::SetImageOption option) {
 
     if (this->has_images && (0 <= current_image && current_image < this->total_images)) {
         this->current_image = current_image;
-        QPixmap image;
-        image.loadFromData(this->images[current_image]);
-        this->image_item->setPixmap(image);
+        this->scaleDisplayedImage();
         this->fitImage();
         this->showStatus();
     }    
@@ -90,6 +92,14 @@ void ImageView::fitImage() {
     }
 }
 
+void ImageView::scaleDisplayedImage() {
+    if (this->has_images) {
+        QPixmap image;
+        image.loadFromData(this->images[this->current_image]);
+        this->image_item->setPixmap(image.scaled(this->width(), this->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+}
+
 void ImageView::clearImageView() {
     this->images = QByteArrayList();
     this->current_image = -1;
@@ -102,9 +112,8 @@ void ImageView::clearImageView() {
 
 void ImageView::resizeEvent(QResizeEvent *event) {
     QGraphicsView::resizeEvent(event);
-    if (this->has_images) {
-        this->fitInView(this->image_item, Qt::KeepAspectRatio);
-    }
+    this->scaleDisplayedImage();
+    this->fitImage();
 }
 
 void ImageView::mouseReleaseEvent(QMouseEvent *event) {
@@ -163,12 +172,8 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
             if (images_list.isEmpty()) {
                 return;
             }
-            QPixmap img;
-            if (img.loadFromData(images_list[0])) {
-                this->image_item->setPixmap(img);
-                this->image_item->setData(MyDataRoles::FilePath, QVariant::fromValue(file_path));
-                this->loadImages(images_list);
-            }
+            this->image_item->setData(MyDataRoles::FilePath, QVariant::fromValue(file_path));
+            this->loadImages(images_list);
         } else if (clicked_action == copy_current_image) {
             QApplication::clipboard()->clear();
             QApplication::clipboard()->setImage(this->getCurrentImage());
