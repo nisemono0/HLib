@@ -23,6 +23,7 @@ private:
     int total_images;
     bool has_images;
     bool scale_images;
+    bool is_loaded_images;
     QGraphicsPixmapItem *image_item;
     QLabel *img_status;
     QImage getCurrentImage();

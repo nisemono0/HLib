@@ -17,6 +17,7 @@ ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->has_images = false;
     this->image_item = nullptr;
     this->scale_images = false;
+    this->is_loaded_images = false;
     this->current_pixmap = QPixmap();
     this->cursor_next = QCursor(QPixmap(":mouse/mouse-image-next"), -1, -1);
     this->cursor_prev = QCursor(QPixmap(":mouse/mouse-image-prev"), -1, -1);
@@ -30,6 +31,7 @@ void ImageView::loadImages(QByteArrayList images) {
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
     this->current_pixmap = this->image_item->pixmap();
+    this->is_loaded_images = true;
     this->scaleDisplayImage();
     this->setMouseTracking(true);
     this->fitImage();
@@ -115,6 +117,7 @@ void ImageView::clearImageView() {
     this->current_image = -1;
     this->total_images = -1;
     this->has_images = false;
+    this->is_loaded_images = false;
     this->current_pixmap = QPixmap();
     this->setCursor(Qt::ArrowCursor);
     this->setMouseTracking(false);
@@ -159,7 +162,7 @@ void ImageView::mouseMoveEvent(QMouseEvent *event) {
 
 void ImageView::mouseDoubleClickEvent(QMouseEvent *event) {
     QGraphicsView::mouseDoubleClickEvent(event);
-    if (this->has_images) {
+    if (this->has_images && this->is_loaded_images) {
         QString file_path = this->image_item->data(MyDataRoles::FilePath).toString();
         
         QByteArrayList images_list = Utils::getImagesFromZip(file_path, this);
