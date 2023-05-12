@@ -15,7 +15,7 @@ Only searches for ```*.zip``` archives since that's all I use. <br>
 ### Linux
 Install missing dependencies <br>
 Make sure that the ```qmakeconf.sh``` points to the right libs and include paths on your system <br>
-Run ``` qmakeconf.sh``` then ```make release``` <br>
+Run ```qmakeconf.sh``` then ```make release``` <br>
 The binary is ```./release/HLib```
 
 ### Windows
