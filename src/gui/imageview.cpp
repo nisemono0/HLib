@@ -97,7 +97,7 @@ void ImageView::fitImage() {
 void ImageView::scaleDisplayImage() {
     if (this->has_images) {
         if (this->scale_images) {
-            this->image_item->setPixmap(this->current_pixmap.scaled(QWidget::window()->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            this->image_item->setPixmap(this->current_pixmap.scaled(QWidget::window()->size() * 1.1, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         } else {
             this->image_item->setPixmap(this->current_pixmap);
         }
