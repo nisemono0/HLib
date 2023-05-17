@@ -27,8 +27,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     this->h_slider->setTickPosition(QSlider::NoTicks);
     this->h_slider->setMaximum(10);
     this->h_slider->setMinimum(0);
-    this->h_slider->setSingleStep(1);
-    this->h_slider->setPageStep(1);
+    this->h_slider->setSingleStep(0);
+    this->h_slider->setPageStep(0);
     this->h_slider->setValue(0);
     this->action_slider->setDefaultWidget(this->h_slider);
     this->ui.menuSettings->addAction(this->action_slider);
