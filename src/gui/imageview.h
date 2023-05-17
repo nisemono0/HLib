@@ -16,13 +16,15 @@ public:
     void loadImages(QByteArray image);
     void addStatusLabel(QLabel *img_status);
     void setCurrentImage(const SetImageOption::SetImageOption option);
-    void setScaleImages(bool checked);
+    void toggleScaleImage(bool checked);
+    void setScaleValue(int value);
 private:
     QByteArrayList images;
     int current_image;
     int total_images;
     bool has_images;
     bool scale_images;
+    float scale_value;
     bool is_loaded_images;
     QGraphicsPixmapItem *image_item;
     QLabel *img_status;
@@ -34,6 +36,7 @@ private:
     void hideStatus();
     void fitImage();
     void scaleDisplayImage();
+    void scaleAndFit();
 protected:
     void resizeEvent(QResizeEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);

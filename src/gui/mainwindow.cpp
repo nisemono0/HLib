@@ -26,10 +26,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     this->h_slider->setOrientation(Qt::Horizontal);
     this->h_slider->setTickPosition(QSlider::NoTicks);
     this->h_slider->setMaximum(10);
-    this->h_slider->setMinimum(1);
+    this->h_slider->setMinimum(0);
     this->h_slider->setSingleStep(1);
     this->h_slider->setPageStep(1);
-    this->h_slider->setValue(1);
+    this->h_slider->setValue(0);
     this->action_slider->setDefaultWidget(this->h_slider);
     this->ui.menuSettings->addAction(this->action_slider);
 
@@ -77,7 +77,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     connect(this->ui.actionCleanPaths, &QAction::triggered, this, &MainWindow::triggered_action_cleanPaths);
 
     connect(this->ui.actionScaleImage, &QAction::toggled, this, &MainWindow::triggered_action_scaleimage);
-    
+    connect(this->h_slider, &QSlider::valueChanged, this, &MainWindow::triggered_action_scalechanged);
+
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
     connect(this->ui.actionThemeDarkGreen, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_GREEN);});
     connect(this->ui.actionThemeDarkPurple, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_PURPLE);});
@@ -330,7 +331,11 @@ void MainWindow::triggered_action_cleanPaths() {
 }
 
 void MainWindow::triggered_action_scaleimage(bool checked) {
-    this->ui.graphicsView->setScaleImages(checked);
+    this->ui.graphicsView->toggleScaleImage(checked);
+}
+
+void MainWindow::triggered_action_scalechanged(int value) {
+    this->ui.graphicsView->setScaleValue(value);
 }
 
 

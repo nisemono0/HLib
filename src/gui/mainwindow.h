@@ -35,6 +35,7 @@ private:
     void unlockWindowItems();
     void clearTree();
     void clearView();
+    void populateTree();
     void resetTreeStatusMessage();
     void setTreeStatusMessage();
     void setTreeStatusMessage(const QString file_path);
@@ -50,8 +51,8 @@ private slots:
     void triggered_action_cleanHashes();
     void triggered_action_cleanPaths();
     void triggered_action_scaleimage(bool checked);
+    void triggered_action_scalechanged(int value);
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
-    void populateTree();
     void searchTreeItems(const QString search_str);
     void treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void showTreeContextMenu(const QPoint &pos);
