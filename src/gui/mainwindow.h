@@ -13,8 +13,10 @@
 #include <QTreeWidgetItem>
 #include <QString>
 #include <QClipboard>
+#include <QWidgetAction>
+#include <QSlider>
 
-class MainWindow : public QMainWindow {
+class MainWindow: public QMainWindow {
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -26,6 +28,8 @@ private:
     QGraphicsScene *scene;
     QLabel *tree_status;
     QLabel *img_status;
+    QSlider *h_slider;
+    QWidgetAction *action_slider;
     int loaded_archives_num;
     void lockWindowItems();
     void unlockWindowItems();

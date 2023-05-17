@@ -20,6 +20,19 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     this->ui.setupUi(this);
 
+    this->action_slider = new QWidgetAction(this->ui.menuSettings);
+    this->h_slider = new QSlider(this->ui.menuSettings);
+    this->h_slider->setFixedHeight(25);
+    this->h_slider->setOrientation(Qt::Horizontal);
+    this->h_slider->setTickPosition(QSlider::NoTicks);
+    this->h_slider->setMaximum(10);
+    this->h_slider->setMinimum(1);
+    this->h_slider->setSingleStep(1);
+    this->h_slider->setPageStep(1);
+    this->h_slider->setValue(1);
+    this->action_slider->setDefaultWidget(this->h_slider);
+    this->ui.menuSettings->addAction(this->action_slider);
+
     this->loaded_archives_num = 0;
 
     new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImageOption::NextImage);});
@@ -85,6 +98,8 @@ MainWindow::~MainWindow() {
     delete this->scene;
     delete this->tree_status;
     delete this->img_status;
+    delete this->h_slider;
+    delete this->action_slider;
 }
 
 void MainWindow::triggered_action_changeTheme(const MyTheme::MyTheme theme) {
