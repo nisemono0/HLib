@@ -10,6 +10,8 @@
 #include <QAction>
 #include <QApplication>
 #include <QClipboard>
+#include <QToolTip>
+#include <QCursor>
 
 ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->current_image = -1;
@@ -116,6 +118,7 @@ void ImageView::toggleScaleImage(bool checked) {
 
 void ImageView::setScaleValue(int value) {
     this->scale_value = 1.0 + (value / 10.0);
+    QToolTip::showText(QCursor::pos(), QString("Scale: %1").arg(this->scale_value), nullptr);
     this->scaleAndFit();
 }
 
