@@ -99,7 +99,7 @@ public:
         actionScaleImage = new QAction(MainWindow);
         actionScaleImage->setObjectName(QString::fromUtf8("actionScaleImage"));
         actionScaleImage->setCheckable(true);
-        actionScaleImage->setChecked(false);
+        actionScaleImage->setChecked(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
