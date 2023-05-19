@@ -464,6 +464,9 @@ void MainWindow::loadFIrstImage(const QString file_path, const QString title) {
 
 void MainWindow::treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
     this->clearView();
+
+    // (void)previous;
+    Q_UNUSED(previous);
     
     if (current == nullptr) {
         return;
