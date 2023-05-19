@@ -22,6 +22,7 @@ ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->scale_value = 1;
     this->is_loaded_images = false;
     this->current_pixmap = QPixmap();
+    this->current_image_size = QSize();
     this->cursor_next = QCursor(QPixmap(":mouse/mouse-image-next"), -1, -1);
     this->cursor_prev = QCursor(QPixmap(":mouse/mouse-image-prev"), -1, -1);
 }
@@ -34,6 +35,7 @@ void ImageView::loadImages(QByteArrayList images) {
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
     this->current_pixmap = this->image_item->pixmap();
+    this->current_image_size = this->current_pixmap.size();
     this->is_loaded_images = true;
     this->scaleAndFit();
     this->setMouseTracking(true);
@@ -47,6 +49,7 @@ void ImageView::loadImages(QByteArray image) {
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
     this->current_pixmap = this->image_item->pixmap();
+    this->current_image_size = this->current_pixmap.size();
     this->scaleAndFit();
     this->setMouseTracking(true);
     this->showStatus();
@@ -75,6 +78,7 @@ void ImageView::setCurrentImage(const SetImageOption::SetImageOption option) {
     if (this->has_images && (0 <= current_image && current_image < this->total_images)) {
         this->current_image = current_image;
         this->current_pixmap.loadFromData(this->images[this->current_image]);
+        this->current_image_size = this->current_pixmap.size();
         this->scaleAndFit();
         this->showStatus();
     }    
@@ -82,7 +86,10 @@ void ImageView::setCurrentImage(const SetImageOption::SetImageOption option) {
 
 void ImageView::showStatus() {
     this->img_status->setHidden(false);
-    this->img_status->setText(QString("Displaying image: [%1/%2]").arg(QString::number(this->current_image + 1), QString::number(this->total_images)));
+    this->img_status->setText(QString("Image: [%1/%2] (%3x%4)").arg(
+        QString::number(this->current_image + 1), QString::number(this->total_images),
+        QString::number(this->current_image_size.width()), QString::number(this->current_image_size.height())
+    ));
 }
 
 void ImageView::hideStatus() {
