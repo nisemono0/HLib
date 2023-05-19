@@ -18,7 +18,7 @@ ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->total_images = -1;
     this->has_images = false;
     this->image_item = nullptr;
-    this->scale_images = false;
+    this->scale_images = true;
     this->scale_value = 1;
     this->is_loaded_images = false;
     this->current_pixmap = QPixmap();
