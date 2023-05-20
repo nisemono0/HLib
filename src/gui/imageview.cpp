@@ -34,7 +34,7 @@ void ImageView::loadImages(QByteArrayList images) {
     this->current_image = 0;
     this->total_images = images.count();
     this->image_item = (QGraphicsPixmapItem *)this->scene()->items().at(0);
-    this->current_pixmap = this->image_item->pixmap();
+    this->current_pixmap.loadFromData(this->images[this->current_image]);
     this->current_image_size = this->current_pixmap.size();
     this->is_loaded_images = true;
     this->scaleAndFit();
