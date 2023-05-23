@@ -175,6 +175,9 @@
     <addaction name="actionCleanDB"/>
     <addaction name="actionCleanHashes"/>
     <addaction name="actionCleanPaths"/>
+    <addaction name="separator"/>
+    <addaction name="actionCheckDB"/>
+    <addaction name="actionCheckPaths"/>
    </widget>
    <widget class="QMenu" name="menuTheme">
     <property name="title">
@@ -343,6 +346,22 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionCheckDB">
+   <property name="text">
+    <string>Check DB</string>
+   </property>
+   <property name="statusTip">
+    <string>Checks if the paths/hashes in db match the ones on disk</string>
+   </property>
+  </action>
+  <action name="actionCheckPaths">
+   <property name="text">
+    <string>Check paths</string>
+   </property>
+   <property name="statusTip">
+    <string>Checks if only the paths in db match the ones on disk</string>
    </property>
   </action>
  </widget>

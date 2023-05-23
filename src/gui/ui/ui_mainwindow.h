@@ -46,6 +46,8 @@ public:
     QAction *actionCleanHashes;
     QAction *actionCleanPaths;
     QAction *actionScaleImage;
+    QAction *actionCheckDB;
+    QAction *actionCheckPaths;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -100,6 +102,10 @@ public:
         actionScaleImage->setObjectName(QString::fromUtf8("actionScaleImage"));
         actionScaleImage->setCheckable(true);
         actionScaleImage->setChecked(true);
+        actionCheckDB = new QAction(MainWindow);
+        actionCheckDB->setObjectName(QString::fromUtf8("actionCheckDB"));
+        actionCheckPaths = new QAction(MainWindow);
+        actionCheckPaths->setObjectName(QString::fromUtf8("actionCheckPaths"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -211,6 +217,9 @@ public:
         menuLoad->addAction(actionCleanDB);
         menuLoad->addAction(actionCleanHashes);
         menuLoad->addAction(actionCleanPaths);
+        menuLoad->addSeparator();
+        menuLoad->addAction(actionCheckDB);
+        menuLoad->addAction(actionCheckPaths);
         menuTheme->addAction(actionThemeDarkMaroon);
         menuTheme->addAction(actionThemeDarkGreen);
         menuTheme->addAction(actionThemeDarkPurple);
@@ -308,6 +317,14 @@ public:
 #if QT_CONFIG(shortcut)
         actionScaleImage->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+S", nullptr));
 #endif // QT_CONFIG(shortcut)
+        actionCheckDB->setText(QCoreApplication::translate("MainWindow", "Check DB", nullptr));
+#if QT_CONFIG(statustip)
+        actionCheckDB->setStatusTip(QCoreApplication::translate("MainWindow", "Checks if the paths/hashes in db match the ones on disk", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionCheckPaths->setText(QCoreApplication::translate("MainWindow", "Check paths", nullptr));
+#if QT_CONFIG(statustip)
+        actionCheckPaths->setStatusTip(QCoreApplication::translate("MainWindow", "Checks if only the paths in db match the ones on disk", nullptr));
+#endif // QT_CONFIG(statustip)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));

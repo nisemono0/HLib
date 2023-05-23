@@ -50,6 +50,8 @@ private slots:
     void triggered_action_cleanDB();
     void triggered_action_cleanHashes();
     void triggered_action_cleanPaths();
+    void triggered_action_checkDB();
+    void triggered_action_checkPaths();
     void triggered_action_scaleimage(bool checked);
     void triggered_action_scalechanged(int value);
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);

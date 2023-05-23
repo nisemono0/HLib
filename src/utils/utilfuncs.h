@@ -21,4 +21,5 @@ public:
     static QStringList getCleanDBEntries(QMap<QString, QStringList> map);
     static QStringList getCleanDBHashes(QStringList hashes);    
     static QStringList getCleanDBPaths(QMap<QString, QStringList> map);
+    static bool fileExists(const QString file_path);
 };

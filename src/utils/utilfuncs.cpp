@@ -330,3 +330,11 @@ QStringList Utils::getCleanDBPaths(QMap<QString, QStringList> map) {
     }
     return removable_list;
 }
+
+bool Utils::fileExists(const QString file_path) {
+    QFile file(file_path);
+    if (file.exists()) {
+        return true;
+    }
+    return false;
+}

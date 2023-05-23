@@ -75,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
     connect(this->ui.actionCleanDB, &QAction::triggered, this, &MainWindow::triggered_action_cleanDB);
     connect(this->ui.actionCleanHashes, &QAction::triggered, this, &MainWindow::triggered_action_cleanHashes);
     connect(this->ui.actionCleanPaths, &QAction::triggered, this, &MainWindow::triggered_action_cleanPaths);
+    connect(this->ui.actionCheckDB, &QAction::triggered, this, &MainWindow::triggered_action_checkDB);
+    connect(this->ui.actionCheckPaths, &QAction::triggered, this, &MainWindow::triggered_action_checkPaths);
 
     connect(this->ui.actionScaleImage, &QAction::toggled, this, &MainWindow::triggered_action_scaleimage);
     connect(this->h_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_scalechanged);
@@ -330,6 +332,58 @@ void MainWindow::triggered_action_cleanPaths() {
     }
 }
 
+void MainWindow::triggered_action_checkDB() {
+    QMessageBox::StandardButton ask_checkdb = QMessageBox::question(this, "Check DB", QString("Are you sure you want to check DB ?"), QMessageBox::Yes | QMessageBox::No);
+    if (ask_checkdb == QMessageBox::No) {
+        return;
+    }
+    
+    QList<QMap<QString, QVariant>> db_select = this->db.selectAll();
+    QMap<QString, QStringList> hash_path_map;
+
+    QProgressDialog progress("Checking DB", nullptr, 0, db_select.length() - 1, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.show();
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    for (int i = 0; i < db_select.length(); i++) {
+        QString db_hash = db_select[i]["file_hash"].toString();
+        QString disk_hash = Utils::getSHA1Hash(db_select[i]["file_path"].toString());
+        if (disk_hash.isEmpty()) {
+            qDebug() << "Not found:" << db_select[i]["file_path"].toString();
+        } else {
+            if (QString::compare(db_hash, disk_hash, Qt::CaseInsensitive) != 0) {
+                qDebug() << "Hash mismatch:" << db_select[i]["file_path"].toString();
+            }
+        }
+        progress.setValue(i);
+        progress.setLabelText(QString("Working on files: [%1/%2]").arg(QString::number(i + 1), QString::number(db_select.length())));
+        qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
+    progress.hide();
+}
+
+void MainWindow::triggered_action_checkPaths() {
+    QMessageBox::StandardButton ask_checkpaths = QMessageBox::question(this, "Check DB paths", QString("Are you sure you want to check DB paths ?"), QMessageBox::Yes | QMessageBox::No);
+    if (ask_checkpaths == QMessageBox::No) {
+        return;
+    }
+
+    QStringList db_paths = this->db.selectAllFilepaths();
+
+    QProgressDialog progress("Checking DB paths", nullptr, 0, db_paths.length() - 1, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.show();
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    for (int i = 0; i < db_paths.length(); i++) {
+        if (!Utils::fileExists(db_paths[i])) {
+            qDebug() << "Not found:" << db_paths[i];                
+        }
+        progress.setValue(i);
+        progress.setLabelText(QString("Working on files: [%1/%2]").arg(QString::number(i + 1), QString::number(db_paths.length())));
+        qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
+}
+
 void MainWindow::triggered_action_scaleimage(bool checked) {
     this->ui.graphicsView->toggleScaleImage(checked);
 }
@@ -347,6 +401,8 @@ void MainWindow::lockWindowItems() {
     this->ui.actionCleanDB->setEnabled(false);
     this->ui.actionCleanHashes->setEnabled(false);
     this->ui.actionCleanPaths->setEnabled(false);
+    this->ui.actionCheckDB->setEnabled(false);
+    this->ui.actionCheckPaths->setEnabled(false);
     this->ui.lineEditSearch->setEnabled(false);
     this->ui.pushButtonSearch->setEnabled(false);
     this->ui.pushButtonRefresh->setEnabled(false);
@@ -360,6 +416,8 @@ void MainWindow::unlockWindowItems() {
     this->ui.actionCleanDB->setEnabled(true);
     this->ui.actionCleanHashes->setEnabled(true);
     this->ui.actionCleanPaths->setEnabled(true);
+    this->ui.actionCheckDB->setEnabled(true);
+    this->ui.actionCheckPaths->setEnabled(true);
     this->ui.lineEditSearch->setEnabled(true);
     this->ui.pushButtonSearch->setEnabled(true);
     this->ui.pushButtonRefresh->setEnabled(true);
