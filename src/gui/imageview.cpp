@@ -1,7 +1,6 @@
 #include "gui/imageview.h"
 #include "utils/utilfuncs.h"
 
-#include <QDebug>
 #include <QGraphicsItem>
 #include <QMouseEvent>
 #include <QResizeEvent>

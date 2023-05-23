@@ -1,6 +1,7 @@
 #pragma once
 #include "ui/ui_mainwindow.h"
 #include "gui/imageview.h"
+#include "gui/logwindow.h"
 #include "db/dbmanager.h"
 #include "utils/utildefs.h"
 
@@ -23,13 +24,20 @@ public:
     ~MainWindow();
 private:
     Ui::MainWindow ui;
-    SQLiteDB db;
+    
+    LogWindow *log_window;
+    
+    SQLiteDB *db;
+    
     QGraphicsPixmapItem *pixitem;
     QGraphicsScene *scene;
+    
     QLabel *tree_status;
     QLabel *img_status;
+    
     QSlider *h_slider;
     QWidgetAction *action_slider;
+    
     int loaded_archives_num;
     void lockWindowItems();
     void unlockWindowItems();
@@ -54,6 +62,8 @@ private slots:
     void triggered_action_checkPaths();
     void triggered_action_scaleimage(bool checked);
     void triggered_action_scalechanged(int value);
+    void triggered_action_showlogs();
+    void triggered_action_clearlogs();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void searchTreeItems(const QString search_str);
     void treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);

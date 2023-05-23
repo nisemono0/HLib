@@ -1,4 +1,5 @@
 #pragma once
+#include "gui/logwindow.h"
 
 #include <QJsonObject>
 #include <QMap>
@@ -7,6 +8,7 @@
 
 class Utils {
 public:
+    static void setLogWindow(LogWindow *log_win);
     static QJsonObject getJsonFromZip(const QString zip_path, const QString json_name);
     static QMap<QString, QString> getMapFromJson(QJsonObject json_obj);
     static bool createDB(const QString db_path, const QString con_name);
@@ -22,4 +24,6 @@ public:
     static QStringList getCleanDBHashes(QStringList hashes);    
     static QStringList getCleanDBPaths(QMap<QString, QStringList> map);
     static bool fileExists(const QString file_path);
+private:
+    static inline LogWindow *log_window;
 };

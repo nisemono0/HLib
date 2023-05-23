@@ -1,8 +1,8 @@
 #include "gui/mainwindow.h"
+#include "gui/logwindow.h"
 #include "utils/utilfuncs.h"
 #include "utils/utildefs.h"
 
-#include <QDebug>
 #include <QDir>
 #include <QFileDialog>
 #include <QDirIterator>
@@ -17,9 +17,13 @@
 #include <QFileInfo>
 #include <QLocale>
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     this->ui.setupUi(this);
 
+    this->log_window = new LogWindow(this);
+    this->db = new SQLiteDB("HLib_CON", this->log_window);
+    Utils::setLogWindow(this->log_window);
+    
     this->action_slider = new QWidgetAction(this->ui.menuSettings);
     this->h_slider = new QSlider(this->ui.menuSettings);
     this->h_slider->setFixedHeight(25);
@@ -67,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
 
     connect(this->ui.actionAddFile, &QAction::triggered, this, &MainWindow::triggered_action_addFile);
     connect(this->ui.actionAddDir, &QAction::triggered, this, &MainWindow::triggered_action_addDir);
-    connect(this->ui.actionExit, &QAction::triggered, this, [=] { db.closeDB(); qApp->quit();});
+    connect(this->ui.actionExit, &QAction::triggered, this, [=] { db->closeDB(); qApp->quit();});
 
     connect(this->ui.actionCreateDB, &QAction::triggered, this, &MainWindow::triggered_action_createDB);
     connect(this->ui.actionLoadDB, &QAction::triggered, this, &MainWindow::triggered_action_loadDB);
@@ -80,6 +84,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
 
     connect(this->ui.actionScaleImage, &QAction::toggled, this, &MainWindow::triggered_action_scaleimage);
     connect(this->h_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_scalechanged);
+
+    connect(this->ui.actionShowLogs, &QAction::triggered, this, &MainWindow::triggered_action_showlogs);
+    connect(this->ui.actionClearLogs, &QAction::triggered, this, &MainWindow::triggered_action_clearlogs);
 
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
     connect(this->ui.actionThemeDarkGreen, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_GREEN);});
@@ -97,12 +104,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), db("HLib_CON") {
 }
 
 MainWindow::~MainWindow() {
+    this->db->closeDB();
+    delete this->db;
     delete this->pixitem;
     delete this->scene;
     delete this->tree_status;
     delete this->img_status;
     delete this->h_slider;
     delete this->action_slider;
+    delete this->log_window;
 }
 
 void MainWindow::triggered_action_changeTheme(const MyTheme::MyTheme theme) {
@@ -154,10 +164,10 @@ void MainWindow::triggered_action_addFile() {
         QMap json_map = Utils::getMapFromJson(json_obj);
 
         if (!json_map.isEmpty()) {
-            QStringList db_hashes = this->db.selectAllHashes();
-            QStringList db_filepaths = this->db.selectAllFilepaths();
+            QStringList db_hashes = this->db->selectAllHashes();
+            QStringList db_filepaths = this->db->selectAllFilepaths();
             if (!db_hashes.contains(json_map["file_hash"]) || !db_filepaths.contains(json_map["file_path"])) {
-                if (this->db.insert(json_map)) {
+                if (this->db->insert(json_map)) {
                     this->populateTree();
                     QMessageBox::information(this, "Info", QString("Added %1 to database").arg(json_map["title"]));
                 } else {
@@ -190,8 +200,8 @@ void MainWindow::triggered_action_addDir() {
     }
 
     QList<QMap<QString, QString>> data_list;
-    QStringList db_hashes = this->db.selectAllHashes();
-    QStringList db_filepaths = this->db.selectAllFilepaths();
+    QStringList db_hashes = this->db->selectAllHashes();
+    QStringList db_filepaths = this->db->selectAllFilepaths();
     int total_toadd = 0;
     
     QProgressDialog progress("Adding files to DB", nullptr, 0, zip_files.length() - 1, this);
@@ -205,7 +215,7 @@ void MainWindow::triggered_action_addDir() {
         if (!json_map.isEmpty()) {
             if (!db_hashes.contains(json_map["file_hash"]) || !db_filepaths.contains(json_map["file_path"])) {
                 data_list.append(json_map);
-                qDebug() << "To add:" << json_map["title"];
+                this->log_window->appendMessage(QString("[To add]: %1").arg(json_map["title"]));
                 total_toadd++;
             }
         }
@@ -215,7 +225,7 @@ void MainWindow::triggered_action_addDir() {
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
     progress.hide();
-    if (this->db.insert(data_list)) {
+    if (this->db->insert(data_list)) {
         this->populateTree();
         QMessageBox::information(this, "Info", QString("Added %1 archives to database").arg(QString::number(total_toadd)));
     } else {
@@ -247,8 +257,8 @@ void MainWindow::triggered_action_loadDB() {
     this->clearView();
     this->ui.lineEditSearch->setText("");
     
-    this->db.setDBPath(db_file);
-    if (this->db.openDB()) {
+    this->db->setDBPath(db_file);
+    if (this->db->openDB()) {
         this->unlockWindowItems();
         this->populateTree();
         QMessageBox::information(this, "Info", "Database loaded");
@@ -258,7 +268,7 @@ void MainWindow::triggered_action_loadDB() {
 }
 
 void MainWindow::triggered_action_unloadDB() {
-    this->db.closeDB();
+    this->db->closeDB();
     this->clearTree();
     this->clearView();
     this->ui.lineEditSearch->setText("");
@@ -274,7 +284,7 @@ void MainWindow::triggered_action_cleanDB() {
         return;
     }
     
-    QList<QMap<QString, QVariant>> db_select = this->db.selectAll();
+    QList<QMap<QString, QVariant>> db_select = this->db->selectAll();
 
     QMap<QString, QStringList> path_hash_map;
 
@@ -284,7 +294,7 @@ void MainWindow::triggered_action_cleanDB() {
 
     QStringList removable_hashes = Utils::getCleanDBEntries(path_hash_map);
 
-    if (this->db.removeFromDB(removable_hashes)) {
+    if (this->db->removeFromDB(removable_hashes)) {
         this->populateTree();
         QMessageBox::information(this, "Info", QString("Cleaned %1 entries from DB").arg(QString::number(removable_hashes.length())));
     } else {
@@ -298,9 +308,9 @@ void MainWindow::triggered_action_cleanHashes() {
         return;
     }
 
-    QStringList hashes = this->db.selectAllHashes();
+    QStringList hashes = this->db->selectAllHashes();
     QStringList removable_hashes = Utils::getCleanDBHashes(hashes);
-    if (this->db.removeFromDB(removable_hashes)) {
+    if (this->db->removeFromDB(removable_hashes)) {
         this->populateTree();
         QMessageBox::information(this, "Info", QString("Removed %1 duplicate hashes from DB").arg(QString::number(removable_hashes.length())));
     } else {
@@ -314,7 +324,7 @@ void MainWindow::triggered_action_cleanPaths() {
         return;
     }
 
-    QList<QMap<QString, QVariant>> db_select = this->db.selectAll();
+    QList<QMap<QString, QVariant>> db_select = this->db->selectAll();
 
     QMap<QString, QStringList> path_hash_map;
 
@@ -324,7 +334,7 @@ void MainWindow::triggered_action_cleanPaths() {
 
     QStringList removable_paths = Utils::getCleanDBPaths(path_hash_map);
 
-    if (this->db.removeFromDB(removable_paths)) {
+    if (this->db->removeFromDB(removable_paths)) {
         this->populateTree();
         QMessageBox::information(this, "Info", QString("Removed %1 duplicate filepaths from DB").arg(QString::number(removable_paths.length())));
     } else {
@@ -338,7 +348,7 @@ void MainWindow::triggered_action_checkDB() {
         return;
     }
     
-    QList<QMap<QString, QVariant>> db_select = this->db.selectAll();
+    QList<QMap<QString, QVariant>> db_select = this->db->selectAll();
     QMap<QString, QStringList> hash_path_map;
 
     QProgressDialog progress("Checking DB", nullptr, 0, db_select.length() - 1, this);
@@ -349,10 +359,10 @@ void MainWindow::triggered_action_checkDB() {
         QString db_hash = db_select[i]["file_hash"].toString();
         QString disk_hash = Utils::getSHA1Hash(db_select[i]["file_path"].toString());
         if (disk_hash.isEmpty()) {
-            qDebug() << "Not found:" << db_select[i]["file_path"].toString();
+            this->log_window->appendMessage(QString("[Not found]: %1").arg(db_select[i]["file_path"].toString()));
         } else {
             if (QString::compare(db_hash, disk_hash, Qt::CaseInsensitive) != 0) {
-                qDebug() << "Hash mismatch:" << db_select[i]["file_path"].toString();
+                this->log_window->appendMessage(QString("[Hash mismatch]: %1").arg(db_select[i]["file_path"].toString()));
             }
         }
         progress.setValue(i);
@@ -360,6 +370,7 @@ void MainWindow::triggered_action_checkDB() {
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
     progress.hide();
+    QMessageBox::information(this, "Info", "Finished, check logs for more info");
 }
 
 void MainWindow::triggered_action_checkPaths() {
@@ -368,7 +379,7 @@ void MainWindow::triggered_action_checkPaths() {
         return;
     }
 
-    QStringList db_paths = this->db.selectAllFilepaths();
+    QStringList db_paths = this->db->selectAllFilepaths();
 
     QProgressDialog progress("Checking DB paths", nullptr, 0, db_paths.length() - 1, this);
     progress.setWindowModality(Qt::WindowModal);
@@ -376,12 +387,14 @@ void MainWindow::triggered_action_checkPaths() {
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     for (int i = 0; i < db_paths.length(); i++) {
         if (!Utils::fileExists(db_paths[i])) {
-            qDebug() << "Not found:" << db_paths[i];                
+            this->log_window->appendMessage(QString("[Not found]: %1").arg(db_paths[i]));
         }
         progress.setValue(i);
         progress.setLabelText(QString("Working on files: [%1/%2]").arg(QString::number(i + 1), QString::number(db_paths.length())));
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
+    progress.hide();
+    QMessageBox::information(this, "Info", "Finished, check logs for more info");
 }
 
 void MainWindow::triggered_action_scaleimage(bool checked) {
@@ -392,6 +405,13 @@ void MainWindow::triggered_action_scalechanged(int value) {
     this->ui.graphicsView->setScaleValue(value);
 }
 
+void MainWindow::triggered_action_showlogs() {
+    this->log_window->show();
+}
+
+void MainWindow::triggered_action_clearlogs() {
+    this->log_window->clearLogs();
+}
 
 void MainWindow::lockWindowItems() {
     this->ui.actionAddFile->setEnabled(false);
@@ -451,7 +471,7 @@ void MainWindow::setTreeStatusMessage(const QString file_path) {
 }
 
 void MainWindow::populateTree() {
-    QList<QMap<QString, QVariant>> list_variants = this->db.selectAll();
+    QList<QMap<QString, QVariant>> list_variants = this->db->selectAll();
 
     this->clearTree();
     QList<QTreeWidgetItem *> root_items;
@@ -470,7 +490,7 @@ void MainWindow::populateTree() {
 }
 
 void MainWindow::searchTreeItems(const QString search_str) {
-    QStringList hash_list = this->db.selectTags("*" + search_str + "*");
+    QStringList hash_list = this->db->selectTags("*" + search_str + "*");
     
     QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
     while (*tree_it) {
@@ -587,7 +607,7 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     } else if (clicked_action == remove_db) {
         QMessageBox::StandardButton remove_reply = QMessageBox::question(this, "Remove from DB", QString("Remove %1 from DB").arg(title), QMessageBox::Yes | QMessageBox::No);
         if (remove_reply == QMessageBox::Yes) {
-            if (this->db.removeFromDB(item_filehash)) {
+            if (this->db->removeFromDB(item_filehash)) {
                 this->populateTree();
                 QMessageBox::information(this, "Info", QString("Removed %1 from DB").arg(title));
             } else {

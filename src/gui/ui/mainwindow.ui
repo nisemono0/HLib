@@ -196,9 +196,17 @@
     </property>
     <addaction name="actionScaleImage"/>
    </widget>
+   <widget class="QMenu" name="menuInfo">
+    <property name="title">
+     <string>Info</string>
+    </property>
+    <addaction name="actionShowLogs"/>
+    <addaction name="actionClearLogs"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuLoad"/>
    <addaction name="menuSettings"/>
+   <addaction name="menuInfo"/>
    <addaction name="menuTheme"/>
   </widget>
   <action name="actionLoadDB">
@@ -362,6 +370,22 @@
    </property>
    <property name="statusTip">
     <string>Checks if only the paths in db match the ones on disk</string>
+   </property>
+  </action>
+  <action name="actionShowLogs">
+   <property name="text">
+    <string>Show logs</string>
+   </property>
+   <property name="statusTip">
+    <string>Shows the logs window</string>
+   </property>
+  </action>
+  <action name="actionClearLogs">
+   <property name="text">
+    <string>Clear logs</string>
+   </property>
+   <property name="statusTip">
+    <string>Clears the logs</string>
    </property>
   </action>
  </widget>

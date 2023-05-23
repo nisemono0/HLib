@@ -48,6 +48,8 @@ public:
     QAction *actionScaleImage;
     QAction *actionCheckDB;
     QAction *actionCheckPaths;
+    QAction *actionShowLogs;
+    QAction *actionClearLogs;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -63,6 +65,7 @@ public:
     QMenu *menuLoad;
     QMenu *menuTheme;
     QMenu *menuSettings;
+    QMenu *menuInfo;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -106,6 +109,10 @@ public:
         actionCheckDB->setObjectName(QString::fromUtf8("actionCheckDB"));
         actionCheckPaths = new QAction(MainWindow);
         actionCheckPaths->setObjectName(QString::fromUtf8("actionCheckPaths"));
+        actionShowLogs = new QAction(MainWindow);
+        actionShowLogs->setObjectName(QString::fromUtf8("actionShowLogs"));
+        actionClearLogs = new QAction(MainWindow);
+        actionClearLogs->setObjectName(QString::fromUtf8("actionClearLogs"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -199,11 +206,14 @@ public:
         menuTheme->setObjectName(QString::fromUtf8("menuTheme"));
         menuSettings = new QMenu(menubar);
         menuSettings->setObjectName(QString::fromUtf8("menuSettings"));
+        menuInfo = new QMenu(menubar);
+        menuInfo->setObjectName(QString::fromUtf8("menuInfo"));
         MainWindow->setMenuBar(menubar);
 
         menubar->addAction(menuFile->menuAction());
         menubar->addAction(menuLoad->menuAction());
         menubar->addAction(menuSettings->menuAction());
+        menubar->addAction(menuInfo->menuAction());
         menubar->addAction(menuTheme->menuAction());
         menuFile->addAction(actionAddFile);
         menuFile->addAction(actionAddDir);
@@ -227,6 +237,8 @@ public:
         menuTheme->addAction(actionThemeFusion);
         menuTheme->addAction(actionThemeWindows);
         menuSettings->addAction(actionScaleImage);
+        menuInfo->addAction(actionShowLogs);
+        menuInfo->addAction(actionClearLogs);
 
         retranslateUi(MainWindow);
 
@@ -325,12 +337,21 @@ public:
 #if QT_CONFIG(statustip)
         actionCheckPaths->setStatusTip(QCoreApplication::translate("MainWindow", "Checks if only the paths in db match the ones on disk", nullptr));
 #endif // QT_CONFIG(statustip)
+        actionShowLogs->setText(QCoreApplication::translate("MainWindow", "Show logs", nullptr));
+#if QT_CONFIG(statustip)
+        actionShowLogs->setStatusTip(QCoreApplication::translate("MainWindow", "Shows the logs window", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionClearLogs->setText(QCoreApplication::translate("MainWindow", "Clear logs", nullptr));
+#if QT_CONFIG(statustip)
+        actionClearLogs->setStatusTip(QCoreApplication::translate("MainWindow", "Clears the logs", nullptr));
+#endif // QT_CONFIG(statustip)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuLoad->setTitle(QCoreApplication::translate("MainWindow", "Database", nullptr));
         menuTheme->setTitle(QCoreApplication::translate("MainWindow", "Theme", nullptr));
         menuSettings->setTitle(QCoreApplication::translate("MainWindow", "Settings", nullptr));
+        menuInfo->setTitle(QCoreApplication::translate("MainWindow", "Info", nullptr));
     } // retranslateUi
 
 };

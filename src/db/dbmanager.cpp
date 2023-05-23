@@ -1,13 +1,13 @@
 #include "dbmanager.h"
+#include "gui/logwindow.h"
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
 
-#include <QDebug>
-
-SQLiteDB::SQLiteDB(const QString con_name, QObject *parent): QObject(parent) {
+SQLiteDB::SQLiteDB(const QString con_name, LogWindow *log_window, QObject *parent) : QObject(parent) {
     this->db = QSqlDatabase::addDatabase("QSQLITE", con_name);
+    this->log_window = log_window;
 }
 
 SQLiteDB::~SQLiteDB() {
@@ -46,7 +46,7 @@ bool SQLiteDB::insert(const QMap<QString, QString> info_map) {
         if (query.exec()) {
             success = true;
         } else {
-            qDebug() << "[insertFile error]:" << query.lastError();
+            this->log_window->appendMessage(QString("[insertFile error]: %1").arg(query.lastError().text()));
         }
         query.clear();
         this->db.commit();
@@ -79,7 +79,7 @@ bool SQLiteDB::insert(QList<QMap<QString, QString>> map_list) {
         if (query.execBatch()) {
             success = true;
         } else {
-            qDebug() << "[insertFile error]:" << query.lastError();
+            this->log_window->appendMessage(QString("[insertFile error]: %1").arg(query.lastError().text()));
         }
         query.clear();
         this->db.commit();
@@ -98,7 +98,7 @@ QList<QMap<QString, QVariant>> SQLiteDB::selectAll() {
                                     {"file_path", query.value(2)}, {"tags", query.value(3)} });
             }
         } else {
-            qDebug() << "[select() error]:" << query.lastError();
+            this->log_window->appendMessage(QString("[select() error]: %1").arg(query.lastError().text()));
         }
         query.clear();
     }
@@ -116,7 +116,7 @@ QStringList SQLiteDB::selectTags(const QString tag_search) {
                 hash_list.append(query.value(0).toString());
             }
         } else {
-            qDebug() << "[select(tag_search) error]:" << query.lastError();
+            this->log_window->appendMessage(QString("[select(tag_search) error]: %1").arg(query.lastError().text()));
         }
         query.clear();
     }
@@ -133,7 +133,7 @@ QStringList SQLiteDB::selectAllHashes() {
                 hash_list.append(query.value(0).toString());
             }
         } else {
-            qDebug() << "[selectAllHashes() error]:" << query.lastError();
+            this->log_window->appendMessage(QString("[selectAllHashes() error]: %1").arg(query.lastError().text()));
         }
         query.clear();
     }
@@ -150,7 +150,7 @@ QStringList SQLiteDB::selectAllFilepaths() {
                 paths_list.append(query.value(0).toString());
             }
         } else {
-            qDebug() << "[selectAllFilepaths() error]:" << query.lastError();
+            this->log_window->appendMessage(QString("[selectAllFilepaths() error]: %1").arg(query.lastError().text()));
         }
         query.clear();
     }
@@ -167,7 +167,7 @@ bool SQLiteDB::removeFromDB(const QString del_hash) {
         if (query.exec()) {
             success = true;
         } else {
-            qDebug() << "[deleteFromDB(del_hash) error]:" << query.lastError();
+            this->log_window->appendMessage(QString("[deleteFromDB(del_hash) error]: %1").arg(query.lastError().text()));
         }
         query.clear();
         this->db.commit();
@@ -191,7 +191,7 @@ bool SQLiteDB::removeFromDB(QStringList del_hashes) {
         if (query.execBatch()) {
             success = true;
         } else {
-            qDebug() << "[removeFromDB(del_hashes) error]:" << query.lastError();
+            this->log_window->appendMessage(QString("[removeFromDB(del_hashes) error]: %1").arg(query.lastError().text()));
         }
         
         query.clear();
