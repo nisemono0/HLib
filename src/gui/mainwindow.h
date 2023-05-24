@@ -1,7 +1,6 @@
 #pragma once
 #include "ui/ui_mainwindow.h"
 #include "gui/imageview.h"
-#include "gui/logwindow.h"
 #include "db/dbmanager.h"
 #include "utils/utildefs.h"
 
@@ -24,8 +23,6 @@ public:
     ~MainWindow();
 private:
     Ui::MainWindow ui;
-    
-    LogWindow *log_window;
     
     SQLiteDB *db;
     

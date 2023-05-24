@@ -21,11 +21,6 @@
 #include <QEventLoop>
 #include <QApplication>
 
-void Utils::setLogWindow(LogWindow *log_win) {
-    Utils::log_window = log_win;
-}
-
-
 QJsonObject Utils::getJsonFromZip(const QString zip_path, const QString json_name) {
     QJsonObject json_obj;
     QuaZip zip(zip_path);

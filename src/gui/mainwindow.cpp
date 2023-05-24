@@ -1,5 +1,4 @@
 #include "gui/mainwindow.h"
-#include "gui/logwindow.h"
 #include "utils/utilfuncs.h"
 #include "utils/utildefs.h"
 
@@ -20,9 +19,7 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     this->ui.setupUi(this);
 
-    this->log_window = new LogWindow(this);
-    this->db = new SQLiteDB("HLib_CON", this->log_window);
-    Utils::setLogWindow(this->log_window);
+    this->db = new SQLiteDB("HLib_CON");
     
     this->action_slider = new QWidgetAction(this->ui.menuSettings);
     this->h_slider = new QSlider(this->ui.menuSettings);
@@ -112,7 +109,6 @@ MainWindow::~MainWindow() {
     delete this->img_status;
     delete this->h_slider;
     delete this->action_slider;
-    delete this->log_window;
 }
 
 void MainWindow::triggered_action_changeTheme(const MyTheme::MyTheme theme) {
@@ -215,7 +211,7 @@ void MainWindow::triggered_action_addDir() {
         if (!json_map.isEmpty()) {
             if (!db_hashes.contains(json_map["file_hash"]) || !db_filepaths.contains(json_map["file_path"])) {
                 data_list.append(json_map);
-                this->log_window->appendMessage(QString("[To add]: %1").arg(json_map["title"]));
+                Utils::log_window->appendMessage(QString("[To add]: %1").arg(json_map["title"]));
                 total_toadd++;
             }
         }
@@ -359,10 +355,10 @@ void MainWindow::triggered_action_checkDB() {
         QString db_hash = db_select[i]["file_hash"].toString();
         QString disk_hash = Utils::getSHA1Hash(db_select[i]["file_path"].toString());
         if (disk_hash.isEmpty()) {
-            this->log_window->appendMessage(QString("[Not found]: %1").arg(db_select[i]["file_path"].toString()));
+            Utils::log_window->appendMessage(QString("[Not found]: %1").arg(db_select[i]["file_path"].toString()));
         } else {
             if (QString::compare(db_hash, disk_hash, Qt::CaseInsensitive) != 0) {
-                this->log_window->appendMessage(QString("[Hash mismatch]: %1").arg(db_select[i]["file_path"].toString()));
+                Utils::log_window->appendMessage(QString("[Hash mismatch]: %1").arg(db_select[i]["file_path"].toString()));
             }
         }
         progress.setValue(i);
@@ -387,7 +383,7 @@ void MainWindow::triggered_action_checkPaths() {
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     for (int i = 0; i < db_paths.length(); i++) {
         if (!Utils::fileExists(db_paths[i])) {
-            this->log_window->appendMessage(QString("[Not found]: %1").arg(db_paths[i]));
+            Utils::log_window->appendMessage(QString("[Not found]: %1").arg(db_paths[i]));
         }
         progress.setValue(i);
         progress.setLabelText(QString("Working on files: [%1/%2]").arg(QString::number(i + 1), QString::number(db_paths.length())));
@@ -406,11 +402,11 @@ void MainWindow::triggered_action_scalechanged(int value) {
 }
 
 void MainWindow::triggered_action_showlogs() {
-    this->log_window->show();
+    Utils::log_window->show();
 }
 
 void MainWindow::triggered_action_clearlogs() {
-    this->log_window->clearLogs();
+    Utils::log_window->clearLogs();
 }
 
 void MainWindow::lockWindowItems() {

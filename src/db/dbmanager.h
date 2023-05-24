@@ -9,7 +9,7 @@
 class SQLiteDB : public QObject {
     Q_OBJECT
 public:
-    SQLiteDB(const QString con_name, LogWindow *log_window, QObject *parent = nullptr);
+    SQLiteDB(const QString con_name, QObject *parent = nullptr);
     ~SQLiteDB();
     
     void setDBPath(const QString db_path);
@@ -25,5 +25,4 @@ public:
     QStringList selectAllFilepaths();
 private:
     QSqlDatabase db;
-    LogWindow *log_window;
 };
