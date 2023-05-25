@@ -1,5 +1,4 @@
 #pragma once
-#include "gui/logwindow.h"
 
 #include <QJsonObject>
 #include <QMap>
@@ -23,5 +22,4 @@ public:
     static QStringList getCleanDBHashes(QStringList hashes);    
     static QStringList getCleanDBPaths(QMap<QString, QStringList> map);
     static bool fileExists(const QString file_path);
-    static inline LogWindow *log_window;
 };

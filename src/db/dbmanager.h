@@ -1,5 +1,4 @@
 #pragma once
-#include "gui/logwindow.h"
 
 #include <QApplication>
 #include <QSqlDatabase>

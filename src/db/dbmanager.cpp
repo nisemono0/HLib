@@ -1,5 +1,5 @@
 #include "dbmanager.h"
-#include "utils/utilfuncs.h"
+#include "utils/logging.h"
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -45,7 +45,7 @@ bool SQLiteDB::insert(const QMap<QString, QString> info_map) {
         if (query.exec()) {
             success = true;
         } else {
-            Utils::log_window->appendMessage(QString("[insertFile error]: %1").arg(query.lastError().text()));
+            Logging::logMessage(QString("[insertFile error]: %1").arg(query.lastError().text()));
         }
         query.clear();
         this->db.commit();
@@ -78,7 +78,7 @@ bool SQLiteDB::insert(QList<QMap<QString, QString>> map_list) {
         if (query.execBatch()) {
             success = true;
         } else {
-            Utils::log_window->appendMessage(QString("[insertFile error]: %1").arg(query.lastError().text()));
+            Logging::logMessage(QString("[insertFile error]: %1").arg(query.lastError().text()));
         }
         query.clear();
         this->db.commit();
@@ -97,7 +97,7 @@ QList<QMap<QString, QVariant>> SQLiteDB::selectAll() {
                                     {"file_path", query.value(2)}, {"tags", query.value(3)} });
             }
         } else {
-            Utils::log_window->appendMessage(QString("[select() error]: %1").arg(query.lastError().text()));
+            Logging::logMessage(QString("[select() error]: %1").arg(query.lastError().text()));
         }
         query.clear();
     }
@@ -115,7 +115,7 @@ QStringList SQLiteDB::selectTags(const QString tag_search) {
                 hash_list.append(query.value(0).toString());
             }
         } else {
-            Utils::log_window->appendMessage(QString("[select(tag_search) error]: %1").arg(query.lastError().text()));
+            Logging::logMessage(QString("[select(tag_search) error]: %1").arg(query.lastError().text()));
         }
         query.clear();
     }
@@ -132,7 +132,7 @@ QStringList SQLiteDB::selectAllHashes() {
                 hash_list.append(query.value(0).toString());
             }
         } else {
-            Utils::log_window->appendMessage(QString("[selectAllHashes() error]: %1").arg(query.lastError().text()));
+            Logging::logMessage(QString("[selectAllHashes() error]: %1").arg(query.lastError().text()));
         }
         query.clear();
     }
@@ -149,7 +149,7 @@ QStringList SQLiteDB::selectAllFilepaths() {
                 paths_list.append(query.value(0).toString());
             }
         } else {
-            Utils::log_window->appendMessage(QString("[selectAllFilepaths() error]: %1").arg(query.lastError().text()));
+            Logging::logMessage(QString("[selectAllFilepaths() error]: %1").arg(query.lastError().text()));
         }
         query.clear();
     }
@@ -166,7 +166,7 @@ bool SQLiteDB::removeFromDB(const QString del_hash) {
         if (query.exec()) {
             success = true;
         } else {
-            Utils::log_window->appendMessage(QString("[deleteFromDB(del_hash) error]: %1").arg(query.lastError().text()));
+            Logging::logMessage(QString("[deleteFromDB(del_hash) error]: %1").arg(query.lastError().text()));
         }
         query.clear();
         this->db.commit();
@@ -190,7 +190,7 @@ bool SQLiteDB::removeFromDB(QStringList del_hashes) {
         if (query.execBatch()) {
             success = true;
         } else {
-            Utils::log_window->appendMessage(QString("[removeFromDB(del_hashes) error]: %1").arg(query.lastError().text()));
+            Logging::logMessage(QString("[removeFromDB(del_hashes) error]: %1").arg(query.lastError().text()));
         }
         
         query.clear();

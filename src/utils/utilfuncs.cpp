@@ -1,4 +1,5 @@
 #include "utils/utilfuncs.h"
+#include "utils/logging.h"
 
 #include <QString>
 #include <QTextCodec>
@@ -29,7 +30,7 @@ QJsonObject Utils::getJsonFromZip(const QString zip_path, const QString json_nam
         QStringList info_json = zip.getFileNameList().filter(json_name, Qt::CaseInsensitive);
         
         if (info_json.isEmpty()) {
-            Utils::log_window->appendMessage(QString("[No json.info]: %1").arg(zip_path));
+            Logging::logMessage(QString("[No json.info]: %1").arg(zip_path));
         } else {
             if (zip.setCurrentFile(info_json[0], QuaZip::csInsensitive)) {
                 QuaZipFile zip_file(&zip);
@@ -38,7 +39,7 @@ QJsonObject Utils::getJsonFromZip(const QString zip_path, const QString json_nam
                     QJsonDocument json_doc = QJsonDocument::fromJson(json_bytes);
 
                     if (json_doc.isNull() || !json_doc.isObject()) {
-                        Utils::log_window->appendMessage(QString("[Failed to load info.json]: %1").arg(zip_path));
+                        Logging::logMessage(QString("[Failed to load info.json]: %1").arg(zip_path));
                         zip_file.close();
                         zip.close();
                         return json_obj;
@@ -135,12 +136,12 @@ bool Utils::createDB(const QString db_path, const QString con_name) {
             if (query.exec()) {
                 success = true;
             } else {
-                Utils::log_window->appendMessage(QString("[createDB error]: %1").arg(query.lastError().text()));
+                Logging::logMessage(QString("[createDB error]: %1").arg(query.lastError().text()));
             }
             query.clear();
             db.close();
         } else {
-            Utils::log_window->appendMessage(QString("[createDB couldn't open]: %1").arg(db_path));
+            Logging::logMessage(QString("[createDB couldn't open]: %1").arg(db_path));
             success = false;
         }
     }

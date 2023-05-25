@@ -1,5 +1,6 @@
 #include "gui/mainwindow.h"
 #include "utils/utilfuncs.h"
+#include "utils/logging.h"
 #include "utils/utildefs.h"
 
 #include <QDir>
@@ -211,7 +212,7 @@ void MainWindow::triggered_action_addDir() {
         if (!json_map.isEmpty()) {
             if (!db_hashes.contains(json_map["file_hash"]) || !db_filepaths.contains(json_map["file_path"])) {
                 data_list.append(json_map);
-                Utils::log_window->appendMessage(QString("[To add]: %1").arg(json_map["title"]));
+                Logging::logMessage(QString("[To add]: %1").arg(json_map["title"]));
                 total_toadd++;
             }
         }
@@ -355,10 +356,10 @@ void MainWindow::triggered_action_checkDB() {
         QString db_hash = db_select[i]["file_hash"].toString();
         QString disk_hash = Utils::getSHA1Hash(db_select[i]["file_path"].toString());
         if (disk_hash.isEmpty()) {
-            Utils::log_window->appendMessage(QString("[Not found]: %1").arg(db_select[i]["file_path"].toString()));
+            Logging::logMessage(QString("[Not found]: %1").arg(db_select[i]["file_path"].toString()));
         } else {
             if (QString::compare(db_hash, disk_hash, Qt::CaseInsensitive) != 0) {
-                Utils::log_window->appendMessage(QString("[Hash mismatch]: %1").arg(db_select[i]["file_path"].toString()));
+                Logging::logMessage(QString("[Hash mismatch]: %1").arg(db_select[i]["file_path"].toString()));
             }
         }
         progress.setValue(i);
@@ -383,7 +384,7 @@ void MainWindow::triggered_action_checkPaths() {
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     for (int i = 0; i < db_paths.length(); i++) {
         if (!Utils::fileExists(db_paths[i])) {
-            Utils::log_window->appendMessage(QString("[Not found]: %1").arg(db_paths[i]));
+            Logging::logMessage(QString("[Not found]: %1").arg(db_paths[i]));
         }
         progress.setValue(i);
         progress.setLabelText(QString("Working on files: [%1/%2]").arg(QString::number(i + 1), QString::number(db_paths.length())));
@@ -402,11 +403,11 @@ void MainWindow::triggered_action_scalechanged(int value) {
 }
 
 void MainWindow::triggered_action_showlogs() {
-    Utils::log_window->show();
+    Logging::showLoggingWindow();
 }
 
 void MainWindow::triggered_action_clearlogs() {
-    Utils::log_window->clearLogs();
+    Logging::clearLoggingWindow();
 }
 
 void MainWindow::lockWindowItems() {
