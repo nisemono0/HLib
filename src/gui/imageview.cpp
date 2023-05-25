@@ -98,7 +98,7 @@ void ImageView::hideStatus() {
 void ImageView::fitImage() {
     if (this->has_images) {
         this->setSceneRect(this->image_item->boundingRect());
-        this->fitInView(this->image_item, Qt::KeepAspectRatio);
+        this->fitInView(this->image_item->boundingRect(), Qt::KeepAspectRatio);
     }
 }
 
