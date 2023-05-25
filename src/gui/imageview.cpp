@@ -177,7 +177,7 @@ void ImageView::mouseMoveEvent(QMouseEvent *event) {
 
 void ImageView::mouseDoubleClickEvent(QMouseEvent *event) {
     QGraphicsView::mouseDoubleClickEvent(event);
-    if (this->has_images && !this->is_loaded_images) {
+    if (this->has_images && !this->is_loaded_images && event->button() == Qt::LeftButton) {
         QString file_path = this->image_item->data(MyDataRoles::FilePath).toString();
 
         QByteArrayList images_list = Utils::getImagesFromZip(file_path, this);
