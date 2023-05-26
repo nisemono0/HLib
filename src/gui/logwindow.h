@@ -13,4 +13,7 @@ public:
     void clearLogs();
 private:
     Ui::LogWindow ui;
+private slots:
+    void triggered_action_saveLog();
+    void triggered_action_close();
 };

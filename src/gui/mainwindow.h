@@ -15,6 +15,7 @@
 #include <QClipboard>
 #include <QWidgetAction>
 #include <QSlider>
+#include <QActionGroup>
 
 class MainWindow: public QMainWindow {
     Q_OBJECT
@@ -34,7 +35,9 @@ private:
     
     QSlider *h_slider;
     QWidgetAction *action_slider;
-    
+
+    QActionGroup *settings_view_group;
+
     int loaded_archives_num;
     void lockWindowItems();
     void unlockWindowItems();
@@ -59,6 +62,7 @@ private slots:
     void triggered_action_checkPaths();
     void triggered_action_scaleimage(bool checked);
     void triggered_action_scalechanged(int value);
+    void triggered_action_viewfit(QAction *action);
     void triggered_action_showlogs();
     void triggered_action_clearlogs();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);

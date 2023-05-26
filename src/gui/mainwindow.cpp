@@ -16,8 +16,9 @@
 #include <QClipboard>
 #include <QFileInfo>
 #include <QLocale>
+#include <QActionGroup>
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->ui.setupUi(this);
 
     this->db = new SQLiteDB("HLib_CON");
@@ -33,12 +34,18 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     this->h_slider->setPageStep(0);
     this->h_slider->setValue(0);
     this->action_slider->setDefaultWidget(this->h_slider);
-    this->ui.menuSettings->addAction(this->action_slider);
+    this->ui.menuSettings->insertAction(this->ui.menuSettingsView->menuAction(), this->action_slider);
+    this->ui.menuSettings->insertSeparator(this->ui.menuSettingsView->menuAction());
 
+    this->settings_view_group = new QActionGroup(this->ui.menuSettingsView);
+    this->settings_view_group->addAction(this->ui.actionFitInView);
+    this->settings_view_group->addAction(this->ui.actionFitToWidth);
+    this->settings_view_group->setExclusive(true);
+    
     this->loaded_archives_num = 0;
 
-    new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImageOption::NextImage);});
-    new QShortcut(QKeySequence(Qt::Key_Left), this, [=] { ui.graphicsView->setCurrentImage(SetImageOption::PrevImage);});
+    new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImage::NextImage);});
+    new QShortcut(QKeySequence(Qt::Key_Left), this, [=] { ui.graphicsView->setCurrentImage(SetImage::PrevImage);});
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this, [=] { ui.lineEditSearch->setFocus();});
 
     this->ui.treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -82,7 +89,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
 
     connect(this->ui.actionScaleImage, &QAction::toggled, this, &MainWindow::triggered_action_scaleimage);
     connect(this->h_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_scalechanged);
-
+    connect(this->settings_view_group, &QActionGroup::triggered, this, &MainWindow::triggered_action_viewfit);
+    
     connect(this->ui.actionShowLogs, &QAction::triggered, this, &MainWindow::triggered_action_showlogs);
     connect(this->ui.actionClearLogs, &QAction::triggered, this, &MainWindow::triggered_action_clearlogs);
 
@@ -110,6 +118,7 @@ MainWindow::~MainWindow() {
     delete this->img_status;
     delete this->h_slider;
     delete this->action_slider;
+    delete this->settings_view_group;
 }
 
 void MainWindow::triggered_action_changeTheme(const MyTheme::MyTheme theme) {
@@ -400,6 +409,14 @@ void MainWindow::triggered_action_scaleimage(bool checked) {
 
 void MainWindow::triggered_action_scalechanged(int value) {
     this->ui.graphicsView->setScaleValue(value);
+}
+
+void MainWindow::triggered_action_viewfit(QAction *action) {
+    if (action == this->ui.actionFitInView) {
+        this->ui.graphicsView->setViewFit(ImageOption::FitInView);
+    } else if (action == this->ui.actionFitToWidth) {
+        this->ui.graphicsView->setViewFit(ImageOption::FitToWidth);
+    }
 }
 
 void MainWindow::triggered_action_showlogs() {

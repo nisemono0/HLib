@@ -11,6 +11,7 @@
 #include <QClipboard>
 #include <QToolTip>
 #include <QCursor>
+#include <QScrollBar>
 
 ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->current_image = -1;
@@ -22,6 +23,7 @@ ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->is_loaded_images = false;
     this->current_pixmap = QPixmap();
     this->current_image_size = QSize();
+    this->image_fit_option = ImageOption::FitInView;
     this->cursor_next = QCursor(QPixmap(":mouse/mouse-image-next"), -1, -1);
     this->cursor_prev = QCursor(QPixmap(":mouse/mouse-image-prev"), -1, -1);
 }
@@ -67,10 +69,10 @@ QImage ImageView::getCurrentImage() {
     return QImage();
 }
 
-void ImageView::setCurrentImage(const SetImageOption::SetImageOption option) {
-    if (option == SetImageOption::NextImage && (0 <= this->current_image + 1 && this->current_image + 1 < this->total_images)) {
+void ImageView::setCurrentImage(const SetImage::SetImage option) {
+    if (option == SetImage::NextImage && (0 <= this->current_image + 1 && this->current_image + 1 < this->total_images)) {
         this->current_image++;
-    } else if (option == SetImageOption::PrevImage && (0 <= this->current_image - 1 && this->current_image - 1 < this->total_images)) {
+    } else if (option == SetImage::PrevImage && (0 <= this->current_image - 1 && this->current_image - 1 < this->total_images)) {
         this->current_image--;
     }
 
@@ -80,7 +82,8 @@ void ImageView::setCurrentImage(const SetImageOption::SetImageOption option) {
         this->current_image_size = this->current_pixmap.size();
         this->scaleAndFit();
         this->showStatus();
-    }    
+        this->centerOn(0, 0);
+    }
 }
 
 void ImageView::showStatus() {
@@ -98,7 +101,18 @@ void ImageView::hideStatus() {
 void ImageView::fitImage() {
     if (this->has_images) {
         this->setSceneRect(this->image_item->boundingRect());
-        this->fitInView(this->image_item->boundingRect(), Qt::KeepAspectRatio);
+        if (this->image_fit_option == ImageOption::FitInView) {
+            this->fitInView(this->image_item->boundingRect(), Qt::KeepAspectRatio);
+        } else if (this->image_fit_option == ImageOption::FitToWidth) {
+            int scroll_x = this->horizontalScrollBar()->value();
+            int scroll_y = this->verticalScrollBar()->value();
+            this->fitInView(this->scene()->itemsBoundingRect(), Qt::KeepAspectRatioByExpanding);
+            if (this->sceneRect().width() >= this->mapToScene(this->viewport()->rect()).boundingRect().width()) {
+                this->fitInView(this->image_item->boundingRect(), Qt::KeepAspectRatio);
+            }
+            this->horizontalScrollBar()->setValue(scroll_x);
+            this->verticalScrollBar()->setValue(scroll_y);
+        }
     }
 }
 
@@ -128,6 +142,11 @@ void ImageView::setScaleValue(int value) {
     this->scaleAndFit();
 }
 
+void ImageView::setViewFit(const ImageOption::ImageOption option) {
+    this->image_fit_option = option;
+    this->scaleAndFit();
+}
+
 void ImageView::clearImageView() {
     this->images = QByteArrayList();
     this->current_image = -1;
@@ -147,14 +166,14 @@ void ImageView::resizeEvent(QResizeEvent *event) {
 
 void ImageView::mouseReleaseEvent(QMouseEvent *event) {
     QGraphicsView::mouseReleaseEvent(event);
-    if (this->has_images) {
+    if (this->has_images && this->total_images > 1) {
         if (event->button() == Qt::LeftButton) {
             int mouse_x = event->localPos().x();
             int half_point = this->size().width() / 2;
             if (mouse_x > half_point) {
-                this->setCurrentImage(SetImageOption::NextImage);
+                this->setCurrentImage(SetImage::NextImage);
             } else {
-                this->setCurrentImage(SetImageOption::PrevImage);
+                this->setCurrentImage(SetImage::PrevImage);
             }
         }
     }
@@ -229,11 +248,4 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
 
 void ImageView::wheelEvent(QWheelEvent *event) {
     QGraphicsView::wheelEvent(event);
-    if (this->has_images) {
-        if (event->angleDelta().y() < 0) {
-            this->setCurrentImage(SetImageOption::NextImage);
-        } else if (event->angleDelta().y() > 0) {
-            this->setCurrentImage(SetImageOption::PrevImage);
-        }
-    }
 }

@@ -15,9 +15,10 @@ public:
     void loadImages(QByteArrayList images);
     void loadImages(QByteArray image);
     void addStatusLabel(QLabel *img_status);
-    void setCurrentImage(const SetImageOption::SetImageOption option);
+    void setCurrentImage(const SetImage::SetImage option);
     void toggleScaleImage(bool checked);
     void setScaleValue(int value);
+    void setViewFit(const ImageOption::ImageOption option);
 private:
     QByteArrayList images;
     int current_image;
@@ -26,6 +27,7 @@ private:
     bool scale_images;
     float scale_value;
     bool is_loaded_images;
+    ImageOption::ImageOption image_fit_option;
     QGraphicsPixmapItem *image_item;
     QLabel *img_status;
     QImage getCurrentImage();

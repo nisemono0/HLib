@@ -15,6 +15,10 @@ namespace MyTheme {
     enum MyTheme { DARK_MAROON, DARK_GREEN, DARK_PURPLE, FUSION, WINDOWS };
 };
 
-namespace SetImageOption {
-    enum SetImageOption { NextImage, PrevImage };
+namespace SetImage {
+    enum SetImage { NextImage, PrevImage };
+}
+
+namespace ImageOption{
+    enum ImageOption { FitInView, FitToWidth };
 }

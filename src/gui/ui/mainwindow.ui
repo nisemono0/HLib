@@ -194,7 +194,15 @@
     <property name="title">
      <string>Settings</string>
     </property>
+    <widget class="QMenu" name="menuSettingsView">
+     <property name="title">
+      <string>View</string>
+     </property>
+     <addaction name="actionFitInView"/>
+     <addaction name="actionFitToWidth"/>
+    </widget>
     <addaction name="actionScaleImage"/>
+    <addaction name="menuSettingsView"/>
    </widget>
    <widget class="QMenu" name="menuInfo">
     <property name="title">
@@ -386,6 +394,31 @@
    </property>
    <property name="statusTip">
     <string>Clears the logs</string>
+   </property>
+  </action>
+  <action name="actionFitInView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Fit in view</string>
+   </property>
+   <property name="statusTip">
+    <string>Fits the image in view</string>
+   </property>
+  </action>
+  <action name="actionFitToWidth">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Fit to width</string>
+   </property>
+   <property name="statusTip">
+    <string>Fits the image to width</string>
    </property>
   </action>
  </widget>

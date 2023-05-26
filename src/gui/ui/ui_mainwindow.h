@@ -50,6 +50,8 @@ public:
     QAction *actionCheckPaths;
     QAction *actionShowLogs;
     QAction *actionClearLogs;
+    QAction *actionFitInView;
+    QAction *actionFitToWidth;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -65,6 +67,7 @@ public:
     QMenu *menuLoad;
     QMenu *menuTheme;
     QMenu *menuSettings;
+    QMenu *menuSettingsView;
     QMenu *menuInfo;
 
     void setupUi(QMainWindow *MainWindow)
@@ -113,6 +116,13 @@ public:
         actionShowLogs->setObjectName(QString::fromUtf8("actionShowLogs"));
         actionClearLogs = new QAction(MainWindow);
         actionClearLogs->setObjectName(QString::fromUtf8("actionClearLogs"));
+        actionFitInView = new QAction(MainWindow);
+        actionFitInView->setObjectName(QString::fromUtf8("actionFitInView"));
+        actionFitInView->setCheckable(true);
+        actionFitInView->setChecked(true);
+        actionFitToWidth = new QAction(MainWindow);
+        actionFitToWidth->setObjectName(QString::fromUtf8("actionFitToWidth"));
+        actionFitToWidth->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -206,6 +216,8 @@ public:
         menuTheme->setObjectName(QString::fromUtf8("menuTheme"));
         menuSettings = new QMenu(menubar);
         menuSettings->setObjectName(QString::fromUtf8("menuSettings"));
+        menuSettingsView = new QMenu(menuSettings);
+        menuSettingsView->setObjectName(QString::fromUtf8("menuSettingsView"));
         menuInfo = new QMenu(menubar);
         menuInfo->setObjectName(QString::fromUtf8("menuInfo"));
         MainWindow->setMenuBar(menubar);
@@ -237,6 +249,9 @@ public:
         menuTheme->addAction(actionThemeFusion);
         menuTheme->addAction(actionThemeWindows);
         menuSettings->addAction(actionScaleImage);
+        menuSettings->addAction(menuSettingsView->menuAction());
+        menuSettingsView->addAction(actionFitInView);
+        menuSettingsView->addAction(actionFitToWidth);
         menuInfo->addAction(actionShowLogs);
         menuInfo->addAction(actionClearLogs);
 
@@ -345,12 +360,21 @@ public:
 #if QT_CONFIG(statustip)
         actionClearLogs->setStatusTip(QCoreApplication::translate("MainWindow", "Clears the logs", nullptr));
 #endif // QT_CONFIG(statustip)
+        actionFitInView->setText(QCoreApplication::translate("MainWindow", "Fit in view", nullptr));
+#if QT_CONFIG(statustip)
+        actionFitInView->setStatusTip(QCoreApplication::translate("MainWindow", "Fits the image in view", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionFitToWidth->setText(QCoreApplication::translate("MainWindow", "Fit to width", nullptr));
+#if QT_CONFIG(statustip)
+        actionFitToWidth->setStatusTip(QCoreApplication::translate("MainWindow", "Fits the image to width", nullptr));
+#endif // QT_CONFIG(statustip)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuLoad->setTitle(QCoreApplication::translate("MainWindow", "Database", nullptr));
         menuTheme->setTitle(QCoreApplication::translate("MainWindow", "Theme", nullptr));
         menuSettings->setTitle(QCoreApplication::translate("MainWindow", "Settings", nullptr));
+        menuSettingsView->setTitle(QCoreApplication::translate("MainWindow", "View", nullptr));
         menuInfo->setTitle(QCoreApplication::translate("MainWindow", "Info", nullptr));
     } // retranslateUi
 
