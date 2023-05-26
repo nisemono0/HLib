@@ -62,6 +62,8 @@
      <string>File</string>
     </property>
     <addaction name="actionSaveLog"/>
+    <addaction name="actionClearLog"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <addaction name="menuFile"/>
@@ -80,6 +82,14 @@
    </property>
    <property name="statusTip">
     <string>Close the window</string>
+   </property>
+  </action>
+  <action name="actionClearLog">
+   <property name="text">
+    <string>Clear log</string>
+   </property>
+   <property name="statusTip">
+    <string>Clear the log</string>
    </property>
   </action>
  </widget>

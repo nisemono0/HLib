@@ -11,6 +11,7 @@ LogWindow::LogWindow(QWidget *parent) : QMainWindow(parent) {
     this->ui.setupUi(this);
 
     connect(this->ui.actionSaveLog, &QAction::triggered, this, &LogWindow::triggered_action_saveLog);
+    connect(this->ui.actionClearLog, &QAction::triggered, this, &LogWindow::triggered_action_clearLog);
     connect(this->ui.actionClose, &QAction::triggered, this, &LogWindow::triggered_action_close);
 }
 
@@ -45,4 +46,8 @@ void LogWindow::triggered_action_saveLog() {
 
 void LogWindow::triggered_action_close() {
     this->hide();
+}
+
+void LogWindow::triggered_action_clearLog() {
+    this->clearLogs();
 }

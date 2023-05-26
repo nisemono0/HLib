@@ -209,7 +209,6 @@
      <string>Info</string>
     </property>
     <addaction name="actionShowLogs"/>
-    <addaction name="actionClearLogs"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuLoad"/>
@@ -386,14 +385,6 @@
    </property>
    <property name="statusTip">
     <string>Shows the logs window</string>
-   </property>
-  </action>
-  <action name="actionClearLogs">
-   <property name="text">
-    <string>Clear logs</string>
-   </property>
-   <property name="statusTip">
-    <string>Clears the logs</string>
    </property>
   </action>
   <action name="actionFitInView">

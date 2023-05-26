@@ -64,7 +64,6 @@ private slots:
     void triggered_action_scalechanged(int value);
     void triggered_action_viewfit(QAction *action);
     void triggered_action_showlogs();
-    void triggered_action_clearlogs();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void searchTreeItems(const QString search_str);
     void treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);

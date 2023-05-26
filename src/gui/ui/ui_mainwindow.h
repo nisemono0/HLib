@@ -49,7 +49,6 @@ public:
     QAction *actionCheckDB;
     QAction *actionCheckPaths;
     QAction *actionShowLogs;
-    QAction *actionClearLogs;
     QAction *actionFitInView;
     QAction *actionFitToWidth;
     QWidget *centralwidget;
@@ -114,8 +113,6 @@ public:
         actionCheckPaths->setObjectName(QString::fromUtf8("actionCheckPaths"));
         actionShowLogs = new QAction(MainWindow);
         actionShowLogs->setObjectName(QString::fromUtf8("actionShowLogs"));
-        actionClearLogs = new QAction(MainWindow);
-        actionClearLogs->setObjectName(QString::fromUtf8("actionClearLogs"));
         actionFitInView = new QAction(MainWindow);
         actionFitInView->setObjectName(QString::fromUtf8("actionFitInView"));
         actionFitInView->setCheckable(true);
@@ -253,7 +250,6 @@ public:
         menuSettingsView->addAction(actionFitInView);
         menuSettingsView->addAction(actionFitToWidth);
         menuInfo->addAction(actionShowLogs);
-        menuInfo->addAction(actionClearLogs);
 
         retranslateUi(MainWindow);
 
@@ -355,10 +351,6 @@ public:
         actionShowLogs->setText(QCoreApplication::translate("MainWindow", "Show logs", nullptr));
 #if QT_CONFIG(statustip)
         actionShowLogs->setStatusTip(QCoreApplication::translate("MainWindow", "Shows the logs window", nullptr));
-#endif // QT_CONFIG(statustip)
-        actionClearLogs->setText(QCoreApplication::translate("MainWindow", "Clear logs", nullptr));
-#if QT_CONFIG(statustip)
-        actionClearLogs->setStatusTip(QCoreApplication::translate("MainWindow", "Clears the logs", nullptr));
 #endif // QT_CONFIG(statustip)
         actionFitInView->setText(QCoreApplication::translate("MainWindow", "Fit in view", nullptr));
 #if QT_CONFIG(statustip)

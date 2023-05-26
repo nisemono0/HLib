@@ -16,4 +16,5 @@ private:
 private slots:
     void triggered_action_saveLog();
     void triggered_action_close();
+    void triggered_action_clearLog();
 };

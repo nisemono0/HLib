@@ -26,6 +26,7 @@ class Ui_LogWindow
 public:
     QAction *actionSaveLog;
     QAction *actionClose;
+    QAction *actionClearLog;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QPlainTextEdit *logPlainTextEdit;
@@ -43,6 +44,8 @@ public:
         actionSaveLog->setObjectName(QString::fromUtf8("actionSaveLog"));
         actionClose = new QAction(LogWindow);
         actionClose->setObjectName(QString::fromUtf8("actionClose"));
+        actionClearLog = new QAction(LogWindow);
+        actionClearLog->setObjectName(QString::fromUtf8("actionClearLog"));
         centralwidget = new QWidget(LogWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -71,6 +74,8 @@ public:
 
         menuBar->addAction(menuFile->menuAction());
         menuFile->addAction(actionSaveLog);
+        menuFile->addAction(actionClearLog);
+        menuFile->addSeparator();
         menuFile->addAction(actionClose);
 
         retranslateUi(LogWindow);
@@ -88,6 +93,10 @@ public:
         actionClose->setText(QCoreApplication::translate("LogWindow", "Close", nullptr));
 #if QT_CONFIG(statustip)
         actionClose->setStatusTip(QCoreApplication::translate("LogWindow", "Close the window", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionClearLog->setText(QCoreApplication::translate("LogWindow", "Clear log", nullptr));
+#if QT_CONFIG(statustip)
+        actionClearLog->setStatusTip(QCoreApplication::translate("LogWindow", "Clear the log", nullptr));
 #endif // QT_CONFIG(statustip)
         menuFile->setTitle(QCoreApplication::translate("LogWindow", "File", nullptr));
     } // retranslateUi

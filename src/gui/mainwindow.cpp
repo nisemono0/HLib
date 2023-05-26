@@ -92,7 +92,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(this->settings_view_group, &QActionGroup::triggered, this, &MainWindow::triggered_action_viewfit);
     
     connect(this->ui.actionShowLogs, &QAction::triggered, this, &MainWindow::triggered_action_showlogs);
-    connect(this->ui.actionClearLogs, &QAction::triggered, this, &MainWindow::triggered_action_clearlogs);
 
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
     connect(this->ui.actionThemeDarkGreen, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_GREEN);});
@@ -421,10 +420,6 @@ void MainWindow::triggered_action_viewfit(QAction *action) {
 
 void MainWindow::triggered_action_showlogs() {
     Logging::showLoggingWindow();
-}
-
-void MainWindow::triggered_action_clearlogs() {
-    Logging::clearLoggingWindow();
 }
 
 void MainWindow::lockWindowItems() {
