@@ -39,6 +39,7 @@ void ImageView::loadImages(QByteArrayList images) {
     this->current_image_size = this->current_pixmap.size();
     this->is_loaded_images = true;
     this->scaleAndFit();
+    this->centerOn(0, 0);
     this->setMouseTracking(true);
     this->showStatus();
 }
@@ -52,6 +53,7 @@ void ImageView::loadImages(QByteArray image) {
     this->current_pixmap = this->image_item->pixmap();
     this->current_image_size = this->current_pixmap.size();
     this->scaleAndFit();
+    this->centerOn(0, 0);
     this->setMouseTracking(true);
     this->showStatus();
 }
