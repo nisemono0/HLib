@@ -51,6 +51,7 @@ public:
     QAction *actionShowLogs;
     QAction *actionFitInView;
     QAction *actionFitToWidth;
+    QAction *actionFreeView;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -120,6 +121,9 @@ public:
         actionFitToWidth = new QAction(MainWindow);
         actionFitToWidth->setObjectName(QString::fromUtf8("actionFitToWidth"));
         actionFitToWidth->setCheckable(true);
+        actionFreeView = new QAction(MainWindow);
+        actionFreeView->setObjectName(QString::fromUtf8("actionFreeView"));
+        actionFreeView->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -249,6 +253,8 @@ public:
         menuSettings->addAction(menuSettingsView->menuAction());
         menuSettingsView->addAction(actionFitInView);
         menuSettingsView->addAction(actionFitToWidth);
+        menuSettingsView->addSeparator();
+        menuSettingsView->addAction(actionFreeView);
         menuInfo->addAction(actionShowLogs);
 
         retranslateUi(MainWindow);
@@ -359,6 +365,10 @@ public:
         actionFitToWidth->setText(QCoreApplication::translate("MainWindow", "Fit to width", nullptr));
 #if QT_CONFIG(statustip)
         actionFitToWidth->setStatusTip(QCoreApplication::translate("MainWindow", "Fits the image to width", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionFreeView->setText(QCoreApplication::translate("MainWindow", "Free view", nullptr));
+#if QT_CONFIG(statustip)
+        actionFreeView->setStatusTip(QCoreApplication::translate("MainWindow", "Don't fit the image, can zoom and move it around with the mousewheel scroll/button", nullptr));
 #endif // QT_CONFIG(statustip)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));

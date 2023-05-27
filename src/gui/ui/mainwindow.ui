@@ -200,6 +200,8 @@
      </property>
      <addaction name="actionFitInView"/>
      <addaction name="actionFitToWidth"/>
+     <addaction name="separator"/>
+     <addaction name="actionFreeView"/>
     </widget>
     <addaction name="actionScaleImage"/>
     <addaction name="menuSettingsView"/>
@@ -410,6 +412,17 @@
    </property>
    <property name="statusTip">
     <string>Fits the image to width</string>
+   </property>
+  </action>
+  <action name="actionFreeView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Free view</string>
+   </property>
+   <property name="statusTip">
+    <string>Don't fit the image, can zoom and move it around with the mousewheel scroll/button</string>
    </property>
   </action>
  </widget>

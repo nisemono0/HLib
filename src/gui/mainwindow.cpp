@@ -23,25 +23,39 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     this->db = new SQLiteDB("HLib_CON");
     
-    this->action_slider = new QWidgetAction(this->ui.menuSettings);
-    this->h_slider = new QSlider(this->ui.menuSettings);
-    this->h_slider->setFixedHeight(25);
-    this->h_slider->setOrientation(Qt::Horizontal);
-    this->h_slider->setTickPosition(QSlider::NoTicks);
-    this->h_slider->setMaximum(10);
-    this->h_slider->setMinimum(0);
-    this->h_slider->setSingleStep(0);
-    this->h_slider->setPageStep(0);
-    this->h_slider->setValue(0);
-    this->action_slider->setDefaultWidget(this->h_slider);
-    this->ui.menuSettings->insertAction(this->ui.menuSettingsView->menuAction(), this->action_slider);
+    this->action_scale_slider = new QWidgetAction(this->ui.menuSettings);
+    this->scale_slider = new QSlider(this->ui.menuSettings);
+    this->scale_slider->setFixedHeight(25);
+    this->scale_slider->setOrientation(Qt::Horizontal);
+    this->scale_slider->setTickPosition(QSlider::NoTicks);
+    this->scale_slider->setMaximum(10);
+    this->scale_slider->setMinimum(0);
+    this->scale_slider->setSingleStep(0);
+    this->scale_slider->setPageStep(0);
+    this->scale_slider->setValue(0);
+    this->action_scale_slider->setDefaultWidget(this->scale_slider);
+    this->ui.menuSettings->insertAction(this->ui.menuSettingsView->menuAction(), this->action_scale_slider);
     this->ui.menuSettings->insertSeparator(this->ui.menuSettingsView->menuAction());
 
     this->settings_view_group = new QActionGroup(this->ui.menuSettingsView);
     this->settings_view_group->addAction(this->ui.actionFitInView);
     this->settings_view_group->addAction(this->ui.actionFitToWidth);
+    this->settings_view_group->addAction(this->ui.actionFreeView);
     this->settings_view_group->setExclusive(true);
-    
+
+    this->action_zoom_slider = new QWidgetAction(this->ui.menuSettingsView);
+    this->zoom_slider = new QSlider(this->ui.menuSettingsView);
+    this->zoom_slider->setFixedHeight(25);
+    this->zoom_slider->setOrientation(Qt::Horizontal);
+    this->zoom_slider->setTickPosition(QSlider::NoTicks);
+    this->zoom_slider->setMaximum(10);
+    this->zoom_slider->setMinimum(1);
+    this->zoom_slider->setSingleStep(0);
+    this->zoom_slider->setPageStep(0);
+    this->zoom_slider->setValue(1);
+    this->action_zoom_slider->setDefaultWidget(this->zoom_slider);
+    this->ui.menuSettingsView->addAction(this->action_zoom_slider);
+
     this->loaded_archives_num = 0;
 
     new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImage::NextImage);});
@@ -88,9 +102,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(this->ui.actionCheckPaths, &QAction::triggered, this, &MainWindow::triggered_action_checkPaths);
 
     connect(this->ui.actionScaleImage, &QAction::toggled, this, &MainWindow::triggered_action_scaleimage);
-    connect(this->h_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_scalechanged);
+    connect(this->scale_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_scalechanged);
     connect(this->settings_view_group, &QActionGroup::triggered, this, &MainWindow::triggered_action_viewfit);
-    
+    connect(this->zoom_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_zoomchanged);
+
     connect(this->ui.actionShowLogs, &QAction::triggered, this, &MainWindow::triggered_action_showlogs);
 
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
@@ -115,9 +130,11 @@ MainWindow::~MainWindow() {
     delete this->scene;
     delete this->tree_status;
     delete this->img_status;
-    delete this->h_slider;
-    delete this->action_slider;
+    delete this->scale_slider;
+    delete this->action_scale_slider;
     delete this->settings_view_group;
+    delete this->zoom_slider;
+    delete this->action_zoom_slider;
 }
 
 void MainWindow::triggered_action_changeTheme(const MyTheme::MyTheme theme) {
@@ -415,7 +432,13 @@ void MainWindow::triggered_action_viewfit(QAction *action) {
         this->ui.graphicsView->setViewFit(ImageOption::FitInView);
     } else if (action == this->ui.actionFitToWidth) {
         this->ui.graphicsView->setViewFit(ImageOption::FitToWidth);
+    } else if (action == this->ui.actionFreeView) {
+        this->ui.graphicsView->setViewFit(ImageOption::FreeView);
     }
+}
+
+void MainWindow::triggered_action_zoomchanged(int value) {
+    this->ui.graphicsView->setZoomValue(value);
 }
 
 void MainWindow::triggered_action_showlogs() {

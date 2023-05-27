@@ -19,7 +19,8 @@ ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->has_images = false;
     this->image_item = nullptr;
     this->scale_images = true;
-    this->scale_value = 1;
+    this->scale_value = 1.0;
+    this->zoom_value = 1.1;
     this->is_loaded_images = false;
     this->current_pixmap = QPixmap();
     this->current_image_size = QSize();
@@ -144,6 +145,11 @@ void ImageView::setScaleValue(int value) {
     this->scaleAndFit();
 }
 
+void ImageView::setZoomValue(int value) {
+    this->zoom_value = 1.0 + (value / 10.0);
+    QToolTip::showText(QCursor::pos(), QString("Zoom: %1").arg(this->zoom_value), nullptr);
+}
+
 void ImageView::setViewFit(const ImageOption::ImageOption option) {
     this->image_fit_option = option;
     this->scaleAndFit();
@@ -166,7 +172,20 @@ void ImageView::resizeEvent(QResizeEvent *event) {
     this->scaleAndFit();
 }
 
+void ImageView::mousePressEvent(QMouseEvent *event) {
+    if (this->has_images && (this->image_fit_option == ImageOption::FitToWidth || this->image_fit_option == ImageOption::FreeView)) {
+        if (event->button() == Qt::MiddleButton) {
+            this->setDragMode(QGraphicsView::ScrollHandDrag);
+            QMouseEvent fake(event->type(), event->pos(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
+            QGraphicsView::mousePressEvent(&fake);
+        } else {
+            QGraphicsView::mousePressEvent(event);
+        }
+    }
+}
+
 void ImageView::mouseReleaseEvent(QMouseEvent *event) {
+    this->setDragMode(QGraphicsView::NoDrag);
     QGraphicsView::mouseReleaseEvent(event);
     if (this->has_images && this->total_images > 1) {
         if (event->button() == Qt::LeftButton) {
@@ -249,5 +268,16 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
 }
 
 void ImageView::wheelEvent(QWheelEvent *event) {
-    QGraphicsView::wheelEvent(event);
+    if (this->has_images && this->image_fit_option == ImageOption::FreeView) {
+        this->setTransformationAnchor(QGraphicsView::NoAnchor);
+        this->setResizeAnchor(QGraphicsView::NoAnchor);
+        if (event->angleDelta().y() > 0) {
+            this->scale(this->zoom_value, this->zoom_value);
+            this->centerOn(this->mapToScene(event->position().toPoint()));
+        } else if (event->angleDelta().y() < 0) {
+            this->scale(1.0 / this->zoom_value, 1.0 / this->zoom_value);
+        }
+    } else {
+        QGraphicsView::wheelEvent(event);
+    }
 }

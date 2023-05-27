@@ -18,6 +18,7 @@ public:
     void setCurrentImage(const SetImage::SetImage option);
     void toggleScaleImage(bool checked);
     void setScaleValue(int value);
+    void setZoomValue(int value);
     void setViewFit(const ImageOption::ImageOption option);
 private:
     QByteArrayList images;
@@ -26,6 +27,7 @@ private:
     bool has_images;
     bool scale_images;
     float scale_value;
+    float zoom_value;
     bool is_loaded_images;
     ImageOption::ImageOption image_fit_option;
     QGraphicsPixmapItem *image_item;
@@ -42,6 +44,7 @@ private:
     void scaleAndFit();
 protected:
     void resizeEvent(QResizeEvent *event);
+    void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);

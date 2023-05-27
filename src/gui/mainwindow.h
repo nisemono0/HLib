@@ -33,9 +33,12 @@ private:
     QLabel *tree_status;
     QLabel *img_status;
     
-    QSlider *h_slider;
-    QWidgetAction *action_slider;
+    QSlider *scale_slider;
+    QWidgetAction *action_scale_slider;
 
+    QSlider *zoom_slider;
+    QWidgetAction *action_zoom_slider;
+    
     QActionGroup *settings_view_group;
 
     int loaded_archives_num;
@@ -63,6 +66,7 @@ private slots:
     void triggered_action_scaleimage(bool checked);
     void triggered_action_scalechanged(int value);
     void triggered_action_viewfit(QAction *action);
+    void triggered_action_zoomchanged(int value);
     void triggered_action_showlogs();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void searchTreeItems(const QString search_str);

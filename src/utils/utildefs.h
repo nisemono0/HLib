@@ -20,5 +20,5 @@ namespace SetImage {
 }
 
 namespace ImageOption{
-    enum ImageOption { FitInView, FitToWidth };
+    enum ImageOption { FitInView, FitToWidth, FreeView };
 }
