@@ -422,7 +422,7 @@
     <string>Free view</string>
    </property>
    <property name="statusTip">
-    <string>Don't fit the image, can zoom and move it around with the mousewheel scroll/button</string>
+    <string>No fit, zoom in and out with scrollwheen and drag with middlebutton</string>
    </property>
   </action>
  </widget>

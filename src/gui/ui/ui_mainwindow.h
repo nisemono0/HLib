@@ -368,7 +368,7 @@ public:
 #endif // QT_CONFIG(statustip)
         actionFreeView->setText(QCoreApplication::translate("MainWindow", "Free view", nullptr));
 #if QT_CONFIG(statustip)
-        actionFreeView->setStatusTip(QCoreApplication::translate("MainWindow", "Don't fit the image, can zoom and move it around with the mousewheel scroll/button", nullptr));
+        actionFreeView->setStatusTip(QCoreApplication::translate("MainWindow", "No fit, zoom in and out with scrollwheen and drag with middlebutton", nullptr));
 #endif // QT_CONFIG(statustip)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
