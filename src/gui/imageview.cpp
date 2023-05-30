@@ -12,6 +12,7 @@
 #include <QToolTip>
 #include <QCursor>
 #include <QScrollBar>
+#include <QInputDialog>
 
 ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->current_image = -1;
@@ -80,7 +81,21 @@ void ImageView::setCurrentImage(const SetImage::SetImage option) {
     }
 
     if (this->has_images && (0 <= current_image && current_image < this->total_images)) {
-        this->current_image = current_image;
+        this->current_pixmap.loadFromData(this->images[this->current_image]);
+        this->current_image_size = this->current_pixmap.size();
+        this->scaleAndFit();
+        this->showStatus();
+        this->centerOn(0, 0);
+    }
+}
+
+void ImageView::setCurrentImage(const int image_number) {
+    if (this->has_images) {
+        if (image_number <= 0) {
+            this->current_image = 0;
+        } else if (image_number < this->total_images) {
+            this->current_image = image_number;
+        }
         this->current_pixmap.loadFromData(this->images[this->current_image]);
         this->current_image_size = this->current_pixmap.size();
         this->scaleAndFit();
@@ -239,11 +254,14 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
         QAction *load_all_images = new QAction("Load all images", &menu);
         QAction *copy_current_image = new QAction("Copy image", &menu);
         QAction *copy_title = new QAction("Copy title", &menu);
+        QAction *jump_to = new QAction("Jump to", &menu);
         menu.addAction(load_all_images);
         menu.addAction(copy_current_image);
         menu.addSeparator();
         menu.addAction(copy_title);
-        
+        menu.addSeparator();
+        menu.addAction(jump_to);
+
         QAction *clicked_action = menu.exec(event->globalPos());
 
         if (!clicked_action) {
@@ -263,6 +281,9 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
         } else if (clicked_action == copy_title) {
             QApplication::clipboard()->clear();
             QApplication::clipboard()->setText(title);
+        } else if (clicked_action == jump_to) {
+            int jump_image = QInputDialog::getInt(this, "Jump to", "Jump to image", 1, 1, this->total_images, 1) - 1;
+            this->setCurrentImage(jump_image);
         }
     }
 }

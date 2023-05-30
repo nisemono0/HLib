@@ -16,6 +16,7 @@ public:
     void loadImages(QByteArray image);
     void addStatusLabel(QLabel *img_status);
     void setCurrentImage(const SetImage::SetImage option);
+    void setCurrentImage(const int image_number);
     void toggleScaleImage(bool checked);
     void setScaleValue(int value);
     void setZoomValue(int value);
