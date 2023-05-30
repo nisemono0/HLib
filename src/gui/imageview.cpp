@@ -282,7 +282,9 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
             QApplication::clipboard()->clear();
             QApplication::clipboard()->setText(title);
         } else if (clicked_action == jump_to) {
-            int jump_image = QInputDialog::getInt(this, "Jump to", "Jump to image", 1, 1, this->total_images, 1) - 1;
+            int jump_image = QInputDialog::getInt(this, "Jump to",
+                QString("Jump to image (%1, %2)").arg(QString::number(1), QString::number(this->total_images)),
+                1, 1, this->total_images, 1) - 1;
             this->setCurrentImage(jump_image);
         }
     }
