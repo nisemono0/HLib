@@ -182,13 +182,11 @@ void MainWindow::triggered_action_addFile() {
     }
 
     if (QFile::exists(file_path)) {
-        QJsonObject json_obj = Utils::getJsonFromZip(file_path, "info.json");
-        QMap json_map = Utils::getMapFromJson(json_obj);
-
-        if (!json_map.isEmpty()) {
-            QStringList db_hashes = this->db->selectAllHashes();
-            QStringList db_filepaths = this->db->selectAllFilepaths();
-            if (!db_hashes.contains(json_map["file_hash"]) || !db_filepaths.contains(json_map["file_path"])) {
+        QStringList db_filepaths = this->db->selectAllFilepaths();
+        if (!db_filepaths.contains(file_path, Qt::CaseInsensitive)) {
+            QJsonObject json_obj = Utils::getJsonFromZip(file_path, "info.json");
+            QMap json_map = Utils::getMapFromJson(json_obj);
+            if (!json_map.isEmpty()) {
                 if (this->db->insert(json_map)) {
                     this->populateTree();
                     QMessageBox::information(this, "Info", QString("Added %1 to database").arg(json_map["title"]));
@@ -196,8 +194,10 @@ void MainWindow::triggered_action_addFile() {
                     QMessageBox::warning(this, "Warning", "Couldn't add to database");
                 }
             } else {
-                QMessageBox::information(this, "Info", "Archive already in database");
+                QMessageBox::warning(this, "Warning", "No json found in archive");
             }
+        } else {
+            QMessageBox::information(this, "Info", "Archive already in database");
         }
     }
 }
@@ -222,7 +222,6 @@ void MainWindow::triggered_action_addDir() {
     }
 
     QList<QMap<QString, QString>> data_list;
-    QStringList db_hashes = this->db->selectAllHashes();
     QStringList db_filepaths = this->db->selectAllFilepaths();
     int total_toadd = 0;
     
@@ -231,14 +230,15 @@ void MainWindow::triggered_action_addDir() {
     progress.show();
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     for (int i = 0; i < zip_files.length(); i++) {
-        QJsonObject json_obj = Utils::getJsonFromZip(zip_files[i], "info.json");
-        QMap json_map = Utils::getMapFromJson(json_obj);
-
-        if (!json_map.isEmpty()) {
-            if (!db_hashes.contains(json_map["file_hash"]) || !db_filepaths.contains(json_map["file_path"])) {
+        if (!db_filepaths.contains(zip_files[i], Qt::CaseInsensitive)) {
+            QJsonObject json_obj = Utils::getJsonFromZip(zip_files[i], "info.json");
+            QMap json_map = Utils::getMapFromJson(json_obj);
+            if (!json_map.isEmpty()) {
                 data_list.append(json_map);
                 Logging::logMessage(QString("[To add]: %1").arg(json_map["title"]));
                 total_toadd++;
+            } else {
+                Logging::logMessage(QString("[No json]: %1").arg(zip_files[i]));
             }
         }
 
