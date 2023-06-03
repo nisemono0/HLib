@@ -13,6 +13,7 @@
 #include <QCursor>
 #include <QScrollBar>
 #include <QInputDialog>
+#include <QMessageBox>
 
 ImageView::ImageView(QWidget *parent) : QGraphicsView(parent) {
     this->current_image = -1;
@@ -252,12 +253,15 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
         QString title = this->image_item->data(MyDataRoles::Title).toString();
 
         QAction *load_all_images = new QAction("Load all images", &menu);
+        QAction *show_zip_info = new QAction("Show zip info", &menu);
         QAction *copy_current_image = new QAction("Copy image", &menu);
         QAction *copy_title = new QAction("Copy title", &menu);
-        QAction *jump_to = new QAction("Jump to", &menu);
+        QAction *jump_to = new QAction("Jump to image", &menu);
         menu.addAction(load_all_images);
-        menu.addAction(copy_current_image);
         menu.addSeparator();
+        menu.addAction(show_zip_info);
+        menu.addSeparator();
+        menu.addAction(copy_current_image);
         menu.addAction(copy_title);
         menu.addSeparator();
         menu.addAction(jump_to);
@@ -275,6 +279,9 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
             }
             this->image_item->setData(MyDataRoles::FilePath, QVariant::fromValue(file_path));
             this->loadImages(images_list);
+        } else if (clicked_action == show_zip_info) {
+            QString info = Utils::getArchiveInfo(file_path, "info.json");
+            QMessageBox::information(this, "Zip archive info", info);
         } else if (clicked_action == copy_current_image) {
             QApplication::clipboard()->clear();
             QApplication::clipboard()->setImage(this->getCurrentImage());
@@ -282,7 +289,7 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
             QApplication::clipboard()->clear();
             QApplication::clipboard()->setText(title);
         } else if (clicked_action == jump_to) {
-            int jump_image = QInputDialog::getInt(this, "Jump to",
+            int jump_image = QInputDialog::getInt(this, "Jump to image",
                 QString("Jump to image (%1, %2)").arg(QString::number(1), QString::number(this->total_images)),
                 1, 1, this->total_images, 1) - 1;
             this->setCurrentImage(jump_image);

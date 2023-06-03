@@ -338,3 +338,8 @@ bool Utils::fileExists(const QString file_path) {
     }
     return false;
 }
+
+QString Utils::getArchiveInfo(const QString file_path, const QString json_name) {
+    QJsonDocument json_doc(Utils::getJsonFromZip(file_path, json_name));
+    return json_doc.toJson(QJsonDocument::Indented);
+}

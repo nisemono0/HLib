@@ -602,12 +602,15 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
 
     QMenu menu(this);
     QAction *load_all_images = new QAction("Load all images", &menu);
+    QAction *show_zip_info = new QAction("Show zip info", &menu);
     QAction *copy_title = new QAction("Copy title", &menu);
     QAction *copy_filepath = new QAction("Copy path", &menu);
     QAction *copy_tags = new QAction("Copy tags", &menu);
     QAction *copy_hash = new QAction("Copy hash", &menu);
     QAction *remove_db = new QAction("Remove from DB", &menu);
     menu.addAction(load_all_images);
+    menu.addSeparator();
+    menu.addAction(show_zip_info);
     menu.addSeparator();
     menu.addAction(copy_title);
     menu.addAction(copy_filepath);
@@ -623,8 +626,10 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
 
     if (clicked_action == load_all_images) {
         this->loadAllImages(item_filepath, title);
-    }
-    else if (clicked_action == copy_title) {
+    } else if (clicked_action == show_zip_info) {
+        QString info = Utils::getArchiveInfo(item_filepath, "info.json");
+        QMessageBox::information(this, "Zip archive info", info);
+    } else if (clicked_action == copy_title) {
         QApplication::clipboard()->clear();
         QApplication::clipboard()->setText(item_filename, QClipboard::Clipboard);
     } else if (clicked_action == copy_filepath) {
