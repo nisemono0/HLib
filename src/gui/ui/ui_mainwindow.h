@@ -264,7 +264,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "HLib", nullptr));
         actionLoadDB->setText(QCoreApplication::translate("MainWindow", "Load DB", nullptr));
 #if QT_CONFIG(statustip)
         actionLoadDB->setStatusTip(QCoreApplication::translate("MainWindow", "Load a database", nullptr));

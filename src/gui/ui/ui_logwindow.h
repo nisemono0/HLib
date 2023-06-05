@@ -85,7 +85,7 @@ public:
 
     void retranslateUi(QMainWindow *LogWindow)
     {
-        LogWindow->setWindowTitle(QCoreApplication::translate("LogWindow", "MainWindow", nullptr));
+        LogWindow->setWindowTitle(QCoreApplication::translate("LogWindow", "Logs", nullptr));
         actionSaveLog->setText(QCoreApplication::translate("LogWindow", "Save log", nullptr));
 #if QT_CONFIG(statustip)
         actionSaveLog->setStatusTip(QCoreApplication::translate("LogWindow", "Save the log to a file", nullptr));
