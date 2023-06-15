@@ -22,7 +22,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayoutSearch" stretch="0,0,1">
+     <layout class="QHBoxLayout" name="horizontalLayoutSearch" stretch="0,0,0,1">
       <item>
        <widget class="QPushButton" name="pushButtonSearch">
         <property name="sizePolicy">
@@ -31,8 +31,27 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="statusTip">
+         <string>Search the database</string>
+        </property>
         <property name="text">
          <string>Search</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonRandom">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="statusTip">
+         <string>Select random from view</string>
+        </property>
+        <property name="text">
+         <string>Random</string>
         </property>
        </widget>
       </item>
@@ -43,6 +62,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="statusTip">
+         <string>Refresh the search</string>
         </property>
         <property name="text">
          <string>Refresh</string>

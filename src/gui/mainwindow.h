@@ -73,4 +73,6 @@ private slots:
     void treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void showTreeContextMenu(const QPoint &pos);
     void treeDoubleClick(QTreeWidgetItem *item, int column);
+    void randomButtonClicked();
+    void refreshButtonClicked();
 };

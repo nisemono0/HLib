@@ -17,6 +17,7 @@
 #include <QFileInfo>
 #include <QLocale>
 #include <QActionGroup>
+#include <QRandomGenerator>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->ui.setupUi(this);
@@ -116,7 +117,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     connect(this->ui.pushButtonSearch, &QPushButton::pressed, this, [=] { MainWindow::searchTreeItems(ui.lineEditSearch->text());});
     connect(this->ui.lineEditSearch, &QLineEdit::returnPressed, this, [=] { MainWindow::searchTreeItems(ui.lineEditSearch->text());});
-    connect(this->ui.pushButtonRefresh, &QPushButton::pressed, this, [=] {ui.lineEditSearch->setText(""); MainWindow::searchTreeItems("");});
+    connect(this->ui.pushButtonRandom, &QPushButton::pressed, this, &MainWindow::randomButtonClicked);
+    connect(this->ui.pushButtonRefresh, &QPushButton::pressed, this, &MainWindow::refreshButtonClicked);
 
     connect(this->ui.treeWidget, &QTreeWidget::currentItemChanged, this, &MainWindow::treeItemChanged);
     connect(this->ui.treeWidget, &QTreeWidget::customContextMenuRequested, this, &MainWindow::showTreeContextMenu);
@@ -457,6 +459,7 @@ void MainWindow::lockWindowItems() {
     this->ui.actionCheckPaths->setEnabled(false);
     this->ui.lineEditSearch->setEnabled(false);
     this->ui.pushButtonSearch->setEnabled(false);
+    this->ui.pushButtonRandom->setEnabled(false);
     this->ui.pushButtonRefresh->setEnabled(false);
 }
 
@@ -472,6 +475,7 @@ void MainWindow::unlockWindowItems() {
     this->ui.actionCheckPaths->setEnabled(true);
     this->ui.lineEditSearch->setEnabled(true);
     this->ui.pushButtonSearch->setEnabled(true);
+    this->ui.pushButtonRandom->setEnabled(true);
     this->ui.pushButtonRefresh->setEnabled(true);
 }
 
@@ -663,4 +667,34 @@ void MainWindow::treeDoubleClick(QTreeWidgetItem *item, int column) {
     QString title = item->data(0, MyDataRoles::Title).toString();
     
     this->loadAllImages(item_filepath, title);
+}
+
+void MainWindow::randomButtonClicked() {
+    QList<QTreeWidgetItem *> visible_items;
+
+    QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
+    while (*tree_it) {
+        if (!(*tree_it)->isHidden()) {
+            visible_items.append(*tree_it);
+        }
+        tree_it++;
+    }
+
+    if (visible_items.length() > 0) {
+        this->ui.treeWidget->setCurrentItem(visible_items[QRandomGenerator::global()->bounded(0, visible_items.length())]);
+    }
+}
+
+void MainWindow::refreshButtonClicked() {
+    QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
+    while (*tree_it) {
+        (*tree_it)->setHidden(false);
+        tree_it++;
+    }
+    
+    this->ui.lineEditSearch->setText("");
+    
+    if (this->ui.treeWidget->topLevelItemCount() > 0) {
+        this->ui.treeWidget->setCurrentItem(this->ui.treeWidget->topLevelItem(0));
+    }
 }

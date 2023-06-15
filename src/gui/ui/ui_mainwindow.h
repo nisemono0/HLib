@@ -56,6 +56,7 @@ public:
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
     QPushButton *pushButtonSearch;
+    QPushButton *pushButtonRandom;
     QPushButton *pushButtonRefresh;
     QLineEdit *lineEditSearch;
     QSplitter *splitterExplorer;
@@ -140,6 +141,16 @@ public:
 
         horizontalLayoutSearch->addWidget(pushButtonSearch);
 
+        pushButtonRandom = new QPushButton(centralwidget);
+        pushButtonRandom->setObjectName(QString::fromUtf8("pushButtonRandom"));
+        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(pushButtonRandom->sizePolicy().hasHeightForWidth());
+        pushButtonRandom->setSizePolicy(sizePolicy1);
+
+        horizontalLayoutSearch->addWidget(pushButtonRandom);
+
         pushButtonRefresh = new QPushButton(centralwidget);
         pushButtonRefresh->setObjectName(QString::fromUtf8("pushButtonRefresh"));
         sizePolicy.setHeightForWidth(pushButtonRefresh->sizePolicy().hasHeightForWidth());
@@ -152,17 +163,17 @@ public:
 
         horizontalLayoutSearch->addWidget(lineEditSearch);
 
-        horizontalLayoutSearch->setStretch(2, 1);
+        horizontalLayoutSearch->setStretch(3, 1);
 
         verticalLayout->addLayout(horizontalLayoutSearch);
 
         splitterExplorer = new QSplitter(centralwidget);
         splitterExplorer->setObjectName(QString::fromUtf8("splitterExplorer"));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(splitterExplorer->sizePolicy().hasHeightForWidth());
-        splitterExplorer->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(splitterExplorer->sizePolicy().hasHeightForWidth());
+        splitterExplorer->setSizePolicy(sizePolicy2);
         splitterExplorer->setMinimumSize(QSize(0, 0));
         splitterExplorer->setOrientation(Qt::Horizontal);
         splitterExplorer->setHandleWidth(4);
@@ -176,11 +187,11 @@ public:
         __qtreewidgetitem->setFont(0, font);
         treeWidget->setHeaderItem(__qtreewidgetitem);
         treeWidget->setObjectName(QString::fromUtf8("treeWidget"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(treeWidget->sizePolicy().hasHeightForWidth());
-        treeWidget->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(treeWidget->sizePolicy().hasHeightForWidth());
+        treeWidget->setSizePolicy(sizePolicy3);
         treeWidget->setMinimumSize(QSize(150, 0));
         treeWidget->setMaximumSize(QSize(16777215, 16777215));
         treeWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -188,11 +199,11 @@ public:
         splitterExplorer->addWidget(treeWidget);
         graphicsView = new ImageView(splitterExplorer);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy3.setHorizontalStretch(100);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(graphicsView->sizePolicy().hasHeightForWidth());
-        graphicsView->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy4.setHorizontalStretch(100);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(graphicsView->sizePolicy().hasHeightForWidth());
+        graphicsView->setSizePolicy(sizePolicy4);
         graphicsView->setMinimumSize(QSize(300, 0));
         graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -370,7 +381,17 @@ public:
 #if QT_CONFIG(statustip)
         actionFreeView->setStatusTip(QCoreApplication::translate("MainWindow", "No fit, zoom in and out with scrollwheen and drag with middlebutton", nullptr));
 #endif // QT_CONFIG(statustip)
+#if QT_CONFIG(statustip)
+        pushButtonSearch->setStatusTip(QCoreApplication::translate("MainWindow", "Search the database", nullptr));
+#endif // QT_CONFIG(statustip)
         pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
+#if QT_CONFIG(statustip)
+        pushButtonRandom->setStatusTip(QCoreApplication::translate("MainWindow", "Select random from view", nullptr));
+#endif // QT_CONFIG(statustip)
+        pushButtonRandom->setText(QCoreApplication::translate("MainWindow", "Random", nullptr));
+#if QT_CONFIG(statustip)
+        pushButtonRefresh->setStatusTip(QCoreApplication::translate("MainWindow", "Refresh the search", nullptr));
+#endif // QT_CONFIG(statustip)
         pushButtonRefresh->setText(QCoreApplication::translate("MainWindow", "Refresh", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuLoad->setTitle(QCoreApplication::translate("MainWindow", "Database", nullptr));
