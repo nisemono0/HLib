@@ -611,6 +611,7 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     QAction *copy_filepath = new QAction("Copy path", &menu);
     QAction *copy_tags = new QAction("Copy tags", &menu);
     QAction *copy_hash = new QAction("Copy hash", &menu);
+    QAction *check_hash = new QAction("Check hash", &menu);
     QAction *remove_db = new QAction("Remove from DB", &menu);
     menu.addAction(load_all_images);
     menu.addSeparator();
@@ -620,6 +621,8 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     menu.addAction(copy_filepath);
     menu.addAction(copy_tags);
     menu.addAction(copy_hash);
+    menu.addSeparator();
+    menu.addAction(check_hash);
     menu.addSeparator();
     menu.addAction(remove_db);
     QAction *clicked_action = menu.exec(this->ui.treeWidget->viewport()->mapToGlobal(pos));
@@ -645,6 +648,13 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     } else if (clicked_action == copy_hash) {
         QApplication::clipboard()->clear();
         QApplication::clipboard()->setText(item_filehash, QClipboard::Clipboard);
+    } else if (clicked_action == check_hash) {
+        QString disk_hash = Utils::getSHA1Hash(item_filepath);
+        if (QString::compare(item_filehash, disk_hash, Qt::CaseInsensitive) == 0) {
+            QMessageBox::information(this, "Info", "Hashes are the same");
+        } else {
+            QMessageBox::information(this, "Info", "Hashes don't match");
+        }
     } else if (clicked_action == remove_db) {
         QMessageBox::StandardButton remove_reply = QMessageBox::question(this, "Remove from DB", QString("Remove %1 from DB").arg(title), QMessageBox::Yes | QMessageBox::No);
         if (remove_reply == QMessageBox::Yes) {
