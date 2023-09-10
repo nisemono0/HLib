@@ -1,5 +1,5 @@
 <h1 align="center"> HLib </h1>
-<p align="center">Shitty Qt app to search/read my local H library</p>
+<p align="center">Qt app to search/read my local library</p>
 
 # Info
 Uses the ```info.json``` tag files inside the archives. <br>
