@@ -18,6 +18,4 @@ Run ```qmakeconf.sh``` then ```make release``` <br>
 The binary is ```./release/HLib```
 
 ### Windows
-Theoretically compiling on Windows should work (I wouldn't know, never tested) <br>
-Make sure that the libs and include paths are set in the ```qmakeconf.sh``` or the ```.pro``` file <br>
-Compile it
+Theoretically compiling on Windows should work (I wouldn't know, never tested)
