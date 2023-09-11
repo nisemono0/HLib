@@ -8,7 +8,6 @@ Only searches for ```*.zip``` archives since that's all I use. <br>
 # Dependencies (Arch Linux)
 ```qt5-base``` <br>
 ```quazip-qt5``` <br>
-```sqlite``` <br>
 
 # Compile
 
