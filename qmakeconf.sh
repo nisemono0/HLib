@@ -2,7 +2,7 @@
 
 MODULES="QT += widgets sql"
 
-CONFIG="CONFIG += debug_and_release"
+CONFIG="CONFIG += debug_and_release optimize_full"
 
 RELEASE_DIR="Release:DESTDIR = release"
 DEBUG_DIR="Debug:DESTDIR = debug"
