@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->ui.menuSettingsView->addAction(this->action_zoom_slider);
 
     this->loaded_archives_num = 0;
+    this->filtered_archives_num = 0;
 
     new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImage::NextImage);});
     new QShortcut(QKeySequence(Qt::Key_Left), this, [=] { ui.graphicsView->setCurrentImage(SetImage::PrevImage);});
@@ -299,6 +300,7 @@ void MainWindow::triggered_action_unloadDB() {
     this->resetTreeStatusMessage();
     this->lockWindowItems();
     this->loaded_archives_num = 0;
+    this->filtered_archives_num = 0;
     QMessageBox::information(this, "Info", "Database unloaded");
 }
 
@@ -493,7 +495,7 @@ void MainWindow::resetTreeStatusMessage() {
 }
 
 void MainWindow::setTreeStatusMessage() {
-    this->tree_status->setText(QString("Loaded: [%1]").arg(QString::number(this->loaded_archives_num)));
+    this->tree_status->setText(QString("Showing: [%1/%2]").arg(QString::number(this->filtered_archives_num), QString::number(this->loaded_archives_num)));
 }
 
 void MainWindow::setTreeStatusMessage(const QString file_path) {
@@ -503,7 +505,7 @@ void MainWindow::setTreeStatusMessage(const QString file_path) {
     if (file.exists()) {
         file_size = locale.formattedDataSize(file.size(), 1, QLocale::DataSizeIecFormat);
     }
-    this->tree_status->setText(QString("Loaded: [%1] | Filesize: [%2]").arg(QString::number(this->loaded_archives_num), file_size));
+    this->tree_status->setText(QString("Showing: [%1/%2] | Filesize: [%3]").arg(QString::number(this->filtered_archives_num), QString::number(this->loaded_archives_num), file_size));
 }
 
 void MainWindow::populateTree() {
@@ -521,13 +523,25 @@ void MainWindow::populateTree() {
         root_items.append(root);
     }
     this->ui.treeWidget->addTopLevelItems(root_items);
-    this->loaded_archives_num = this->ui.treeWidget->topLevelItemCount();
+    this->loaded_archives_num = this->filtered_archives_num = this->ui.treeWidget->topLevelItemCount();
     this->setTreeStatusMessage();
+}
+
+QTreeWidgetItem *MainWindow::getFirstVisibleItem() {
+    QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
+    while (*tree_it) {
+        if (!(*tree_it)->isHidden()) {
+            return (*tree_it);
+        }
+        tree_it++;
+    }
+    return nullptr;
 }
 
 void MainWindow::searchTreeItems(const QString search_str) {
     QStringList hash_list = this->db->selectTags("*" + search_str + "*");
-    
+    this->filtered_archives_num = 0;
+
     QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
     while (*tree_it) {
         if (Utils::isNullOrEmpty(search_str)) {
@@ -536,12 +550,15 @@ void MainWindow::searchTreeItems(const QString search_str) {
             QString tree_item_hash = (*tree_it)->data(0, MyDataRoles::FileHash).toString();
             if (hash_list.contains(tree_item_hash, Qt::CaseSensitive)) {
                 (*tree_it)->setHidden(false);
+                this->filtered_archives_num++;
             } else {
                 (*tree_it)->setHidden(true);
             }
         }
         tree_it++;
     }
+
+    this->ui.treeWidget->setCurrentItem(this->getFirstVisibleItem());
 }
 
 void MainWindow::loadAllImages(const QString item_path, const QString title) {
@@ -577,14 +594,20 @@ void MainWindow::loadFIrstImage(const QString file_path, const QString title) {
 }
 
 void MainWindow::treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
-    this->clearView();
-
     // (void)previous;
-    Q_UNUSED(previous);
+    // Q_UNUSED(previous);
     
     if (current == nullptr) {
+        if (previous == nullptr) {
+            this->setTreeStatusMessage();
+            return;
+        }
+        QString item_path = previous->data(0, MyDataRoles::FilePath).toString();
+        this->setTreeStatusMessage(item_path);
         return;
     }
+
+    this->clearView();
     
     QString item_path = current->data(0, MyDataRoles::FilePath).toString();
     QString title = current->data(0, MyDataRoles::Title).toString();
@@ -705,6 +728,7 @@ void MainWindow::refreshButtonClicked() {
     this->ui.lineEditSearch->setText("");
     
     if (this->ui.treeWidget->topLevelItemCount() > 0) {
+        this->filtered_archives_num = this->loaded_archives_num;
         this->ui.treeWidget->setCurrentItem(this->ui.treeWidget->topLevelItem(0));
     }
 }

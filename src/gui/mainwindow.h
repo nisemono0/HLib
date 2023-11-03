@@ -41,7 +41,9 @@ private:
     
     QActionGroup *settings_view_group;
 
-    int loaded_archives_num;
+    unsigned int loaded_archives_num;
+    unsigned int filtered_archives_num;
+
     void lockWindowItems();
     void unlockWindowItems();
     void clearTree();
@@ -52,6 +54,7 @@ private:
     void setTreeStatusMessage(const QString file_path);
     void loadAllImages(const QString file_path, const QString title);
     void loadFIrstImage(const QString file_path, const QString title);
+    QTreeWidgetItem *getFirstVisibleItem();
 private slots:
     void triggered_action_addDir();
     void triggered_action_addFile();
