@@ -7,6 +7,7 @@
 void Logging::setLoggerWindow(QWidget *parent) {
     if (Logging::log_window == nullptr) {
         Logging::log_window = new LogWindow(parent);
+        Logging::log_window->setWindowFlag(Qt::Dialog);
     }
 }
 
