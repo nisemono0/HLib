@@ -13,6 +13,7 @@ int main(int argc, char **argv) {
 
     Logging::setLoggerWindow(&mainWin);
 
+    mainWin.setWindowFlag(Qt::Dialog);
     mainWin.show();
 
     return app.exec();
