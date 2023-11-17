@@ -168,7 +168,7 @@ QStringList Utils::getZipFilesList(const QString dir_path) {
     dir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
     dir.setNameFilters({ "*.zip" });
 
-    QDirIterator zip_files_it(dir, QDirIterator::Subdirectories);
+    QDirIterator zip_files_it(dir, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
     while(zip_files_it.hasNext()){
         zips_list.append(zip_files_it.next());
     }
