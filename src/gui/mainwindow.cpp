@@ -760,6 +760,8 @@ void MainWindow::refreshButtonClicked() {
     
     if (this->ui.treeWidget->topLevelItemCount() > 0) {
         this->filtered_archives_num = this->loaded_archives_num;
-        this->ui.treeWidget->setCurrentItem(this->ui.treeWidget->topLevelItem(0));
+        if (this->select_first_result) {
+            this->ui.treeWidget->setCurrentItem(this->ui.treeWidget->topLevelItem(0));
+        }
     }
 }
