@@ -60,6 +60,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->loaded_archives_num = 0;
     this->filtered_archives_num = 0;
 
+    this->search_timer = new QTimer(this);
+    this->old_search = this->ui.lineEditSearch->text();
+    this->select_first_result = false;
+
     new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImage::NextImage);});
     new QShortcut(QKeySequence(Qt::Key_Left), this, [=] { ui.graphicsView->setCurrentImage(SetImage::PrevImage);});
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this, [=] { ui.lineEditSearch->setFocus();});
@@ -108,6 +112,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(this->settings_view_group, &QActionGroup::triggered, this, &MainWindow::triggered_action_viewfit);
     connect(this->zoom_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_zoomchanged);
 
+    connect(this->ui.actionSearchWhileTyping, &QAction::toggled, this, &MainWindow::triggered_action_search_typing);
+    connect(this->search_timer, &QTimer::timeout, this, &MainWindow::triggered_search_timer);
+    connect(this->ui.actionSelectFirstAfterSearch, &QAction::toggled, this, &MainWindow::triggered_action_select_first_result);
+
     connect(this->ui.actionShowLogs, &QAction::triggered, this, &MainWindow::triggered_action_showlogs);
 
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
@@ -138,6 +146,7 @@ MainWindow::~MainWindow() {
     delete this->settings_view_group;
     delete this->zoom_slider;
     delete this->action_zoom_slider;
+    delete this->search_timer;
 }
 
 void MainWindow::triggered_action_changeTheme(const MyTheme::MyTheme theme) {
@@ -427,6 +436,26 @@ void MainWindow::triggered_action_scaleimage(bool checked) {
     this->ui.graphicsView->toggleScaleImage(checked);
 }
 
+void MainWindow::triggered_action_search_typing(bool checked) {
+    if (checked) {
+        this->search_timer->start(500);
+    } else {
+        this->search_timer->stop();
+    }
+}
+
+void MainWindow::triggered_action_select_first_result(bool checked) {
+    this->select_first_result = checked;
+}
+
+void MainWindow::triggered_search_timer() {
+    QString new_search = this->ui.lineEditSearch->text();
+    if (this->old_search != new_search) {
+        this->searchTreeItems(new_search);
+        this->old_search = new_search;
+    }
+}
+
 void MainWindow::triggered_action_scalechanged(int value) {
     this->ui.graphicsView->setScaleValue(value);
 }
@@ -558,7 +587,9 @@ void MainWindow::searchTreeItems(const QString search_str) {
         tree_it++;
     }
 
-    this->ui.treeWidget->setCurrentItem(this->getFirstVisibleItem());
+    if (this->select_first_result) {
+        this->ui.treeWidget->setCurrentItem(this->getFirstVisibleItem());
+    }
 }
 
 void MainWindow::loadAllImages(const QString item_path, const QString title) {

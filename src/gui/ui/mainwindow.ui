@@ -227,6 +227,8 @@
     </widget>
     <addaction name="actionScaleImage"/>
     <addaction name="menuSettingsView"/>
+    <addaction name="actionSearchWhileTyping"/>
+    <addaction name="actionSelectFirstAfterSearch"/>
    </widget>
    <widget class="QMenu" name="menuInfo">
     <property name="title">
@@ -445,6 +447,31 @@
    </property>
    <property name="statusTip">
     <string>No fit, zoom in and out with scrollwheen and drag with middlebutton</string>
+   </property>
+  </action>
+  <action name="actionSearchWhileTyping">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Search while typing</string>
+   </property>
+   <property name="statusTip">
+    <string>Enable or disables searching while typing in the searchbox</string>
+   </property>
+  </action>
+  <action name="actionSelectFirstAfterSearch">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Select first item after search</string>
+   </property>
+   <property name="statusTip">
+    <string>Enable or disables selecting the first result after search</string>
    </property>
   </action>
  </widget>

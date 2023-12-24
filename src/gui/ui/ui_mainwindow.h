@@ -52,6 +52,8 @@ public:
     QAction *actionFitInView;
     QAction *actionFitToWidth;
     QAction *actionFreeView;
+    QAction *actionSearchWhileTyping;
+    QAction *actionSelectFirstAfterSearch;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -125,6 +127,13 @@ public:
         actionFreeView = new QAction(MainWindow);
         actionFreeView->setObjectName(QString::fromUtf8("actionFreeView"));
         actionFreeView->setCheckable(true);
+        actionSearchWhileTyping = new QAction(MainWindow);
+        actionSearchWhileTyping->setObjectName(QString::fromUtf8("actionSearchWhileTyping"));
+        actionSearchWhileTyping->setCheckable(true);
+        actionSelectFirstAfterSearch = new QAction(MainWindow);
+        actionSelectFirstAfterSearch->setObjectName(QString::fromUtf8("actionSelectFirstAfterSearch"));
+        actionSelectFirstAfterSearch->setCheckable(true);
+        actionSelectFirstAfterSearch->setEnabled(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -262,6 +271,8 @@ public:
         menuTheme->addAction(actionThemeWindows);
         menuSettings->addAction(actionScaleImage);
         menuSettings->addAction(menuSettingsView->menuAction());
+        menuSettings->addAction(actionSearchWhileTyping);
+        menuSettings->addAction(actionSelectFirstAfterSearch);
         menuSettingsView->addAction(actionFitInView);
         menuSettingsView->addAction(actionFitToWidth);
         menuSettingsView->addSeparator();
@@ -380,6 +391,14 @@ public:
         actionFreeView->setText(QCoreApplication::translate("MainWindow", "Free view", nullptr));
 #if QT_CONFIG(statustip)
         actionFreeView->setStatusTip(QCoreApplication::translate("MainWindow", "No fit, zoom in and out with scrollwheen and drag with middlebutton", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionSearchWhileTyping->setText(QCoreApplication::translate("MainWindow", "Search while typing", nullptr));
+#if QT_CONFIG(statustip)
+        actionSearchWhileTyping->setStatusTip(QCoreApplication::translate("MainWindow", "Enable or disables searching while typing in the searchbox", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionSelectFirstAfterSearch->setText(QCoreApplication::translate("MainWindow", "Select first item after search", nullptr));
+#if QT_CONFIG(statustip)
+        actionSelectFirstAfterSearch->setStatusTip(QCoreApplication::translate("MainWindow", "Enable or disables selecting the first result after search", nullptr));
 #endif // QT_CONFIG(statustip)
 #if QT_CONFIG(statustip)
         pushButtonSearch->setStatusTip(QCoreApplication::translate("MainWindow", "Search the database", nullptr));

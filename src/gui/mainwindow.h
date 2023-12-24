@@ -16,6 +16,7 @@
 #include <QWidgetAction>
 #include <QSlider>
 #include <QActionGroup>
+#include <QTimer>
 
 class MainWindow: public QMainWindow {
     Q_OBJECT
@@ -44,6 +45,10 @@ private:
     unsigned int loaded_archives_num;
     unsigned int filtered_archives_num;
 
+    QTimer *search_timer;
+    QString old_search;
+    bool select_first_result;
+
     void lockWindowItems();
     void unlockWindowItems();
     void clearTree();
@@ -69,6 +74,9 @@ private slots:
     void triggered_action_scaleimage(bool checked);
     void triggered_action_scalechanged(int value);
     void triggered_action_viewfit(QAction *action);
+    void triggered_action_search_typing(bool checked);
+    void triggered_action_select_first_result(bool checked);
+    void triggered_search_timer();
     void triggered_action_zoomchanged(int value);
     void triggered_action_showlogs();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
