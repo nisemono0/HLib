@@ -60,6 +60,7 @@ private:
     void loadAllImages(const QString file_path, const QString title);
     void loadFIrstImage(const QString file_path, const QString title);
     QTreeWidgetItem *getFirstVisibleItem();
+    bool removeTreeItem(QTreeWidgetItem *item);
 private slots:
     void triggered_action_addDir();
     void triggered_action_addFile();

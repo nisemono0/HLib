@@ -567,6 +567,16 @@ QTreeWidgetItem *MainWindow::getFirstVisibleItem() {
     return nullptr;
 }
 
+bool MainWindow::removeTreeItem(QTreeWidgetItem *item) {
+    int index = this->ui.treeWidget->indexOfTopLevelItem(item);
+    if (index != -1) {
+        if (this->ui.treeWidget->takeTopLevelItem(index) != nullptr) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void MainWindow::searchTreeItems(const QString search_str) {
     QStringList hash_list = this->db->selectTags("*" + search_str + "*");
     this->filtered_archives_num = 0;
@@ -713,8 +723,11 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
         QMessageBox::StandardButton remove_reply = QMessageBox::question(this, "Remove from DB", QString("Remove %1 from DB").arg(title), QMessageBox::Yes | QMessageBox::No);
         if (remove_reply == QMessageBox::Yes) {
             if (this->db->removeFromDB(item_filehash)) {
-                this->populateTree();
-                QMessageBox::information(this, "Info", QString("Removed %1 from DB").arg(title));
+                if (this->removeTreeItem(item)) {
+                    QMessageBox::information(this, "Info", QString("Removed %1 from DB").arg(title));
+                } else {
+                    QMessageBox::warning(this, "Warning", "Couldn't remove item from tree");
+                }
             } else {
                 QMessageBox::warning(this, "Warning", "Couldn't remove from DB");
             }
