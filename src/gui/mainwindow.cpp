@@ -600,6 +600,8 @@ void MainWindow::searchTreeItems(const QString search_str) {
     if (this->select_first_result) {
         this->ui.treeWidget->setCurrentItem(this->getFirstVisibleItem());
     }
+    
+    this->setTreeStatusMessage();
 }
 
 void MainWindow::loadAllImages(const QString item_path, const QString title) {
@@ -724,6 +726,9 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
         if (remove_reply == QMessageBox::Yes) {
             if (this->db->removeFromDB(item_filehash)) {
                 if (this->removeTreeItem(item)) {
+                    this->loaded_archives_num--;
+                    this->filtered_archives_num--;
+                    this->setTreeStatusMessage();
                     QMessageBox::information(this, "Info", QString("Removed %1 from DB").arg(title));
                 } else {
                     QMessageBox::warning(this, "Warning", "Couldn't remove item from tree");
@@ -763,12 +768,8 @@ void MainWindow::randomButtonClicked() {
 }
 
 void MainWindow::refreshButtonClicked() {
-    QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
-    while (*tree_it) {
-        (*tree_it)->setHidden(false);
-        tree_it++;
-    }
-    
+    this->populateTree();
+
     this->ui.lineEditSearch->setText("");
     
     if (this->ui.treeWidget->topLevelItemCount() > 0) {
