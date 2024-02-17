@@ -6,7 +6,10 @@
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
-    
+
+    QApplication::setOrganizationDomain("HLib");
+    QApplication::setApplicationName("HLib");
+
     app.setStyle("Fusion");
 
     MainWindow mainWin;
