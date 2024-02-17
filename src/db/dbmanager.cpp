@@ -19,6 +19,10 @@ void SQLiteDB::setDBPath(const QString db_path) {
     this->db.setDatabaseName(db_path);
 }
 
+QString SQLiteDB::getDBPath() {
+    return this->db.databaseName();
+}
+
 bool SQLiteDB::openDB() {
     if (this->db.open()) {
         return true;

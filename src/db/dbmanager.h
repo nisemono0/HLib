@@ -12,6 +12,7 @@ public:
     ~SQLiteDB();
     
     void setDBPath(const QString db_path);
+    QString getDBPath();
     bool openDB();
     void closeDB();
     bool insert(QMap<QString, QString> info_map);
