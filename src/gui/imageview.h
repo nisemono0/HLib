@@ -19,7 +19,6 @@ public:
     void setCurrentImage(const int image_number);
     void toggleScaleImage(bool checked);
     void setScaleValue(int value);
-    void setZoomValue(int value);
     void setViewFit(const ImageOption::ImageOption option);
 private:
     QByteArrayList images;

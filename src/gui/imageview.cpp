@@ -161,11 +161,6 @@ void ImageView::setScaleValue(int value) {
     this->scaleAndFit();
 }
 
-void ImageView::setZoomValue(int value) {
-    this->zoom_value = 1.0 + (value / 10.0);
-    QToolTip::showText(QCursor::pos(), QString("Zoom: %1").arg(this->zoom_value), nullptr);
-}
-
 void ImageView::setViewFit(const ImageOption::ImageOption option) {
     this->image_fit_option = option;
     this->scaleAndFit();

@@ -18,12 +18,13 @@
 #include <QLocale>
 #include <QActionGroup>
 #include <QRandomGenerator>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->ui.setupUi(this);
 
     this->db = new SQLiteDB("HLib_CON");
-    
+
     this->action_scale_slider = new QWidgetAction(this->ui.menuSettings);
     this->scale_slider = new QSlider(this->ui.menuSettings);
     this->scale_slider->setFixedHeight(25);
@@ -43,19 +44,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->settings_view_group->addAction(this->ui.actionFitToWidth);
     this->settings_view_group->addAction(this->ui.actionFreeView);
     this->settings_view_group->setExclusive(true);
-
-    this->action_zoom_slider = new QWidgetAction(this->ui.menuSettingsView);
-    this->zoom_slider = new QSlider(this->ui.menuSettingsView);
-    this->zoom_slider->setFixedHeight(25);
-    this->zoom_slider->setOrientation(Qt::Horizontal);
-    this->zoom_slider->setTickPosition(QSlider::NoTicks);
-    this->zoom_slider->setMaximum(10);
-    this->zoom_slider->setMinimum(1);
-    this->zoom_slider->setSingleStep(0);
-    this->zoom_slider->setPageStep(0);
-    this->zoom_slider->setValue(1);
-    this->action_zoom_slider->setDefaultWidget(this->zoom_slider);
-    this->ui.menuSettingsView->addAction(this->action_zoom_slider);
 
     this->loaded_archives_num = 0;
     this->filtered_archives_num = 0;
@@ -108,9 +96,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(this->ui.actionCheckPaths, &QAction::triggered, this, &MainWindow::triggered_action_checkPaths);
 
     connect(this->ui.actionScaleImage, &QAction::toggled, this, &MainWindow::triggered_action_scaleimage);
-    connect(this->scale_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_scalechanged);
+    connect(this->scale_slider, &QSlider::valueChanged, this, &MainWindow::triggered_action_scalechanged);
     connect(this->settings_view_group, &QActionGroup::triggered, this, &MainWindow::triggered_action_viewfit);
-    connect(this->zoom_slider, &QSlider::sliderMoved, this, &MainWindow::triggered_action_zoomchanged);
 
     connect(this->ui.actionSearchWhileTyping, &QAction::toggled, this, &MainWindow::triggered_action_search_typing);
     connect(this->search_timer, &QTimer::timeout, this, &MainWindow::triggered_search_timer);
@@ -132,9 +119,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(this->ui.treeWidget, &QTreeWidget::currentItemChanged, this, &MainWindow::treeItemChanged);
     connect(this->ui.treeWidget, &QTreeWidget::customContextMenuRequested, this, &MainWindow::showTreeContextMenu);
     connect(this->ui.treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::treeDoubleClick);
+
+    this->loadSettings();
 }
 
 MainWindow::~MainWindow() {
+    this->saveSettings();
     this->db->closeDB();
     delete this->db;
     delete this->pixitem;
@@ -144,8 +134,6 @@ MainWindow::~MainWindow() {
     delete this->scale_slider;
     delete this->action_scale_slider;
     delete this->settings_view_group;
-    delete this->zoom_slider;
-    delete this->action_zoom_slider;
     delete this->search_timer;
 }
 
@@ -470,10 +458,6 @@ void MainWindow::triggered_action_viewfit(QAction *action) {
     }
 }
 
-void MainWindow::triggered_action_zoomchanged(int value) {
-    this->ui.graphicsView->setZoomValue(value);
-}
-
 void MainWindow::triggered_action_showlogs() {
     Logging::showLoggingWindow();
 }
@@ -575,6 +559,42 @@ bool MainWindow::removeTreeItem(QTreeWidgetItem *item) {
         }
     }
     return false;
+}
+
+void MainWindow::saveSettings() {
+    this->settings.setValue("db_path", this->db->getDBPath());
+    this->settings.setValue("scale_image", this->ui.actionScaleImage->isChecked());
+    this->settings.setValue("scale_slider", this->scale_slider->value()); // Maybe setValue emit another signal ?
+    this->settings.setValue("search_type", this->ui.actionSearchWhileTyping->isChecked());
+    this->settings.setValue("remember_settings", this->ui.actionRememberSettings->isChecked());
+    this->settings.setValue("load_lastdb", this->ui.actionLoadLastDB->isChecked());    
+}
+
+void MainWindow::loadSettings() {
+    QString db_path = this->settings.value("db_path", "").toString();
+    bool scale_image = this->settings.value("scale_image", false).toBool();
+    int scale_slider = this->settings.value("scale_slider", 0).toInt();
+    bool search_type = this->settings.value("search_type", false).toBool();
+    bool remember_settings = this->settings.value("remember_settings", false).toBool();
+    bool load_lastdb = this->settings.value("load_lastdb", false).toBool();
+
+    this->ui.actionRememberSettings->setChecked(remember_settings);
+    if (remember_settings) {
+        this->ui.actionScaleImage->setChecked(scale_image);
+        this->scale_slider->setValue(scale_slider);
+        this->ui.actionSearchWhileTyping->setChecked(search_type);
+    }
+
+    this->ui.actionLoadLastDB->setChecked(load_lastdb);
+    if (load_lastdb && !db_path.isEmpty()) {
+        this->clearView();
+        this->ui.lineEditSearch->setText("");
+        this->db->setDBPath(db_path);
+        if (this->db->openDB()) {
+            this->unlockWindowItems();
+            this->populateTree();
+        }
+    }
 }
 
 void MainWindow::searchTreeItems(const QString search_str) {

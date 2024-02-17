@@ -54,6 +54,8 @@ public:
     QAction *actionFreeView;
     QAction *actionSearchWhileTyping;
     QAction *actionSelectFirstAfterSearch;
+    QAction *actionRememberSettings;
+    QAction *actionLoadLastDB;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayoutSearch;
@@ -110,7 +112,7 @@ public:
         actionScaleImage = new QAction(MainWindow);
         actionScaleImage->setObjectName(QString::fromUtf8("actionScaleImage"));
         actionScaleImage->setCheckable(true);
-        actionScaleImage->setChecked(true);
+        actionScaleImage->setChecked(false);
         actionCheckDB = new QAction(MainWindow);
         actionCheckDB->setObjectName(QString::fromUtf8("actionCheckDB"));
         actionCheckPaths = new QAction(MainWindow);
@@ -134,6 +136,12 @@ public:
         actionSelectFirstAfterSearch->setObjectName(QString::fromUtf8("actionSelectFirstAfterSearch"));
         actionSelectFirstAfterSearch->setCheckable(true);
         actionSelectFirstAfterSearch->setEnabled(true);
+        actionRememberSettings = new QAction(MainWindow);
+        actionRememberSettings->setObjectName(QString::fromUtf8("actionRememberSettings"));
+        actionRememberSettings->setCheckable(true);
+        actionLoadLastDB = new QAction(MainWindow);
+        actionLoadLastDB->setObjectName(QString::fromUtf8("actionLoadLastDB"));
+        actionLoadLastDB->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -273,6 +281,9 @@ public:
         menuSettings->addAction(menuSettingsView->menuAction());
         menuSettings->addAction(actionSearchWhileTyping);
         menuSettings->addAction(actionSelectFirstAfterSearch);
+        menuSettings->addSeparator();
+        menuSettings->addAction(actionRememberSettings);
+        menuSettings->addAction(actionLoadLastDB);
         menuSettingsView->addAction(actionFitInView);
         menuSettingsView->addAction(actionFitToWidth);
         menuSettingsView->addSeparator();
@@ -399,6 +410,14 @@ public:
         actionSelectFirstAfterSearch->setText(QCoreApplication::translate("MainWindow", "Select first item after search", nullptr));
 #if QT_CONFIG(statustip)
         actionSelectFirstAfterSearch->setStatusTip(QCoreApplication::translate("MainWindow", "Enable or disables selecting the first result after search", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionRememberSettings->setText(QCoreApplication::translate("MainWindow", "Remember settings", nullptr));
+#if QT_CONFIG(statustip)
+        actionRememberSettings->setStatusTip(QCoreApplication::translate("MainWindow", "Remember last used settings", nullptr));
+#endif // QT_CONFIG(statustip)
+        actionLoadLastDB->setText(QCoreApplication::translate("MainWindow", "Load last used DB", nullptr));
+#if QT_CONFIG(statustip)
+        actionLoadLastDB->setStatusTip(QCoreApplication::translate("MainWindow", "Load (if possible) the last used DB", nullptr));
 #endif // QT_CONFIG(statustip)
 #if QT_CONFIG(statustip)
         pushButtonSearch->setStatusTip(QCoreApplication::translate("MainWindow", "Search the database", nullptr));

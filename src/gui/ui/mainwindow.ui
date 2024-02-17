@@ -229,6 +229,9 @@
     <addaction name="menuSettingsView"/>
     <addaction name="actionSearchWhileTyping"/>
     <addaction name="actionSelectFirstAfterSearch"/>
+    <addaction name="separator"/>
+    <addaction name="actionRememberSettings"/>
+    <addaction name="actionLoadLastDB"/>
    </widget>
    <widget class="QMenu" name="menuInfo">
     <property name="title">
@@ -377,7 +380,7 @@
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Scale image to window</string>
@@ -472,6 +475,28 @@
    </property>
    <property name="statusTip">
     <string>Enable or disables selecting the first result after search</string>
+   </property>
+  </action>
+  <action name="actionRememberSettings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Remember settings</string>
+   </property>
+   <property name="statusTip">
+    <string>Remember last used settings</string>
+   </property>
+  </action>
+  <action name="actionLoadLastDB">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Load last used DB</string>
+   </property>
+   <property name="statusTip">
+    <string>Load (if possible) the last used DB</string>
    </property>
   </action>
  </widget>

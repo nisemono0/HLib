@@ -17,6 +17,7 @@
 #include <QSlider>
 #include <QActionGroup>
 #include <QTimer>
+#include <QSettings>
 
 class MainWindow: public QMainWindow {
     Q_OBJECT
@@ -36,9 +37,6 @@ private:
     
     QSlider *scale_slider;
     QWidgetAction *action_scale_slider;
-
-    QSlider *zoom_slider;
-    QWidgetAction *action_zoom_slider;
     
     QActionGroup *settings_view_group;
 
@@ -48,6 +46,8 @@ private:
     QTimer *search_timer;
     QString old_search;
     bool select_first_result;
+
+    QSettings settings;
 
     void lockWindowItems();
     void unlockWindowItems();
@@ -61,6 +61,8 @@ private:
     void loadFIrstImage(const QString file_path, const QString title);
     QTreeWidgetItem *getFirstVisibleItem();
     bool removeTreeItem(QTreeWidgetItem *item);
+    void saveSettings();
+    void loadSettings();
 private slots:
     void triggered_action_addDir();
     void triggered_action_addFile();
@@ -78,7 +80,6 @@ private slots:
     void triggered_action_search_typing(bool checked);
     void triggered_action_select_first_result(bool checked);
     void triggered_search_timer();
-    void triggered_action_zoomchanged(int value);
     void triggered_action_showlogs();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void searchTreeItems(const QString search_str);
