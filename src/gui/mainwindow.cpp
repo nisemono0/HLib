@@ -586,7 +586,7 @@ void MainWindow::loadSettings() {
     }
 
     this->ui.actionLoadLastDB->setChecked(load_lastdb);
-    if (load_lastdb && !db_path.isEmpty()) {
+    if (load_lastdb && Utils::fileExists(db_path)) {
         this->clearView();
         this->ui.lineEditSearch->setText("");
         this->db->setDBPath(db_path);
