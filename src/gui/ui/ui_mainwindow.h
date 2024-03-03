@@ -112,7 +112,7 @@ public:
         actionScaleImage = new QAction(MainWindow);
         actionScaleImage->setObjectName(QString::fromUtf8("actionScaleImage"));
         actionScaleImage->setCheckable(true);
-        actionScaleImage->setChecked(false);
+        actionScaleImage->setChecked(true);
         actionCheckDB = new QAction(MainWindow);
         actionCheckDB->setObjectName(QString::fromUtf8("actionCheckDB"));
         actionCheckPaths = new QAction(MainWindow);
