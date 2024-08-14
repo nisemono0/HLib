@@ -30,7 +30,8 @@ QJsonObject Utils::getJsonFromZip(const QString zip_path, const QString json_nam
         QStringList info_json = zip.getFileNameList().filter(json_name, Qt::CaseInsensitive);
         
         if (info_json.isEmpty()) {
-            Logging::logMessage(QString("[No json.info]: %1").arg(zip_path));
+            zip.close();
+            return json_obj;
         } else {
             if (zip.setCurrentFile(info_json[0], QuaZip::csInsensitive)) {
                 QuaZipFile zip_file(&zip);
@@ -66,7 +67,7 @@ QJsonObject Utils::getJsonFromZip(const QString zip_path, const QString json_nam
 QMap<QString, QString> Utils::getMapFromJson(QJsonObject json_obj) {
     QMap<QString, QString> mapped_data;
 
-    if (json_obj.isEmpty()) {
+    if (json_obj.isEmpty() || !json_obj.contains("gallery_info")) {
         return mapped_data;
     }
 

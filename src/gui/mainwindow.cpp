@@ -223,8 +223,9 @@ void MainWindow::triggered_action_addDir() {
 
     QList<QMap<QString, QString>> data_list;
     QStringList db_filepaths = this->db->selectAllFilepaths();
-    int total_toadd = 0;
-    
+    int total_added = 0;
+    int total_notadded = 0;
+
     QProgressDialog progress("Adding files to DB", nullptr, 0, zip_files.length() - 1, this);
     progress.setWindowModality(Qt::WindowModal);
     progress.show();
@@ -232,13 +233,19 @@ void MainWindow::triggered_action_addDir() {
     for (int i = 0; i < zip_files.length(); i++) {
         if (!db_filepaths.contains(zip_files[i], Qt::CaseInsensitive)) {
             QJsonObject json_obj = Utils::getJsonFromZip(zip_files[i], "info.json");
-            QMap json_map = Utils::getMapFromJson(json_obj);
-            if (!json_map.isEmpty()) {
-                data_list.append(json_map);
-                Logging::logMessage(QString("[To add]: %1").arg(json_map["title"]));
-                total_toadd++;
+            if (!json_obj.isEmpty()) {
+                QMap json_map = Utils::getMapFromJson(json_obj);
+                if (!json_map.isEmpty()) {
+                    data_list.append(json_map);
+                    Logging::logMessage(QString("[To add]: %1").arg(json_map["title"]));
+                    total_added++;
+                } else {
+                    Logging::logMessage(QString("[No gallery_info json]: %1").arg(zip_files[i]));
+                    total_notadded++;
+                }
             } else {
-                Logging::logMessage(QString("[No json]: %1").arg(zip_files[i]));
+                Logging::logMessage(QString("[No json.info]: %1").arg(zip_files[i]));
+                total_notadded++;
             }
         }
 
@@ -249,7 +256,7 @@ void MainWindow::triggered_action_addDir() {
     progress.hide();
     if (this->db->insert(data_list)) {
         this->populateTree();
-        QMessageBox::information(this, "Info", QString("Added %1 archives to database").arg(QString::number(total_toadd)));
+        QMessageBox::information(this, "Info", QString("Added: %1 archives\nSkipped: %2 archives").arg(QString::number(total_added), QString::number(total_notadded)));
     } else {
         QMessageBox::warning(this, "Warning", "Couldn't add to database");
     }
