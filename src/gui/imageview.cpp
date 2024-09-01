@@ -251,7 +251,8 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
         QAction *show_zip_info = new QAction("Show zip info", &menu);
         QAction *copy_current_image = new QAction("Copy image", &menu);
         QAction *copy_title = new QAction("Copy title", &menu);
-        QAction *jump_to = new QAction("Jump to image", &menu);
+        QAction *jump_to_img = new QAction("Jump to image", &menu);
+        QAction *scroll_to_item = new QAction("Scroll to item", &menu);
         menu.addAction(load_all_images);
         menu.addSeparator();
         menu.addAction(show_zip_info);
@@ -259,7 +260,8 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
         menu.addAction(copy_current_image);
         menu.addAction(copy_title);
         menu.addSeparator();
-        menu.addAction(jump_to);
+        menu.addAction(jump_to_img);
+        menu.addAction(scroll_to_item);
 
         QAction *clicked_action = menu.exec(event->globalPos());
 
@@ -283,11 +285,12 @@ void ImageView::contextMenuEvent(QContextMenuEvent *event) {
         } else if (clicked_action == copy_title) {
             QApplication::clipboard()->clear();
             QApplication::clipboard()->setText(title);
-        } else if (clicked_action == jump_to) {
+        } else if (clicked_action == jump_to_img) {
             int jump_image = QInputDialog::getInt(this, "Jump to image",
-                QString("Jump to image (%1, %2)").arg(QString::number(1), QString::number(this->total_images)),
-                1, 1, this->total_images, 1) - 1;
+                QString("Jump to image (%1, %2)").arg(QString::number(1), QString::number(this->total_images)), 1, 1, this->total_images, 1) - 1;
             this->setCurrentImage(jump_image);
+        } else if (clicked_action == scroll_to_item) {
+            emit scrollToItem();
         }
     }
 }

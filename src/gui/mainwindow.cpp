@@ -117,6 +117,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(this->ui.pushButtonRefresh, &QPushButton::pressed, this, &MainWindow::refreshButtonClicked);
 
     connect(this->ui.treeWidget, &QTreeWidget::currentItemChanged, this, &MainWindow::treeItemChanged);
+    connect(this->ui.graphicsView, &ImageView::scrollToItem, this, &MainWindow::treeScrollToItem);
     connect(this->ui.treeWidget, &QTreeWidget::customContextMenuRequested, this, &MainWindow::showTreeContextMenu);
     connect(this->ui.treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::treeDoubleClick);
 
@@ -515,17 +516,19 @@ void MainWindow::resetTreeStatusMessage() {
 }
 
 void MainWindow::setTreeStatusMessage() {
-    this->tree_status->setText(QString("Showing: [%1/%2]").arg(QString::number(this->filtered_archives_num), QString::number(this->loaded_archives_num)));
-}
-
-void MainWindow::setTreeStatusMessage(const QString file_path) {
-    QFileInfo file(file_path);
-    QLocale locale;
-    QString file_size = "File not found";
-    if (file.exists()) {
-        file_size = locale.formattedDataSize(file.size(), 1, QLocale::DataSizeIecFormat);
+    QTreeWidgetItem *curr_item = this->ui.treeWidget->currentItem();
+    if (curr_item != nullptr) {
+        QString file_path = curr_item->data(0, MyDataRoles::FilePath).toString();
+        QFileInfo file(file_path);
+        QLocale locale;
+        QString file_size = "File not found";
+        if (file.exists()) {
+            file_size = locale.formattedDataSize(file.size(), 1, QLocale::DataSizeIecFormat);
+        }
+        this->tree_status->setText(QString("Showing: [%1/%2] | Filesize: [%3]").arg(QString::number(this->filtered_archives_num), QString::number(this->loaded_archives_num), file_size));
+    } else {
+        this->tree_status->setText(QString("Showing: [%1/%2]").arg(QString::number(this->filtered_archives_num), QString::number(this->loaded_archives_num)));
     }
-    this->tree_status->setText(QString("Showing: [%1/%2] | Filesize: [%3]").arg(QString::number(this->filtered_archives_num), QString::number(this->loaded_archives_num), file_size));
 }
 
 void MainWindow::populateTree() {
@@ -626,9 +629,9 @@ void MainWindow::searchTreeItems(const QString search_str) {
 
     if (this->select_first_result) {
         this->ui.treeWidget->setCurrentItem(this->getFirstVisibleItem());
+    } else {
+        this->setTreeStatusMessage();
     }
-    
-    this->setTreeStatusMessage();
 }
 
 void MainWindow::loadAllImages(const QString item_path, const QString title) {
@@ -673,7 +676,7 @@ void MainWindow::treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *prev
             return;
         }
         QString item_path = previous->data(0, MyDataRoles::FilePath).toString();
-        this->setTreeStatusMessage(item_path);
+        this->setTreeStatusMessage();
         return;
     }
 
@@ -681,8 +684,15 @@ void MainWindow::treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *prev
     
     QString item_path = current->data(0, MyDataRoles::FilePath).toString();
     QString title = current->data(0, MyDataRoles::Title).toString();
-    this->setTreeStatusMessage(item_path);
+    this->setTreeStatusMessage();
     this->loadFIrstImage(item_path, title);
+}
+
+void MainWindow::treeScrollToItem() {
+    QTreeWidgetItem *curr_item = this->ui.treeWidget->currentItem();
+    if (curr_item != nullptr && curr_item->isHidden() == false) {
+        this->ui.treeWidget->scrollToItem(curr_item, QAbstractItemView::PositionAtCenter);
+    }
 }
 
 void MainWindow::showTreeContextMenu(const QPoint &pos) {
@@ -795,7 +805,11 @@ void MainWindow::randomButtonClicked() {
 }
 
 void MainWindow::refreshButtonClicked() {
-    this->populateTree();
+    QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
+    while (*tree_it) {
+        (*tree_it)->setHidden(false);
+        tree_it++;
+    }
 
     this->ui.lineEditSearch->setText("");
     
@@ -803,6 +817,8 @@ void MainWindow::refreshButtonClicked() {
         this->filtered_archives_num = this->loaded_archives_num;
         if (this->select_first_result) {
             this->ui.treeWidget->setCurrentItem(this->ui.treeWidget->topLevelItem(0));
+        } else {
+            this->setTreeStatusMessage();
         }
     }
 }

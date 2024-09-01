@@ -56,7 +56,6 @@ private:
     void populateTree();
     void resetTreeStatusMessage();
     void setTreeStatusMessage();
-    void setTreeStatusMessage(const QString file_path);
     void loadAllImages(const QString file_path, const QString title);
     void loadFIrstImage(const QString file_path, const QString title);
     QTreeWidgetItem *getFirstVisibleItem();
@@ -84,6 +83,7 @@ private slots:
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void searchTreeItems(const QString search_str);
     void treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+    void treeScrollToItem();
     void showTreeContextMenu(const QPoint &pos);
     void treeDoubleClick(QTreeWidgetItem *item, int column);
     void randomButtonClicked();
