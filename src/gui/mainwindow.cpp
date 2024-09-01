@@ -800,7 +800,9 @@ void MainWindow::randomButtonClicked() {
     }
 
     if (visible_items.length() > 0) {
-        this->ui.treeWidget->setCurrentItem(visible_items[QRandomGenerator::global()->bounded(0, visible_items.length())]);
+        QTreeWidgetItem *rand_item = visible_items[QRandomGenerator::global()->bounded(0, visible_items.length())];
+        this->ui.treeWidget->scrollToItem(rand_item, QAbstractItemView::PositionAtCenter);
+        this->ui.treeWidget->setCurrentItem(rand_item);
     }
 }
 
