@@ -28,7 +28,7 @@ QJsonObject Utils::getJsonFromZip(const QString zip_path, const QString json_nam
 
     if (zip.open(QuaZip::mdUnzip)) {
         QStringList info_json = zip.getFileNameList().filter(json_name, Qt::CaseInsensitive);
-        
+
         if (info_json.isEmpty()) {
             zip.close();
             return json_obj;
@@ -47,7 +47,7 @@ QJsonObject Utils::getJsonFromZip(const QString zip_path, const QString json_nam
                     }
 
                     json_obj = json_doc.object();
-                    
+
                     QFileInfo zip_info(zip_path);
                     // Some archives have dont have [Artist] ... (Published in) in the [gallery_info][title] field
                     // so I add a [title_basename] key containing the basename of the file
@@ -110,7 +110,7 @@ QMap<QString, QString> Utils::getMapFromJson(QJsonObject json_obj) {
     if (str_tags.endsWith(", ")) {
         str_tags.chop(2);
     }
-    
+
     mapped_data["file_hash"] = file_hash;
     mapped_data["title"] = title;
     mapped_data["file_path"] = file_path;
@@ -244,10 +244,10 @@ QByteArray Utils::getFirstImageFromZip(const QString zip_path) {
                 }
             }
         }
-        
+
         zip.close();
     }
-    
+
     return image_bytes;
 }
 
@@ -258,7 +258,7 @@ QByteArrayList Utils::getImagesFromZip(const QString zip_path, QWidget *parent) 
     if (zip.open(QuaZip::mdUnzip)) {
         QStringList filenames = zip.getFileNameList();
         QStringList imagenames;
-        
+
         QMimeDatabase mimdedb;
         for (auto name : filenames) {
             auto mimetype = mimdedb.mimeTypeForFile(name, QMimeDatabase::MatchExtension);
@@ -284,7 +284,7 @@ QByteArrayList Utils::getImagesFromZip(const QString zip_path, QWidget *parent) 
             progress.setValue(progress_count);
             qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
             progress_count++;
-        }   
+        }
         zip.close();
     }
     return images_bytelist;

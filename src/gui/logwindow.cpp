@@ -16,7 +16,7 @@ LogWindow::LogWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 LogWindow::~LogWindow() {
-    
+
 }
 
 void LogWindow::appendMessage(const QString &message) {

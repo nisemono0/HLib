@@ -27,18 +27,18 @@ public:
     ~MainWindow();
 private:
     Ui::MainWindow ui;
-    
+
     SQLiteDB *db;
-    
+
     QGraphicsPixmapItem *pixitem;
     QGraphicsScene *scene;
-    
+
     QLabel *tree_status;
     QLabel *img_status;
-    
+
     QSlider *scale_slider;
     QWidgetAction *action_scale_slider;
-    
+
     QActionGroup *settings_view_group;
 
     unsigned int loaded_archives_num;

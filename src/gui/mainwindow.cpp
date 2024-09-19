@@ -217,13 +217,13 @@ void MainWindow::triggered_action_addFile() {
 
 void MainWindow::triggered_action_addDir() {
     QString dir_path = QFileDialog::getExistingDirectory(this, "Open directory", this->last_add_dir_path, QFileDialog::ShowDirsOnly);
-    
+
     if (Utils::isNullOrEmpty(dir_path)) {
         return;
     }
 
     this->last_add_dir_path = Utils::getAbsoluteDirPath(dir_path);
-    
+
     if (Utils::isDirEmpty(dir_path)) {
         QMessageBox::information(this, "Info", "Directory is empty");
         return;
@@ -283,7 +283,7 @@ void MainWindow::triggered_action_createDB() {
     if (Utils::isNullOrEmpty(db_file)) {
         return;
     }
-    
+
     if (Utils::createDB(db_file, "HLib_CON_CREATE_DB")) {
         QMessageBox::information(this, "Info", "Database created, you can load it now");
     } else {
@@ -301,7 +301,7 @@ void MainWindow::triggered_action_loadDB() {
     this->last_db_dir_path = Utils::getAbsoluteDirPath(db_file);
     this->clearView();
     this->ui.lineEditSearch->setText("");
-    
+
     this->db->setDBPath(db_file);
     if (this->db->openDB()) {
         this->unlockWindowItems();
@@ -329,7 +329,7 @@ void MainWindow::triggered_action_cleanDB() {
     if (ask_cleandb == QMessageBox::No) {
         return;
     }
-    
+
     QList<QMap<QString, QVariant>> db_select = this->db->selectAll();
 
     QMap<QString, QStringList> path_hash_map;
@@ -393,7 +393,7 @@ void MainWindow::triggered_action_checkDB() {
     if (ask_checkdb == QMessageBox::No) {
         return;
     }
-    
+
     QList<QMap<QString, QVariant>> db_select = this->db->selectAll();
     QMap<QString, QStringList> hash_path_map;
 
@@ -650,7 +650,7 @@ void MainWindow::searchTreeItems(const QString search_str) {
     QStringList hash_list = this->db->selectTags("*" + search_str + "*");
     this->saveSearchString(search_str);
     this->filtered_archives_num = 0;
-    
+
     QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
     while (*tree_it) {
         if (Utils::isNullOrEmpty(search_str)) {
@@ -684,7 +684,7 @@ void MainWindow::showLineEditContextMenu(const QPoint &pos) {
             search_actions[i] = new QAction(this->last_searches[i], &menu);
             menu.addAction(search_actions[i]);
         }
-        
+
         QAction *clicked_action = menu.exec(this->ui.lineEditSearch->mapToGlobal(pos));
         if (clicked_action) {
             this->ui.lineEditSearch->setText(clicked_action->text());
@@ -695,7 +695,7 @@ void MainWindow::showLineEditContextMenu(const QPoint &pos) {
 
 void MainWindow::loadAllImages(const QString item_path, const QString title) {
     QByteArrayList images_list = Utils::getImagesFromZip(item_path, this);
-    
+
     if (images_list.isEmpty()) {
         return;
     }
@@ -711,7 +711,7 @@ void MainWindow::loadAllImages(const QString item_path, const QString title) {
 
 void MainWindow::loadFIrstImage(const QString file_path, const QString title) {
     QByteArray zip_image = Utils::getFirstImageFromZip(file_path);
-    
+
     if (Utils::isNullOrEmpty(zip_image)) {
         return;
     }
@@ -728,7 +728,7 @@ void MainWindow::loadFIrstImage(const QString file_path, const QString title) {
 void MainWindow::treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
     // (void)previous;
     // Q_UNUSED(previous);
-    
+
     if (current == nullptr) {
         if (previous == nullptr) {
             this->setTreeStatusMessage();
@@ -740,7 +740,7 @@ void MainWindow::treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *prev
     }
 
     this->clearView();
-    
+
     QString item_path = current->data(0, MyDataRoles::FilePath).toString();
     QString title = current->data(0, MyDataRoles::Title).toString();
     this->setTreeStatusMessage();
@@ -758,7 +758,7 @@ void MainWindow::showTreeContextMenu(const QPoint &pos) {
     QModelIndex index = this->ui.treeWidget->indexAt(pos);
     if (!index.isValid())
         return;
-    
+
     QTreeWidgetItem *item = this->ui.treeWidget->itemAt(pos);
     QString title = item->data(0, MyDataRoles::Title).toString();
     QString item_filehash = item->data(0, MyDataRoles::FileHash).toString();
@@ -840,10 +840,10 @@ void MainWindow::treeDoubleClick(QTreeWidgetItem *item, int column) {
     if (item == nullptr) {
         return;
     }
-    
+
     QString item_filepath = item->data(column, MyDataRoles::FilePath).toString();
     QString title = item->data(0, MyDataRoles::Title).toString();
-    
+
     this->loadAllImages(item_filepath, title);
 }
 
@@ -873,7 +873,7 @@ void MainWindow::refreshButtonClicked() {
     }
 
     this->ui.lineEditSearch->setText("");
-    
+
     if (this->ui.treeWidget->topLevelItemCount() > 0) {
         this->filtered_archives_num = this->loaded_archives_num;
         if (this->select_first_result) {

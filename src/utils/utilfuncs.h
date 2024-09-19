@@ -19,7 +19,7 @@ public:
     static void naturalOrder(QStringList *str_list);
     static QByteArrayList getImagesFromZip(const QString zip_path, QWidget *parent);
     static QStringList getCleanDBEntries(QMap<QString, QStringList> map);
-    static QStringList getCleanDBHashes(QStringList hashes);    
+    static QStringList getCleanDBHashes(QStringList hashes);
     static QStringList getCleanDBPaths(QMap<QString, QStringList> map);
     static bool fileExists(const QString file_path);
     static QString getArchiveInfo(const QString file_path, const QString json_name);

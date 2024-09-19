@@ -45,7 +45,7 @@ bool SQLiteDB::insert(const QMap<QString, QString> info_map) {
         query.bindValue(":title", info_map["title"]);
         query.bindValue(":file_path", info_map["file_path"]);
         query.bindValue(":tags", info_map["tags"]);
-        
+
         if (query.exec()) {
             success = true;
         } else {
@@ -184,22 +184,22 @@ bool SQLiteDB::removeFromDB(QStringList del_hashes) {
     if (this->db.isOpen()) {
         QSqlQuery query(this->db);
         query.prepare("DELETE FROM HLib WHERE file_hash MATCH :del_hashes");
-        
+
         QVariantList hashes;
         for (auto it : del_hashes) {
             hashes.append(it);
         }
         query.bindValue(":del_hashes", hashes);
-        
+
         if (query.execBatch()) {
             success = true;
         } else {
             Logging::logMessage(QString("[removeFromDB(del_hashes) error]: %1").arg(query.lastError().text()));
         }
-        
+
         query.clear();
         this->db.commit();
     }
-    
+
     return success;
 }

@@ -10,7 +10,7 @@ class SQLiteDB : public QObject {
 public:
     SQLiteDB(const QString con_name, QObject *parent = nullptr);
     ~SQLiteDB();
-    
+
     void setDBPath(const QString db_path);
     QString getDBPath();
     bool openDB();
