@@ -344,3 +344,11 @@ QString Utils::getArchiveInfo(const QString file_path, const QString json_name) 
     QJsonDocument json_doc(Utils::getJsonFromZip(file_path, json_name));
     return json_doc.toJson(QJsonDocument::Indented);
 }
+
+QString Utils::getAbsoluteDirPath(const QString file_path) {
+    QFileInfo file_info(file_path);
+    if (file_info.exists()) {
+        return file_info.absolutePath();
+    }
+    return QDir::homePath();
+}

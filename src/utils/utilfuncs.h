@@ -23,4 +23,5 @@ public:
     static QStringList getCleanDBPaths(QMap<QString, QStringList> map);
     static bool fileExists(const QString file_path);
     static QString getArchiveInfo(const QString file_path, const QString json_name);
+    static QString getAbsoluteDirPath(const QString file_path);
 };

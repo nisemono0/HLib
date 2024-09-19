@@ -177,10 +177,13 @@ void MainWindow::triggered_action_changeTheme(const MyTheme::MyTheme theme) {
 }
 
 void MainWindow::triggered_action_addFile() {
-    QString file_path = QFileDialog::getOpenFileName(this, "Open zip archive", QDir::homePath(), { "Zip files (*.zip)" });
+    QString file_path = QFileDialog::getOpenFileName(this, "Open zip archive", this->last_add_file_path, { "Zip files (*.zip)" });
+
     if (Utils::isNullOrEmpty(file_path)) {
         return;
     }
+
+    this->last_add_file_path = Utils::getAbsoluteDirPath(file_path);
 
     if (QFile::exists(file_path)) {
         QStringList db_filepaths = this->db->selectAllFilepaths();
@@ -204,12 +207,14 @@ void MainWindow::triggered_action_addFile() {
 }
 
 void MainWindow::triggered_action_addDir() {
-    QString dir_path = QFileDialog::getExistingDirectory(this, "Open directory", QDir::homePath(), QFileDialog::ShowDirsOnly);
+    QString dir_path = QFileDialog::getExistingDirectory(this, "Open directory", this->last_add_dir_path, QFileDialog::ShowDirsOnly);
     
     if (Utils::isNullOrEmpty(dir_path)) {
         return;
     }
 
+    this->last_add_dir_path = Utils::getAbsoluteDirPath(dir_path);
+    
     if (Utils::isDirEmpty(dir_path)) {
         QMessageBox::information(this, "Info", "Directory is empty");
         return;
@@ -278,12 +283,13 @@ void MainWindow::triggered_action_createDB() {
 }
 
 void MainWindow::triggered_action_loadDB() {
-    QString db_file = QFileDialog::getOpenFileName(this, "Open DB", QDir::homePath(), { "SQLite database (*.sqlite *.sqlite3 *db *db3) ;; All files (*)" });
+    QString db_file = QFileDialog::getOpenFileName(this, "Open DB", this->last_db_dir_path, { "SQLite database (*.sqlite *.sqlite3 *db *db3) ;; All files (*)" });
 
     if (Utils::isNullOrEmpty(db_file)) {
         return;
     }
 
+    this->last_db_dir_path = Utils::getAbsoluteDirPath(db_file);
     this->clearView();
     this->ui.lineEditSearch->setText("");
     
@@ -572,21 +578,27 @@ bool MainWindow::removeTreeItem(QTreeWidgetItem *item) {
 }
 
 void MainWindow::saveSettings() {
-    this->settings.setValue("db_path", this->db->getDBPath());
+    this->settings.setValue("db_file_path", this->db->getDBPath());
     this->settings.setValue("scale_image", this->ui.actionScaleImage->isChecked());
     this->settings.setValue("scale_slider", this->scale_slider->value()); // Maybe setValue emit another signal ?
     this->settings.setValue("search_type", this->ui.actionSearchWhileTyping->isChecked());
     this->settings.setValue("remember_settings", this->ui.actionRememberSettings->isChecked());
-    this->settings.setValue("load_lastdb", this->ui.actionLoadLastDB->isChecked());    
+    this->settings.setValue("load_lastdb", this->ui.actionLoadLastDB->isChecked());
+    this->settings.setValue("last_db_dir_path", this->last_db_dir_path);
+    this->settings.setValue("last_add_dir_path", this->last_add_dir_path);
+    this->settings.setValue("last_add_file_path", this->last_add_file_path);
 }
 
 void MainWindow::loadSettings() {
-    QString db_path = this->settings.value("db_path", "").toString();
+    QString db_file_path = this->settings.value("db_file_path", "").toString();
     bool scale_image = this->settings.value("scale_image", false).toBool();
     int scale_slider = this->settings.value("scale_slider", 0).toInt();
     bool search_type = this->settings.value("search_type", false).toBool();
     bool remember_settings = this->settings.value("remember_settings", false).toBool();
     bool load_lastdb = this->settings.value("load_lastdb", false).toBool();
+    this->last_db_dir_path = this->settings.value("last_db_dir_path", QDir::homePath()).toString();
+    this->last_add_dir_path = this->settings.value("last_add_dir_path", QDir::homePath()).toString();
+    this->last_add_file_path = this->settings.value("last_add_file_path", QDir::homePath()).toString();
 
     this->ui.actionRememberSettings->setChecked(remember_settings);
     if (remember_settings) {
@@ -596,10 +608,10 @@ void MainWindow::loadSettings() {
     }
 
     this->ui.actionLoadLastDB->setChecked(load_lastdb);
-    if (load_lastdb && Utils::fileExists(db_path)) {
+    if (load_lastdb && Utils::fileExists(db_file_path)) {
         this->clearView();
         this->ui.lineEditSearch->setText("");
-        this->db->setDBPath(db_path);
+        this->db->setDBPath(db_file_path);
         if (this->db->openDB()) {
             this->unlockWindowItems();
             this->populateTree();

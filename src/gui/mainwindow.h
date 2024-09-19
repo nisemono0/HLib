@@ -48,6 +48,9 @@ private:
     bool select_first_result;
 
     QSettings settings;
+    QString last_db_dir_path;
+    QString last_add_dir_path;
+    QString last_add_file_path;
 
     void lockWindowItems();
     void unlockWindowItems();
