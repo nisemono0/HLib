@@ -19,6 +19,7 @@
 #include <QActionGroup>
 #include <QRandomGenerator>
 #include <QSettings>
+#include <QVector>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->ui.setupUi(this);
@@ -52,19 +53,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->old_search = this->ui.lineEditSearch->text();
     this->select_first_result = false;
 
+    this->last_db_dir_path = QDir::homePath();
+    this->last_add_dir_path = QDir::homePath();
+    this->last_add_file_path = QDir::homePath();
+    this->last_searches = QStringList();
+    this->max_searches = 7;
+
     new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImage::NextImage);});
     new QShortcut(QKeySequence(Qt::Key_Left), this, [=] { ui.graphicsView->setCurrentImage(SetImage::PrevImage);});
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this, [=] { ui.lineEditSearch->setFocus();});
 
     this->ui.treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    
+    this->ui.lineEditSearch->setContextMenuPolicy(Qt::CustomContextMenu);
+
     this->tree_status = new QLabel(this);
     this->img_status = new QLabel(this);
-    
+
     this->ui.graphicsView->addStatusLabel(this->img_status);
     this->img_status->setHidden(true);
     this->resetTreeStatusMessage();
-    
+
     this->ui.statusBar->addWidget(tree_status);
     this->ui.statusBar->addPermanentWidget(img_status);
 
@@ -113,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     connect(this->ui.pushButtonSearch, &QPushButton::pressed, this, [=] { MainWindow::searchTreeItems(ui.lineEditSearch->text());});
     connect(this->ui.lineEditSearch, &QLineEdit::returnPressed, this, [=] { MainWindow::searchTreeItems(ui.lineEditSearch->text());});
+    connect(this->ui.lineEditSearch, &QLineEdit::customContextMenuRequested, this, &MainWindow::showLineEditContextMenu);
     connect(this->ui.pushButtonRandom, &QPushButton::pressed, this, &MainWindow::randomButtonClicked);
     connect(this->ui.pushButtonRefresh, &QPushButton::pressed, this, &MainWindow::refreshButtonClicked);
 
@@ -587,6 +596,7 @@ void MainWindow::saveSettings() {
     this->settings.setValue("last_db_dir_path", this->last_db_dir_path);
     this->settings.setValue("last_add_dir_path", this->last_add_dir_path);
     this->settings.setValue("last_add_file_path", this->last_add_file_path);
+    this->settings.setValue("last_searches", this->last_searches);
 }
 
 void MainWindow::loadSettings() {
@@ -599,6 +609,10 @@ void MainWindow::loadSettings() {
     this->last_db_dir_path = this->settings.value("last_db_dir_path", QDir::homePath()).toString();
     this->last_add_dir_path = this->settings.value("last_add_dir_path", QDir::homePath()).toString();
     this->last_add_file_path = this->settings.value("last_add_file_path", QDir::homePath()).toString();
+    this->last_searches = this->settings.value("last_searches", QStringList()).toStringList();
+    if (this->last_searches.count() > this->max_searches) {
+        this->last_searches = QStringList();
+    }
 
     this->ui.actionRememberSettings->setChecked(remember_settings);
     if (remember_settings) {
@@ -619,10 +633,24 @@ void MainWindow::loadSettings() {
     }
 }
 
+void MainWindow::saveSearchString(const QString search_str) {
+    if (Utils::isNullOrEmpty(search_str) || this->last_searches.contains(search_str, Qt::CaseSensitive)) {
+        return;
+    }
+
+    if (this->last_searches.length() < this->max_searches) {
+        this->last_searches.append(search_str);
+    } else {
+        this->last_searches.removeFirst();
+        this->last_searches.append(search_str);
+    }
+}
+
 void MainWindow::searchTreeItems(const QString search_str) {
     QStringList hash_list = this->db->selectTags("*" + search_str + "*");
+    this->saveSearchString(search_str);
     this->filtered_archives_num = 0;
-
+    
     QTreeWidgetItemIterator tree_it(this->ui.treeWidget);
     while (*tree_it) {
         if (Utils::isNullOrEmpty(search_str)) {
@@ -643,6 +671,25 @@ void MainWindow::searchTreeItems(const QString search_str) {
         this->ui.treeWidget->setCurrentItem(this->getFirstVisibleItem());
     } else {
         this->setTreeStatusMessage();
+    }
+}
+
+void MainWindow::showLineEditContextMenu(const QPoint &pos) {
+    QMenu menu(this);
+    QVector<QAction *> search_actions(this->max_searches);
+    int num_searches = this->last_searches.count();
+
+    if (num_searches > 0) {
+        for (int i = 0; i < num_searches; i++) {
+            search_actions[i] = new QAction(this->last_searches[i], &menu);
+            menu.addAction(search_actions[i]);
+        }
+        
+        QAction *clicked_action = menu.exec(this->ui.lineEditSearch->mapToGlobal(pos));
+        if (clicked_action) {
+            this->ui.lineEditSearch->setText(clicked_action->text());
+            this->ui.lineEditSearch->returnPressed();
+        }
     }
 }
 

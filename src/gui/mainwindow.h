@@ -18,6 +18,7 @@
 #include <QActionGroup>
 #include <QTimer>
 #include <QSettings>
+#include <QVector>
 
 class MainWindow: public QMainWindow {
     Q_OBJECT
@@ -51,6 +52,8 @@ private:
     QString last_db_dir_path;
     QString last_add_dir_path;
     QString last_add_file_path;
+    QStringList last_searches;
+    unsigned short max_searches;
 
     void lockWindowItems();
     void unlockWindowItems();
@@ -65,6 +68,7 @@ private:
     bool removeTreeItem(QTreeWidgetItem *item);
     void saveSettings();
     void loadSettings();
+    void saveSearchString(const QString search_str);
 private slots:
     void triggered_action_addDir();
     void triggered_action_addFile();
@@ -85,6 +89,7 @@ private slots:
     void triggered_action_showlogs();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void searchTreeItems(const QString search_str);
+    void showLineEditContextMenu(const QPoint &pos);
     void treeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void treeScrollToItem();
     void showTreeContextMenu(const QPoint &pos);
