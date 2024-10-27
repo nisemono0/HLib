@@ -555,6 +555,7 @@ void MainWindow::populateTree() {
         QTreeWidgetItem *root = new QTreeWidgetItem();
         root->setText(0, it["title"].toString());
         root->setData(0, MyDataRoles::Title, it["title"].toString());
+        root->setToolTip(0, it["title"].toString());
         root->setData(0, MyDataRoles::FilePath, it["file_path"].toString());
         root->setData(0, MyDataRoles::FileHash, it["file_hash"].toString());
         root->setData(0, MyDataRoles::Tags, it["tags"].toString());
