@@ -6,9 +6,13 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QLabel>
 
 LogWindow::LogWindow(QWidget *parent) : QMainWindow(parent) {
     this->ui.setupUi(this);
+
+    this->log_status = new QLabel(this);
+    this->ui.statusBar->addWidget(log_status);
 
     connect(this->ui.actionSaveLog, &QAction::triggered, this, &LogWindow::triggered_action_saveLog);
     connect(this->ui.actionClearLog, &QAction::triggered, this, &LogWindow::triggered_action_clearLog);
@@ -16,15 +20,22 @@ LogWindow::LogWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 LogWindow::~LogWindow() {
-
+    delete this->log_status;
 }
 
 void LogWindow::appendMessage(const QString &message) {
     this->ui.logPlainTextEdit->appendPlainText(message);
+    this->updateLogStatusBar();
 }
 
 void LogWindow::clearLogs() {
     this->ui.logPlainTextEdit->clear();
+    this->updateLogStatusBar();
+}
+
+void LogWindow::updateLogStatusBar() {
+    int blocks = this->ui.logPlainTextEdit->blockCount();
+    this->log_status->setText(QString("Lines: %1").arg(QString::number(blocks)));
 }
 
 void LogWindow::triggered_action_saveLog() {

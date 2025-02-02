@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'logwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.15
+** Created by: Qt User Interface Compiler version 5.15.16
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -16,6 +16,7 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPlainTextEdit>
+#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -32,6 +33,7 @@ public:
     QPlainTextEdit *logPlainTextEdit;
     QMenuBar *menuBar;
     QMenu *menuFile;
+    QStatusBar *statusBar;
 
     void setupUi(QMainWindow *LogWindow)
     {
@@ -71,6 +73,9 @@ public:
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         LogWindow->setMenuBar(menuBar);
+        statusBar = new QStatusBar(LogWindow);
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        LogWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
         menuFile->addAction(actionSaveLog);

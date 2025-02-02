@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QWidget>
+#include <QLabel>
 
 class LogWindow: public QMainWindow {
     Q_OBJECT
@@ -13,6 +14,8 @@ public:
     void clearLogs();
 private:
     Ui::LogWindow ui;
+    QLabel *log_status;
+    void updateLogStatusBar();
 private slots:
     void triggered_action_saveLog();
     void triggered_action_close();
