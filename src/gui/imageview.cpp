@@ -187,7 +187,7 @@ void ImageView::mousePressEvent(QMouseEvent *event) {
     if (this->has_images && (this->image_fit_option == ImageOption::FitToWidth || this->image_fit_option == ImageOption::FreeView)) {
         if (event->button() == Qt::MiddleButton) {
             this->setDragMode(QGraphicsView::ScrollHandDrag);
-            QMouseEvent fake(event->type(), event->pos(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
+            QMouseEvent fake(event->type(), event->pos(), event->globalPosition(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
             QGraphicsView::mousePressEvent(&fake);
         } else {
             QGraphicsView::mousePressEvent(event);
@@ -200,7 +200,7 @@ void ImageView::mouseReleaseEvent(QMouseEvent *event) {
     QGraphicsView::mouseReleaseEvent(event);
     if (this->has_images && this->total_images > 1) {
         if (event->button() == Qt::LeftButton) {
-            int mouse_x = event->localPos().x();
+            int mouse_x = event->position().x();
             int half_point = this->size().width() / 2;
             if (mouse_x > half_point) {
                 this->setCurrentImage(SetImage::NextImage);
@@ -214,7 +214,7 @@ void ImageView::mouseReleaseEvent(QMouseEvent *event) {
 void ImageView::mouseMoveEvent(QMouseEvent *event) {
     QGraphicsView::mouseMoveEvent(event);
     if (this->has_images && this->total_images > 1) {
-        int mouse_x = event->localPos().x();
+        int mouse_x = event->position().x();
         int half_point = this->size().width() / 2;
         if (mouse_x > half_point) {
             this->setCursor(this->cursor_next);
