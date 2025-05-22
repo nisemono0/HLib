@@ -1,5 +1,8 @@
 #!/bin/bash
 
+rm -f ./src/gui/ui/ui_logwindow.h
+rm -f ./src/gui/ui/ui_mainwindow.h
+
 MODULES="QT += widgets sql"
 
 CONFIG="CONFIG += debug_and_release optimize_full"
