@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     new QShortcut(QKeySequence(Qt::Key_Right), this, [=] { ui.graphicsView->setCurrentImage(SetImage::NextImage);});
     new QShortcut(QKeySequence(Qt::Key_Left), this, [=] { ui.graphicsView->setCurrentImage(SetImage::PrevImage);});
-    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this, [=] { ui.lineEditSearch->setFocus();});
+    new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_F), this, [=] { ui.lineEditSearch->setFocus();});
 
     this->ui.treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     this->ui.lineEditSearch->setContextMenuPolicy(Qt::CustomContextMenu);
