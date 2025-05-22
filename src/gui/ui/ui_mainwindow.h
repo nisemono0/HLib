@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.16
+** Created by: Qt User Interface Compiler version 6.9.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,7 +10,7 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
+#include <QtGui/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -78,79 +78,79 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+            MainWindow->setObjectName("MainWindow");
         MainWindow->resize(1000, 700);
         MainWindow->setMinimumSize(QSize(800, 600));
         actionLoadDB = new QAction(MainWindow);
-        actionLoadDB->setObjectName(QString::fromUtf8("actionLoadDB"));
+        actionLoadDB->setObjectName("actionLoadDB");
         actionAddDir = new QAction(MainWindow);
-        actionAddDir->setObjectName(QString::fromUtf8("actionAddDir"));
+        actionAddDir->setObjectName("actionAddDir");
         actionAddFile = new QAction(MainWindow);
-        actionAddFile->setObjectName(QString::fromUtf8("actionAddFile"));
+        actionAddFile->setObjectName("actionAddFile");
         actionExit = new QAction(MainWindow);
-        actionExit->setObjectName(QString::fromUtf8("actionExit"));
+        actionExit->setObjectName("actionExit");
         actionThemeDarkMaroon = new QAction(MainWindow);
-        actionThemeDarkMaroon->setObjectName(QString::fromUtf8("actionThemeDarkMaroon"));
+        actionThemeDarkMaroon->setObjectName("actionThemeDarkMaroon");
         actionThemeDarkGreen = new QAction(MainWindow);
-        actionThemeDarkGreen->setObjectName(QString::fromUtf8("actionThemeDarkGreen"));
+        actionThemeDarkGreen->setObjectName("actionThemeDarkGreen");
         actionThemeDarkPurple = new QAction(MainWindow);
-        actionThemeDarkPurple->setObjectName(QString::fromUtf8("actionThemeDarkPurple"));
+        actionThemeDarkPurple->setObjectName("actionThemeDarkPurple");
         actionThemeFusion = new QAction(MainWindow);
-        actionThemeFusion->setObjectName(QString::fromUtf8("actionThemeFusion"));
+        actionThemeFusion->setObjectName("actionThemeFusion");
         actionThemeWindows = new QAction(MainWindow);
-        actionThemeWindows->setObjectName(QString::fromUtf8("actionThemeWindows"));
+        actionThemeWindows->setObjectName("actionThemeWindows");
         actionCreateDB = new QAction(MainWindow);
-        actionCreateDB->setObjectName(QString::fromUtf8("actionCreateDB"));
+        actionCreateDB->setObjectName("actionCreateDB");
         actionUnloadDB = new QAction(MainWindow);
-        actionUnloadDB->setObjectName(QString::fromUtf8("actionUnloadDB"));
+        actionUnloadDB->setObjectName("actionUnloadDB");
         actionCleanDB = new QAction(MainWindow);
-        actionCleanDB->setObjectName(QString::fromUtf8("actionCleanDB"));
+        actionCleanDB->setObjectName("actionCleanDB");
         actionCleanHashes = new QAction(MainWindow);
-        actionCleanHashes->setObjectName(QString::fromUtf8("actionCleanHashes"));
+        actionCleanHashes->setObjectName("actionCleanHashes");
         actionCleanPaths = new QAction(MainWindow);
-        actionCleanPaths->setObjectName(QString::fromUtf8("actionCleanPaths"));
+        actionCleanPaths->setObjectName("actionCleanPaths");
         actionScaleImage = new QAction(MainWindow);
-        actionScaleImage->setObjectName(QString::fromUtf8("actionScaleImage"));
+        actionScaleImage->setObjectName("actionScaleImage");
         actionScaleImage->setCheckable(true);
         actionScaleImage->setChecked(true);
         actionCheckDB = new QAction(MainWindow);
-        actionCheckDB->setObjectName(QString::fromUtf8("actionCheckDB"));
+        actionCheckDB->setObjectName("actionCheckDB");
         actionCheckPaths = new QAction(MainWindow);
-        actionCheckPaths->setObjectName(QString::fromUtf8("actionCheckPaths"));
+        actionCheckPaths->setObjectName("actionCheckPaths");
         actionShowLogs = new QAction(MainWindow);
-        actionShowLogs->setObjectName(QString::fromUtf8("actionShowLogs"));
+        actionShowLogs->setObjectName("actionShowLogs");
         actionFitInView = new QAction(MainWindow);
-        actionFitInView->setObjectName(QString::fromUtf8("actionFitInView"));
+        actionFitInView->setObjectName("actionFitInView");
         actionFitInView->setCheckable(true);
         actionFitInView->setChecked(true);
         actionFitToWidth = new QAction(MainWindow);
-        actionFitToWidth->setObjectName(QString::fromUtf8("actionFitToWidth"));
+        actionFitToWidth->setObjectName("actionFitToWidth");
         actionFitToWidth->setCheckable(true);
         actionFreeView = new QAction(MainWindow);
-        actionFreeView->setObjectName(QString::fromUtf8("actionFreeView"));
+        actionFreeView->setObjectName("actionFreeView");
         actionFreeView->setCheckable(true);
         actionSearchWhileTyping = new QAction(MainWindow);
-        actionSearchWhileTyping->setObjectName(QString::fromUtf8("actionSearchWhileTyping"));
+        actionSearchWhileTyping->setObjectName("actionSearchWhileTyping");
         actionSearchWhileTyping->setCheckable(true);
         actionSelectFirstAfterSearch = new QAction(MainWindow);
-        actionSelectFirstAfterSearch->setObjectName(QString::fromUtf8("actionSelectFirstAfterSearch"));
+        actionSelectFirstAfterSearch->setObjectName("actionSelectFirstAfterSearch");
         actionSelectFirstAfterSearch->setCheckable(true);
         actionSelectFirstAfterSearch->setEnabled(true);
         actionRememberSettings = new QAction(MainWindow);
-        actionRememberSettings->setObjectName(QString::fromUtf8("actionRememberSettings"));
+        actionRememberSettings->setObjectName("actionRememberSettings");
         actionRememberSettings->setCheckable(true);
         actionLoadLastDB = new QAction(MainWindow);
-        actionLoadLastDB->setObjectName(QString::fromUtf8("actionLoadLastDB"));
+        actionLoadLastDB->setObjectName("actionLoadLastDB");
         actionLoadLastDB->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
-        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        centralwidget->setObjectName("centralwidget");
         verticalLayout = new QVBoxLayout(centralwidget);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setObjectName("verticalLayout");
         horizontalLayoutSearch = new QHBoxLayout();
-        horizontalLayoutSearch->setObjectName(QString::fromUtf8("horizontalLayoutSearch"));
+        horizontalLayoutSearch->setObjectName("horizontalLayoutSearch");
         pushButtonSearch = new QPushButton(centralwidget);
-        pushButtonSearch->setObjectName(QString::fromUtf8("pushButtonSearch"));
-        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        pushButtonSearch->setObjectName("pushButtonSearch");
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Maximum, QSizePolicy::Policy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(pushButtonSearch->sizePolicy().hasHeightForWidth());
@@ -159,8 +159,8 @@ public:
         horizontalLayoutSearch->addWidget(pushButtonSearch);
 
         pushButtonRandom = new QPushButton(centralwidget);
-        pushButtonRandom->setObjectName(QString::fromUtf8("pushButtonRandom"));
-        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        pushButtonRandom->setObjectName("pushButtonRandom");
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Maximum, QSizePolicy::Policy::Fixed);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(pushButtonRandom->sizePolicy().hasHeightForWidth());
@@ -169,14 +169,14 @@ public:
         horizontalLayoutSearch->addWidget(pushButtonRandom);
 
         pushButtonRefresh = new QPushButton(centralwidget);
-        pushButtonRefresh->setObjectName(QString::fromUtf8("pushButtonRefresh"));
+        pushButtonRefresh->setObjectName("pushButtonRefresh");
         sizePolicy.setHeightForWidth(pushButtonRefresh->sizePolicy().hasHeightForWidth());
         pushButtonRefresh->setSizePolicy(sizePolicy);
 
         horizontalLayoutSearch->addWidget(pushButtonRefresh);
 
         lineEditSearch = new QLineEdit(centralwidget);
-        lineEditSearch->setObjectName(QString::fromUtf8("lineEditSearch"));
+        lineEditSearch->setObjectName("lineEditSearch");
 
         horizontalLayoutSearch->addWidget(lineEditSearch);
 
@@ -185,8 +185,8 @@ public:
         verticalLayout->addLayout(horizontalLayoutSearch);
 
         splitterExplorer = new QSplitter(centralwidget);
-        splitterExplorer->setObjectName(QString::fromUtf8("splitterExplorer"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        splitterExplorer->setObjectName("splitterExplorer");
+        QSizePolicy sizePolicy2(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(splitterExplorer->sizePolicy().hasHeightForWidth());
@@ -198,13 +198,12 @@ public:
         treeWidget = new QTreeWidget(splitterExplorer);
         QFont font;
         font.setBold(false);
-        font.setWeight(50);
         QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
         __qtreewidgetitem->setText(0, QString::fromUtf8("Title"));
         __qtreewidgetitem->setFont(0, font);
         treeWidget->setHeaderItem(__qtreewidgetitem);
-        treeWidget->setObjectName(QString::fromUtf8("treeWidget"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        treeWidget->setObjectName("treeWidget");
+        QSizePolicy sizePolicy3(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
         sizePolicy3.setHeightForWidth(treeWidget->sizePolicy().hasHeightForWidth());
@@ -215,8 +214,8 @@ public:
         treeWidget->setIndentation(1);
         splitterExplorer->addWidget(treeWidget);
         graphicsView = new ImageView(splitterExplorer);
-        graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        graphicsView->setObjectName("graphicsView");
+        QSizePolicy sizePolicy4(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
         sizePolicy4.setHorizontalStretch(100);
         sizePolicy4.setVerticalStretch(0);
         sizePolicy4.setHeightForWidth(graphicsView->sizePolicy().hasHeightForWidth());
@@ -232,23 +231,23 @@ public:
 
         MainWindow->setCentralWidget(centralwidget);
         statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        statusBar->setObjectName("statusBar");
         MainWindow->setStatusBar(statusBar);
         menubar = new QMenuBar(MainWindow);
-        menubar->setObjectName(QString::fromUtf8("menubar"));
+        menubar->setObjectName("menubar");
         menubar->setGeometry(QRect(0, 0, 1000, 30));
         menuFile = new QMenu(menubar);
-        menuFile->setObjectName(QString::fromUtf8("menuFile"));
+        menuFile->setObjectName("menuFile");
         menuLoad = new QMenu(menubar);
-        menuLoad->setObjectName(QString::fromUtf8("menuLoad"));
+        menuLoad->setObjectName("menuLoad");
         menuTheme = new QMenu(menubar);
-        menuTheme->setObjectName(QString::fromUtf8("menuTheme"));
+        menuTheme->setObjectName("menuTheme");
         menuSettings = new QMenu(menubar);
-        menuSettings->setObjectName(QString::fromUtf8("menuSettings"));
+        menuSettings->setObjectName("menuSettings");
         menuSettingsView = new QMenu(menuSettings);
-        menuSettingsView->setObjectName(QString::fromUtf8("menuSettingsView"));
+        menuSettingsView->setObjectName("menuSettingsView");
         menuInfo = new QMenu(menubar);
-        menuInfo->setObjectName(QString::fromUtf8("menuInfo"));
+        menuInfo->setObjectName("menuInfo");
         MainWindow->setMenuBar(menubar);
 
         menubar->addAction(menuFile->menuAction());

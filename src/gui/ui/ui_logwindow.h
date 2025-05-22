@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'logwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.16
+** Created by: Qt User Interface Compiler version 6.9.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,7 +10,7 @@
 #define UI_LOGWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
+#include <QtGui/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
@@ -38,24 +38,24 @@ public:
     void setupUi(QMainWindow *LogWindow)
     {
         if (LogWindow->objectName().isEmpty())
-            LogWindow->setObjectName(QString::fromUtf8("LogWindow"));
+            LogWindow->setObjectName("LogWindow");
         LogWindow->setEnabled(true);
         LogWindow->resize(800, 500);
         LogWindow->setMinimumSize(QSize(800, 500));
         actionSaveLog = new QAction(LogWindow);
-        actionSaveLog->setObjectName(QString::fromUtf8("actionSaveLog"));
+        actionSaveLog->setObjectName("actionSaveLog");
         actionClose = new QAction(LogWindow);
-        actionClose->setObjectName(QString::fromUtf8("actionClose"));
+        actionClose->setObjectName("actionClose");
         actionClearLog = new QAction(LogWindow);
-        actionClearLog->setObjectName(QString::fromUtf8("actionClearLog"));
+        actionClearLog->setObjectName("actionClearLog");
         centralwidget = new QWidget(LogWindow);
-        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        centralwidget->setObjectName("centralwidget");
         verticalLayout = new QVBoxLayout(centralwidget);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setObjectName("verticalLayout");
         logPlainTextEdit = new QPlainTextEdit(centralwidget);
-        logPlainTextEdit->setObjectName(QString::fromUtf8("logPlainTextEdit"));
+        logPlainTextEdit->setObjectName("logPlainTextEdit");
         logPlainTextEdit->setEnabled(true);
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(logPlainTextEdit->sizePolicy().hasHeightForWidth());
@@ -68,13 +68,13 @@ public:
 
         LogWindow->setCentralWidget(centralwidget);
         menuBar = new QMenuBar(LogWindow);
-        menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setObjectName("menuBar");
         menuBar->setGeometry(QRect(0, 0, 800, 30));
         menuFile = new QMenu(menuBar);
-        menuFile->setObjectName(QString::fromUtf8("menuFile"));
+        menuFile->setObjectName("menuFile");
         LogWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(LogWindow);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        statusBar->setObjectName("statusBar");
         LogWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
