@@ -60,3 +60,5 @@ release/
 debug/
 
 build/
+
+.cache/
