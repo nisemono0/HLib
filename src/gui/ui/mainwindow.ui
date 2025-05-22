@@ -91,7 +91,7 @@
        </size>
       </property>
       <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
       <property name="handleWidth">
        <number>4</number>
@@ -119,7 +119,7 @@
         </size>
        </property>
        <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
+        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
        </property>
        <property name="indentation">
         <number>1</number>
@@ -130,7 +130,6 @@
         </property>
         <property name="font">
          <font>
-          <weight>50</weight>
           <bold>false</bold>
          </font>
         </property>
@@ -150,16 +149,16 @@
         </size>
        </property>
        <property name="verticalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
+        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
        </property>
        <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
+        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
        </property>
        <property name="interactive">
         <bool>false</bool>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -238,6 +237,8 @@
      <string>Info</string>
     </property>
     <addaction name="actionShowLogs"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowAbout"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuLoad"/>
@@ -497,6 +498,14 @@
    </property>
    <property name="statusTip">
     <string>Load (if possible) the last used DB</string>
+   </property>
+  </action>
+  <action name="actionShowAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="statusTip">
+    <string>Show about window</string>
    </property>
   </action>
  </widget>

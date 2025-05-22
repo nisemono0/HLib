@@ -112,6 +112,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(this->ui.actionSelectFirstAfterSearch, &QAction::toggled, this, &MainWindow::triggered_action_select_first_result);
 
     connect(this->ui.actionShowLogs, &QAction::triggered, this, &MainWindow::triggered_action_showlogs);
+    connect(this->ui.actionShowAbout, &QAction::triggered, this, &MainWindow::triggered_action_showabout);
 
     connect(this->ui.actionThemeDarkMaroon, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_MAROON);});
     connect(this->ui.actionThemeDarkGreen, &QAction::triggered, this, [=] { MainWindow::triggered_action_changeTheme(MyTheme::DARK_GREEN);});
@@ -483,6 +484,10 @@ void MainWindow::triggered_action_viewfit(QAction *action) {
 
 void MainWindow::triggered_action_showlogs() {
     Logging::showLoggingWindow();
+}
+
+void MainWindow::triggered_action_showabout() {
+    qApp->aboutQt();
 }
 
 void MainWindow::lockWindowItems() {

@@ -87,6 +87,7 @@ private slots:
     void triggered_action_select_first_result(bool checked);
     void triggered_search_timer();
     void triggered_action_showlogs();
+    void triggered_action_showabout();
     void triggered_action_changeTheme(const MyTheme::MyTheme theme);
     void searchTreeItems(const QString search_str);
     void showLineEditContextMenu(const QPoint &pos);
