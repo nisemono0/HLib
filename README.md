@@ -14,10 +14,10 @@ Only searches for ```*.zip``` archives since that's all I use. <br>
 
 ### Linux
 Install missing dependencies <br>
-```mkdir build ; cd build```
-```cmake -DCMAKE_BUILD_TYPE=Release ..```
-```cmake --build .```
-The binary is in ```./build/HLib```
+```mkdir build ; cd build``` <br>
+```cmake -DCMAKE_BUILD_TYPE=Release ..``` <br>
+```cmake --build .``` <br>
+The binary is in ```./build/HLib``` <br>
 
 ### Windows
 Theoretically compiling on Windows should work (I wouldn't know, never tested)
