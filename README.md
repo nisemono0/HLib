@@ -6,16 +6,18 @@ Uses the ```info.json``` tag files inside the archives. <br>
 Only searches for ```*.zip``` archives since that's all I use. <br>
 
 # Dependencies (Arch Linux)
-```qt5-base``` <br>
-```quazip-qt5``` <br>
+```qt6-base``` <br>
+```quazip-qt6``` <br>
+```cmake (compile)``` <br>
 
 # Compile
 
 ### Linux
 Install missing dependencies <br>
-Make sure that the ```qmakeconf.sh``` points to the right libs and include paths on your system <br>
-Run ```qmakeconf.sh``` then ```make release``` <br>
-The binary is ```./release/HLib```
+```mkdir build ; cd build```
+```cmake -DCMAKE_BUILD_TYPE=Release ..```
+```cmake --build .```
+The binary is in ```./build/HLib```
 
 ### Windows
 Theoretically compiling on Windows should work (I wouldn't know, never tested)
