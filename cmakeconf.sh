@@ -1,26 +1,26 @@
 #!/bin/bash
 
+PROJ_NAME=$(basename "$PWD")
+
 rm -rf ./build
 rm -f ./CMakeLists.txt
-rm -f ./src/gui/ui/ui_logwindow.h
-rm -f ./src/gui/ui/ui_mainwindow.h
 
 /usr/lib/qt6/bin/qt-cmake-create
 
-sed -i -e '1i set(CMAKE_EXPORT_COMPILE_COMMANDS ON)' ./CMakeLists.txt
-echo '' >> ./CMakeLists.txt
-echo '# !!! cmakeconf.sh !!!' >> ./CMakeLists.txt
-echo 'find_package(Qt6 REQUIRED COMPONENTS Sql)' >> ./CMakeLists.txt
-echo 'find_package(QuaZip-Qt6)' >> ./CMakeLists.txt
-echo 'target_include_directories(HLib PUBLIC ${CMAKE_SOURCE_DIR}/src)' >> ./CMakeLists.txt
-echo 'target_link_libraries(HLib PRIVATE Qt::Sql QuaZip::QuaZip)' >> ./CMakeLists.txt
+echo
+echo "[!!!] cmakeconf.sh: CMakeLists.txt config"
 
-mkdir -p ./build
-cd ./build
-cmake ..
+sed -i -e '4i set(CMAKE_EXPORT_COMPILE_COMMANDS ON)\n' ./CMakeLists.txt
+echo "[!!!] Added set(CMAKE_EXPORT_COMPILE_COMMANDS ON) on line 4 of CMakeLists.txt (needed for .clangd)"
+echo "" >> ./CMakeLists.txt
 
-if [ "$1" == "--compile" ]; then
-    cmake --build . --config Release -j 12
-    cp -f HLib_autogen/include/ui/ui_logwindow.h ../src/gui/ui/
-    cp -f HLib_autogen/include/ui/ui_mainwindow.h ../src/gui/ui/
-fi
+echo "# !!! cmakeconf.sh !!!" >> ./CMakeLists.txt
+echo "find_package(Qt6 REQUIRED COMPONENTS Sql)" >> ./CMakeLists.txt
+echo "find_package(QuaZip-Qt6)" >> ./CMakeLists.txt
+
+echo "target_include_directories($PROJ_NAME PUBLIC \${CMAKE_SOURCE_DIR}/src)" >> ./CMakeLists.txt
+
+echo "target_link_libraries($PROJ_NAME PRIVATE Qt::Sql QuaZip::QuaZip)" >> ./CMakeLists.txt
+
+echo "[!!!] (Optional) Manually merge cmakeconf.sh added options in CMakeLists.txt"
+
