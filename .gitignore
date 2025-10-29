@@ -31,8 +31,6 @@ Makefile*
 *.qm
 *.prl
 
-src/gui/ui/ui_*.h
-
 # Qt unit tests
 target_wrapper.*
 
